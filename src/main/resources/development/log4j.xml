@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+    <appender name="myConsole" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{dd HH:mm:ss} %-5p] %l - %m%n" />
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="levelMin" value="DEBUG" />
+            <param name="levelMax" value="ERROR" />
+            <param name="AcceptOnMatch" value="true" />
+        </filter>
+    </appender>
+    <appender name="log4j-action" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="log/action/action.log"/>
+        <param name="Append" value="true"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{dd HH:mm:ss} %-5p] %l - %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelRangeFilter">
+            <param name="LevelMin" value="DEBUG"/>
+            <param name="LevelMax" value="ERROR"/>
+        </filter>
+    </appender>
+    <category name="jyx.action" additivity="false">
+        <priority value="debug" />
+        <appender-ref ref="myConsole" />
+        <appender-ref ref="log4j-action" />
+    </category>
+
+    <!-- 操作记录-->
+    <category name="jyx.service" additivity="false">
+        <priority value="debug" />
+        <appender-ref ref="myConsole" />
+        <appender-ref ref="log4j-action" />
+    </category>
+
+    <!--依赖-->
+    <category name="org" additivity="false">
+        <priority value="warn" />
+        <appender-ref ref="myConsole" />
+        <appender-ref ref="log4j-action" />
+    </category>
+    <category name="com" additivity="false">
+        <priority value="warn" />
+        <appender-ref ref="myConsole" />
+        <appender-ref ref="log4j-action" />
+    </category>
+
+    <root>
+        <priority value ="debug"/>
+        <appender-ref ref="myConsole"/>
+    </root>
+
+
+
+</log4j:configuration>
