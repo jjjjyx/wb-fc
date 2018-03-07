@@ -9,9 +9,17 @@
     <%@include file="./assets/base/header.jsp" %>
 </head>
 <body>
+12312
     <div id="app">
+
     </div>
+
     <%@include file="./assets/base/footer.jsp" %>
+<script>
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET","!test")
+    xhr.send()
+</script>
 </body>
 </html>
 

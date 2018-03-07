@@ -35,12 +35,19 @@
 			<interceptor-stack name="userStack">
 				<interceptor-ref name="defaultStack"></interceptor-ref>
 				<!--把自己的拦截器添加到定义的拦截器栈里面 -->
-				<!--<interceptor-ref name="user"></interceptor-ref>-->
+				<interceptor-ref name="user"></interceptor-ref>
+			</interceptor-stack>
+
+			<interceptor-stack name="adminStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<!--把自己的拦截器添加到定义的拦截器栈里面 -->
+				<interceptor-ref name="admin"></interceptor-ref>
 			</interceptor-stack>
 
 			<!--定义自己的拦截器 -->
 			<!--<interceptor name="limiterInterceptor" class="jyx.action.interceptor.LimiterInterceptor" />-->
-			<!--<interceptor name="user" class="jyx.action.interceptor.UserInterceptor" />-->
+			<interceptor name="user" class="jyx.action.UserInterceptor" />
+			<interceptor name="user" class="jyx.action.admin.AdminInterceptor" />
 		</interceptors>
 		<!--调用拦截器 -->
 		<default-interceptor-ref name="defStack" />
@@ -52,6 +59,10 @@
 				<param name="actionName">!execute</param>
 			</result>
 			<result name="completion-info" type="redirectAction">
+				<param name="namespace">/</param>
+				<param name="actionName">!execute?_#info-form</param>
+			</result>
+			<result name="access-fail" type="redirectAction">
 				<param name="namespace">/</param>
 				<param name="actionName">!execute?_#info-form</param>
 			</result>

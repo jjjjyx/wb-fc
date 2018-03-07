@@ -2,26 +2,26 @@ package jyx.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "fc_group")
-/**
- * 圈子 标签
- */
-public class GroupBean implements Bean<GroupBean>{
+@Table(name = "fc_news")
+public class NewsBean implements Bean<NewsBean>{
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
     private int id;
+
     private String title;
     private String content;
-    private String type;
-    private Date creteTime;
+    private Date releaseTime;
+    private String author;
+//    private String
+    @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
+    @JoinColumn(name="uid")
+    private UserBean uid;
+
 
     public int getId() {
         return id;
@@ -47,27 +47,34 @@ public class GroupBean implements Bean<GroupBean>{
         this.content = content;
     }
 
-    public String getType() {
-        return type;
+    public Date getReleaseTime() {
+        return releaseTime;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setReleaseTime(Date releaseTime) {
+        this.releaseTime = releaseTime;
     }
 
-    public Date getCreteTime() {
-        return creteTime;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setCreteTime(Date creteTime) {
-        this.creteTime = creteTime;
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public UserBean getUid() {
+        return uid;
+    }
+
+    public void setUid(UserBean uid) {
+        this.uid = uid;
     }
 
     @Override
-    public void update(GroupBean a) {
-        if(a ==null) return ;
+    public void update(NewsBean a) {
+        if(a==null) return;
         this.title = a.getTitle();
         this.content = a.getContent();
-        this.type = a.getType();
     }
 }

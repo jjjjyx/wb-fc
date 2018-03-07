@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 @Entity
 @Table(name = "fc_user")
-public class UserBean {
+public class UserBean implements Bean<UserBean>{
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
@@ -31,6 +31,20 @@ public class UserBean {
 //    @JoinColumn(name="role")
 //    private Role role;
 
+    @Override
+    public void update(UserBean a) {
+        if(a==null) return;
+        this.password = a.getPassword();
+        this.nickname = a.getNickname();
+        this.sex = a.getSex();
+        this.like = a.getLike();
+        this.address = a.getAddress();
+        this.email = a.getEmail();
+        this.city = a.getCity();
+        this.avatar = a.getAvatar();
+//        角色不允许直接修改
+//        this.role = a.getRole();
+    }
 
     public int getUid() {
         return uid;
@@ -127,4 +141,6 @@ public class UserBean {
     public void setRole(int role) {
         this.role = role;
     }
+
+
 }
