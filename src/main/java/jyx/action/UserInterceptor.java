@@ -15,7 +15,7 @@ public class UserInterceptor  extends AbstractInterceptor {
         UserBean userBean = (UserBean) session.get("user");
 //        System.out.println(session+"=======");
         if(userBean== null ) return "session-null";
-        else if(userBean.getRole()==0){
+        else if(userBean.getRole()>=0){
             // 正常访问
             return actionInvocation.invoke();
         }else if(userBean.getRole()==-50){

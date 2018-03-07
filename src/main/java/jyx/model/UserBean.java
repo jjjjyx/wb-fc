@@ -18,7 +18,7 @@ public class UserBean implements Bean<UserBean>{
     private String password;
     private String nickname;
     private String sex;
-    private String like;
+    private String love;
     private String address;
     private String email;
     private String city;
@@ -34,10 +34,10 @@ public class UserBean implements Bean<UserBean>{
     @Override
     public void update(UserBean a) {
         if(a==null) return;
-        this.password = a.getPassword();
+//        this.password = a.getPassword();
         this.nickname = a.getNickname();
         this.sex = a.getSex();
-        this.like = a.getLike();
+        this.love = a.getLove();
         this.address = a.getAddress();
         this.email = a.getEmail();
         this.city = a.getCity();
@@ -86,12 +86,12 @@ public class UserBean implements Bean<UserBean>{
         this.sex = sex;
     }
 
-    public String getLike() {
-        return like;
+    public String getLove() {
+        return love;
     }
 
-    public void setLike(String like) {
-        this.like = like;
+    public void setLove(String love) {
+        this.love = love;
     }
 
     public String getAddress() {

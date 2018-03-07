@@ -47,7 +47,7 @@
 			<!--定义自己的拦截器 -->
 			<!--<interceptor name="limiterInterceptor" class="jyx.action.interceptor.LimiterInterceptor" />-->
 			<interceptor name="user" class="jyx.action.UserInterceptor" />
-			<interceptor name="user" class="jyx.action.admin.AdminInterceptor" />
+			<interceptor name="admin" class="jyx.action.admin.AdminInterceptor" />
 		</interceptors>
 		<!--调用拦截器 -->
 		<default-interceptor-ref name="defStack" />
@@ -56,7 +56,7 @@
 		<global-results>
 			<result name="session-null" type="redirectAction">
 				<param name="namespace">/</param>
-				<param name="actionName">!execute</param>
+				<param name="actionName">sign!execute</param>
 			</result>
 			<result name="completion-info" type="redirectAction">
 				<param name="namespace">/</param>

@@ -19,17 +19,16 @@ import java.util.HashMap;
 @Namespace("/")
 @Action(value = "/", results = {
         @Result(name = "login", location = "/login.jsp"),
-        @Result(name = "admin", location = "/admin/", type = "redirect"),
+        @Result(name = "index", location = "/index.jsp"),
         @Result(name = "error", location = "/error.jsp")
-}
+        },
+        interceptorRefs = {
+                @InterceptorRef("userStack")
+        }
 )
 public class MainAction extends BaseAction {
     private Exception exception;
     protected Logger logger = LoggerFactory.getLogger(getClass());
-    public String test(){
-        System.out.println("hello world");
-        return JSON;
-    }
 
     @Override
     public String execute() throws Exception {
@@ -37,11 +36,11 @@ public class MainAction extends BaseAction {
 
         UserBean user = (UserBean) session.getAttribute("user");
 
-        if (user != null && user.getRole() >= 0) {
-            if(logger.isDebugEnabled()) {
-                logger.debug("欢迎您，用户 {} 已登录，将为您跳转到管理界面！",user.getUsername());
+        if (user != null) { //&& user.getRole() ==100//管理员
+            if (logger.isDebugEnabled()) {
+                logger.debug("欢迎您，用户 {} 已登录，将为您跳转到首页界面！", user.getUsername());
             }
-            return "admin";
+            return "index";
         }
 //        Date start = (Date) session.getAttribute("vcStarrTime");
 //        Date current = new Date();
@@ -62,11 +61,11 @@ public class MainAction extends BaseAction {
 
         UserBean user = (UserBean) session.getAttribute("user");
         String action = request.getRequestURI().split("!")[1];
-        if(logger.isErrorEnabled()){
+        if (logger.isErrorEnabled()) {
             if (user == null) {
-                logger.error("execution action [{}] => {} error: {}", action, request.getQueryString(), exception.getMessage(),exception);
+                logger.error("execution action [{}] => {} error: {}", action, request.getQueryString(), exception.getMessage(), exception);
             } else {
-                logger.error("user [{}] execution action [{}] => {} error: {}",user.getUsername(), action, request.getQueryString(), exception.getMessage(),exception);
+                logger.error("user [{}] execution action [{}] => {} error: {}", user.getUsername(), action, request.getQueryString(), exception.getMessage(), exception);
             }
         }
         data = new HashMap<String, Object>();

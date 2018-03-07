@@ -9,16 +9,15 @@
     <%@include file="./assets/base/header.jsp" %>
 </head>
 <body>
-12312
+<c:if test="${user.role==100}">
+    <a href="./admin/">管理员界面</a>
+</c:if>
     <div id="app">
 
     </div>
 
     <%@include file="./assets/base/footer.jsp" %>
 <script>
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET","!test")
-    xhr.send()
 </script>
 </body>
 </html>
