@@ -7,8 +7,9 @@
 <html>
 <head>
     <%@include file="../assets/base/header.jsp" %>
+
 </head>
-<body class="theme-black">
+<body class="theme-white">
 <div class="am-g tpl-g" id="app">
     <!-- 头部 -->
     <header>
@@ -25,7 +26,7 @@
                 <ul>
                     <!-- 欢迎语 -->
                     <li class="am-text-sm tpl-header-navbar-welcome">
-                        <a href="javascript:;">欢迎你, <span>Amaze UI</span> </a>
+                        <a href="javascript:;">欢迎你, <span> ${user.username}</span> </a>
                     </li>
 
                     <!-- 新邮件 -->
@@ -144,20 +145,7 @@
         </div>
 
     </header>
-    <!-- 风格切换 -->
-    <div class="tpl-skiner">
-        <div class="tpl-skiner-toggle am-icon-cog">
-        </div>
-        <div class="tpl-skiner-content">
-            <div class="tpl-skiner-content-title">
-                选择主题
-            </div>
-            <div class="tpl-skiner-content-bar">
-                <span class="skiner-color skiner-white" data-color="theme-white"></span>
-                <span class="skiner-color skiner-black" data-color="theme-black"></span>
-            </div>
-        </div>
-    </div>
+
     <!-- 侧边导航栏 -->
     <div class="left-sidebar">
         <!-- 用户信息 -->
@@ -178,26 +166,17 @@
         <ul class="sidebar-nav">
             <li class="sidebar-nav-heading">Function <span class="sidebar-nav-heading-info"> 功能</span></li>
             <li class="sidebar-nav-link">
-                <a href="index.html">
-                    <%--class="active"--%>
-                    <i class="am-icon-home sidebar-nav-link-logo"></i> 用户管理
-                </a>
-            </li>
-            <li class="sidebar-nav-link">
-                <a href="tables.html">
-                    <i class="am-icon-table sidebar-nav-link-logo"></i> 资讯管理
-                </a>
-            </li>
-            <li class="sidebar-nav-link">
-                <a href="calendar.html">
-                    <i class="am-icon-calendar sidebar-nav-link-logo"></i> 圈子管理
-                </a>
-            </li>
-            <li class="sidebar-nav-link">
-                <a href="form.html">
-                    <i class="am-icon-wpforms sidebar-nav-link-logo"></i> 活动管理
 
-                </a>
+                <router-link to="/" tag="a"> <i class="am-icon-home sidebar-nav-link-logo"></i> 用户管理</router-link>
+            </li>
+            <li class="sidebar-nav-link">
+                <router-link to="/news" tag="a"><i class="am-icon-table sidebar-nav-link-logo"></i> 资讯管理</router-link>
+            </li>
+            <li class="sidebar-nav-link">
+                <router-link to="/group" tag="a"><i class="am-icon-calendar sidebar-nav-link-logo"></i> 圈子管理</router-link>
+            </li>
+            <li class="sidebar-nav-link">
+                <router-link to="/activity" tag="a"><i class="am-icon-wpforms sidebar-nav-link-logo"></i> 活动管理</router-link>
             </li>
             <li class="sidebar-nav-link">
                 <a href="chart.html">
@@ -227,16 +206,15 @@
                 </div>
             </div>
         </div>
-        <router-view class="main">
-
-        </router-view>
-
-
-
+        <router-view class="main row-content am-cf"></router-view>
     </div>
 </div>
 </div>
     <%@include file="../assets/base/footer.jsp" %>
+<%
+    Object c = request.getAttribute("admin.data");
+    out.print("<script>"+c+"</script>");
+%>
 </body>
 </html>
 

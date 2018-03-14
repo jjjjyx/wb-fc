@@ -5,6 +5,10 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * 活动
+ *
+ */
 @Entity
 @Table(name = "fc_activity")
 public class ActivityBean implements Bean<ActivityBean> {
@@ -93,6 +97,8 @@ public class ActivityBean implements Bean<ActivityBean> {
         if (a==null) return ;
         this.title = a.getTitle();
         this.address = a.getAddress();
+        this.content = a.getContent();
+
         // 作者不允许修改
 //        this.author = a.getAuthor();
         this.type = a.getType();

@@ -1,12 +1,15 @@
 !+(function () {
     define(function(require){
         let api = require('js/api')
-        let Vue = require('js/lib/vue.min')
+        let Vue = require('vue')
         let VueRouter = require('js/lib/vue-router.min')
         //let validator = require('js/lib/vue-validator.min')
-        //let ELEMENT = require('js/lib/element-ui')
+        let ELEMENT =  require('ELEMENT')
         //let cookie = require('js/lib/js.cookie')
         Vue.use(VueRouter);
+        Vue.use(ELEMENT)
+        Vue.prototype.$ELEMENT = { size: 'small' };
+        
         const store = require("./admin-store.js");
         const router = new VueRouter({
             routes:[
@@ -16,6 +19,32 @@
                     meta: {
                         title: '用户管理',
                         subTitle: 'user'
+                    }
+                },
+                {
+                    path: "/news",
+                    component: require('./pages/news.js'),
+                    meta: {
+                        title: '资讯管理',
+                        subTitle: 'news'
+                    }
+                },
+                
+                {
+                    path: "/group",
+                    component: require('./pages/group.js'),
+                    meta: {
+                        title: '圈子管理',
+                        subTitle: 'group'
+                    }
+                },
+    
+                {
+                    path: "/activity",
+                    component: require('./pages/activity.js'),
+                    meta: {
+                        title: '活动管理',
+                        subTitle: 'activity'
                     }
                 }
             ]

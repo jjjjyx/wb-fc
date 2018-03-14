@@ -5,6 +5,10 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * 资讯
+ *
+ */
 @Entity
 @Table(name = "fc_news")
 public class NewsBean implements Bean<NewsBean>{

@@ -4,7 +4,7 @@
     //    function (Vue, api, {on, once, addClass, removeClass}, validator, cookie) {
     define(function(require){
         let api = require('js/api')
-        let Vue = require('js/lib/vue.min')
+        let Vue = require('vue')
         let {on, once, addClass, removeClass} = require('js/utils')
         let validator = require('js/lib/vue-validator.min')
         let cookie = require('js/lib/js.cookie')
@@ -82,5 +82,4 @@
             }
         })
     })
-    
 })()

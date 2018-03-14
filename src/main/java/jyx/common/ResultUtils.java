@@ -1,5 +1,6 @@
 package jyx.common;
 
+import jyx.model.UserBean;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.HashMap;
@@ -74,6 +75,10 @@ public final class ResultUtils {
 
     public static void main(String[] args) {
 
+    }
+
+    public static void set(Map<String, Object> data, Code code, Object user) {
+        set(data,code.getCode(),user,code.getMsg());
     }
 }
 

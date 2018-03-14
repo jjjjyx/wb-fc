@@ -1,12 +1,11 @@
-define(['js/api',"js/lib/vue.min"],function (api,Vue) {
-    console.log(api);
+define(['js/api',"vue"],function (api,Vue) {
     class Store {
         constructor(initialState = {}) {
             this.states = {
-                config:{},
-                map:{},
-                tasks:{},
-                index_info:{}
+                user_data:[],
+                activity_data:[],
+                group_data:[],
+                news_data:[],
             }
             
             for (let prop in initialState) {
@@ -32,14 +31,43 @@ define(['js/api',"js/lib/vue.min"],function (api,Vue) {
     };
     
     Store.prototype.mutations = {
-        addOrUpdateTask(states, data){
-            // states.tasks[data.pid] = data;
-            Vue.set(states.tasks,data.pid,data)
+        addUser(states, data){
+            states.user_data.push(data)
         },
-        removeTask(states, pid){
-            // delete states[id]
-            Vue.delete(states.tasks,data.pid,data)
+        deleteUser(states, data){
+            let index = states.user_data.indexOf(data)
+            states.user_data.splice(index,1)
         },
+        addNews(states, data){
+            states.news_data.push(data)
+        },
+        deleteNews(states, data){
+            let index = states.news_data.indexOf(data)
+            states.news_data.splice(index,1)
+        },
+        addGroup(states, data){
+            states.group_data.push(data)
+        },
+        deleteGroup(states, data){
+            let index = states.group_data.indexOf(data)
+            states.group_data.splice(index,1)
+        },
+        addActivity(states, data){
+            states.activity_data.push(data)
+        },
+        deleteActivity(states, data){
+            let index = states.activity_data.indexOf(data)
+            states.activity_data.splice(index,1)
+        }
+        
+        //addOrUpdateTask(states, data){
+        //    // states.tasks[data.pid] = data;
+        //    Vue.set(states.tasks,data.pid,data)
+        //},
+        //removeTask(states, pid){
+        //    // delete states[id]
+        //    Vue.delete(states.tasks,data.pid,data)
+        //},
     }
     
     Store.prototype.getter = {

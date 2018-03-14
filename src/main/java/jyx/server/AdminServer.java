@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 后台管理服务
@@ -45,11 +47,13 @@ public class AdminServer {
         this.groupDao.save(groupBean);
         return Code.SUCCESS;
     }
-    public Code delGroup(int id){
-        GroupBean groupBean = this.groupDao.get(id);
-        if(groupBean==null)
-            return Code.PARAMETER_FAIL;
-        this.groupDao.delete(groupBean);
+    public Code delGroup(int[] uids){
+        for (int uid : uids) {
+            GroupBean groupBean = this.groupDao.get(uid);
+            if(groupBean==null)
+               continue;
+            this.groupDao.delete(groupBean);
+        }
         return Code.SUCCESS;
     }
 
@@ -71,11 +75,14 @@ public class AdminServer {
         this.newsDao.save(newsBean);
         return Code.SUCCESS;
     }
-    public Code delNews(int id){
-        NewsBean newsBean = this.newsDao.get(id);
-        if(newsBean==null)
-            return Code.PARAMETER_FAIL;
-        this.newsDao.delete(newsBean);
+    public Code delNews(int[] ids){
+        for (int id : ids) {
+            NewsBean newsBean = this.newsDao.get(id);
+            if(newsBean==null)
+               continue;
+            this.newsDao.delete(newsBean);
+        }
+
         return Code.SUCCESS;
     }
 
@@ -96,11 +103,14 @@ public class AdminServer {
         this.activityDao.save(activityBean);
         return Code.SUCCESS;
     }
-    public Code delActivity(int id){
-        ActivityBean activityBean = this.activityDao.get(id);
-        if(activityBean==null)
-            return Code.PARAMETER_FAIL;
-        this.activityDao.delete(activityBean);
+    public Code delActivity(int[] ids){
+        for (int id : ids) {
+            ActivityBean activityBean = this.activityDao.get(id);
+            if(activityBean==null)
+                continue;
+            this.activityDao.delete(activityBean);
+        }
+
         return Code.SUCCESS;
     }
 
@@ -141,16 +151,27 @@ public class AdminServer {
 
     /**
      * 重置密码
-     * @param uid
+     * @param uids
      * @return
      */
-    public Code resetPass(int uid){
-        UserBean userBean = userDao.get(uid);
-        if(userBean==null)
-            return Code.PARAMETER_FAIL;
-        userBean.setPassword(this.DEFAULT_PASS);
-        userDao.update(userBean);
+    public Code resetPass(int[] uids){
+        for (int uid : uids) {
+            UserBean userBean = userDao.get(uid);
+            if(userBean==null)
+//                return Code.PARAMETER_FAIL;
+                continue;
+            userBean.setPassword(this.DEFAULT_PASS);
+            userDao.update(userBean);
+        }
         return Code.SUCCESS;
     }
 
+    public Map<String,Object> getData() {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("user_data",this.getAllUser());
+        map.put("activity_data",this.getAllActivity());
+        map.put("group_data",this.getAllGroup());
+        map.put("news_data",this.getAllNews());
+        return map;
+    }
 }

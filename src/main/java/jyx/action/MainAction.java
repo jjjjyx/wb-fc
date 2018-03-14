@@ -18,12 +18,12 @@ import java.util.HashMap;
 @ParentPackage("default-package")
 @Namespace("/")
 @Action(value = "/", results = {
-        @Result(name = "login", location = "/login.jsp"),
-        @Result(name = "index", location = "/index.jsp"),
-        @Result(name = "error", location = "/error.jsp")
+            @Result(name = "login", location = "/login.jsp"),
+            @Result(name = "index", location = "/index.jsp"),
+            @Result(name = "error", location = "/error.jsp")
         },
         interceptorRefs = {
-                @InterceptorRef("userStack")
+            @InterceptorRef("userStack")
         }
 )
 public class MainAction extends BaseAction {
@@ -70,7 +70,7 @@ public class MainAction extends BaseAction {
         }
         data = new HashMap<String, Object>();
         // isSendErrorDetails() ? exception.getMessage() :
-        ResultUtils.set(data, Code.ERROR, null);
+        ResultUtils.set(data, Code.ERROR);
 
         return JSON;
     }

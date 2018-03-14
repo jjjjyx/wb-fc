@@ -1,7 +1,9 @@
 package jyx.action.admin;
 
+import com.google.gson.Gson;
 import jyx.action.BaseAction;
 
+import jyx.common.Code;
 import jyx.common.ResultUtils;
 import jyx.model.ActivityBean;
 import jyx.model.GroupBean;
@@ -32,14 +34,23 @@ public class AdminAction extends BaseAction {
     private ActivityBean activity;
     private GroupBean group;
     private NewsBean news;
-
+    private int[] uids;
     @Override
     public String execute() throws Exception {
-        System.out.println("访问后台管理界面");
+        Object data = this.adminServer.getData();
+        Gson gson = new Gson();
+        StringBuffer cc = new StringBuffer("window.__INIT=");
+        cc.append(gson.toJson(data)).append(";");
+        request.setAttribute("admin.data", cc);
         return "index";
     }
 
     /* ======== UserBean*/
+
+    public String resetPass(){
+        ResultUtils.set(this.data, adminServer.resetPass(uids));
+        return JSON;
+    }
     public String getAllUser(){
         ResultUtils.set(this.data, adminServer.getAllUser());
         return JSON;
@@ -48,16 +59,18 @@ public class AdminAction extends BaseAction {
         UserBean userBean = (UserBean) this.session.getAttribute("user");
         if(del_id==userBean.getUid()) {
             ResultUtils.set(data,-5,"无法删除自己");
-        }else {
+        } else {
             ResultUtils.set(data, this.adminServer.delUser(this.del_id));
         }
         return JSON;
     }
     public String addUser(){
-        ResultUtils.set(data,adminServer.add(user));
+        Code code= adminServer.add(user);
+        ResultUtils.set(data, code, user);
         return JSON;
     }
     public String updateUser(){
+        System.out.println(this.user);
         ResultUtils.set(data,adminServer.update(user));
         return JSON;
     }
@@ -68,12 +81,13 @@ public class AdminAction extends BaseAction {
     }
 
     public String delActivity(){
-        ResultUtils.set(data, this.adminServer.delActivity(this.del_id));
+        ResultUtils.set(data, this.adminServer.delActivity(this.uids));
         return JSON;
     }
 
     public String addActivity(){
-        ResultUtils.set(data,adminServer.add(activity));
+        Code code= adminServer.add(activity);
+        ResultUtils.set(data, code, activity);
         return JSON;
     }
     public String updateActivity(){
@@ -88,12 +102,13 @@ public class AdminAction extends BaseAction {
     }
 
     public String delGroup(){
-        ResultUtils.set(data, this.adminServer.delGroup(this.del_id));
+        ResultUtils.set(data, this.adminServer.delGroup(this.uids));
         return JSON;
     }
 
     public String addGroup(){
-        ResultUtils.set(data,adminServer.add(group));
+        Code code= adminServer.add(group);
+        ResultUtils.set(data, code, group);
         return JSON;
     }
     public String updateGroup(){
@@ -108,17 +123,26 @@ public class AdminAction extends BaseAction {
     }
 
     public String delNews(){
-        ResultUtils.set(data, this.adminServer.delNews(this.del_id));
+        ResultUtils.set(data, this.adminServer.delNews(this.uids));
         return JSON;
     }
 
     public String addNews(){
-        ResultUtils.set(data,adminServer.add(news));
+        Code code= adminServer.add(news);
+        ResultUtils.set(data, code, news);
         return JSON;
     }
     public String updateNews(){
         ResultUtils.set(data,adminServer.update(news));
         return JSON;
+    }
+
+    public int[] getUids() {
+        return uids;
+    }
+
+    public void setUids(int[] uids) {
+        this.uids = uids;
     }
 
     public int getDel_id() {

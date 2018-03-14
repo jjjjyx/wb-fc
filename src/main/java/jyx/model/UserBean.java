@@ -19,7 +19,6 @@ public class UserBean implements Bean<UserBean>{
     private String nickname;
     private String sex;
     private String love;
-    private String address;
     private String email;
     private String city;
     private String avatar;
@@ -38,7 +37,6 @@ public class UserBean implements Bean<UserBean>{
         this.nickname = a.getNickname();
         this.sex = a.getSex();
         this.love = a.getLove();
-        this.address = a.getAddress();
         this.email = a.getEmail();
         this.city = a.getCity();
         this.avatar = a.getAvatar();
@@ -94,13 +92,6 @@ public class UserBean implements Bean<UserBean>{
         this.love = love;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
 
     public String getEmail() {
         return email;

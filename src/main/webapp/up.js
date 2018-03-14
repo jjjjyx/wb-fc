@@ -1,7 +1,7 @@
 !+(function () {
     define(function (require) {
         let api = require('js/api')
-        let Vue = require('js/lib/vue.min')
+        let Vue = require('vue')
         //let VueRouter = require('js/lib/vue-router.min')
         //let ELEMENT = require('js/lib/element-ui')
         //let cookie = require('js/lib/js.cookie')
