@@ -179,16 +179,17 @@
                 <router-link to="/activity" tag="a"><i class="am-icon-wpforms sidebar-nav-link-logo"></i> 活动管理</router-link>
             </li>
             <li class="sidebar-nav-link">
+                <router-link to="/lore" tag="a"><i class="am-icon-wpforms sidebar-nav-link-logo"></i> 运动知识管理</router-link>
+            </li>
+            <li class="sidebar-nav-link">
                 <a href="chart.html">
                     <i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 动态管理
-
-                </a>
-            </li><li class="sidebar-nav-link">
-                <a href="chart.html">
-                    <i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 材料管理
-
                 </a>
             </li>
+            <li class="sidebar-nav-link">
+                <router-link to="/data_m" tag="a"><i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 材料管理</router-link>
+            </li>
+
         </ul>
     </div>
 

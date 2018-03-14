@@ -6,6 +6,8 @@ define(['js/api',"vue"],function (api,Vue) {
                 activity_data:[],
                 group_data:[],
                 news_data:[],
+                lore_data:[],
+                data_data:[]
             }
             
             for (let prop in initialState) {
@@ -58,6 +60,13 @@ define(['js/api',"vue"],function (api,Vue) {
         deleteActivity(states, data){
             let index = states.activity_data.indexOf(data)
             states.activity_data.splice(index,1)
+        },
+        addLore(states, data){
+            states.lore_data.push(data)
+        },
+        deleteLore(states, data){
+            let index = states.lore_data.indexOf(data)
+            states.lore_data.splice(index,1)
         }
         
         //addOrUpdateTask(states, data){

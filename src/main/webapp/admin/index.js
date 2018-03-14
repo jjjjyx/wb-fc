@@ -46,6 +46,22 @@
                         title: '活动管理',
                         subTitle: 'activity'
                     }
+                },
+                {
+                    path: "/lore",
+                    component: require('./pages/lore.js'),
+                    meta: {
+                        title: '运动知识管理',
+                        subTitle: 'lore'
+                    }
+                },
+                {
+                    path: "/data_m",
+                    component: require('./pages/data.js'),
+                    meta: {
+                        title: '材料管理',
+                        subTitle: 'data'
+                    }
                 }
             ]
         })

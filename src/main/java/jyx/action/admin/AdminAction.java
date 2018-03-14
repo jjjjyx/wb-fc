@@ -5,15 +5,15 @@ import jyx.action.BaseAction;
 
 import jyx.common.Code;
 import jyx.common.ResultUtils;
-import jyx.model.ActivityBean;
-import jyx.model.GroupBean;
-import jyx.model.NewsBean;
-import jyx.model.UserBean;
+import jyx.model.*;
 import jyx.server.AdminServer;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import javax.servlet.ServletContext;
+import java.io.File;
 import java.util.Date;
 
 /**
@@ -34,11 +34,13 @@ public class AdminAction extends BaseAction {
     private ActivityBean activity;
     private GroupBean group;
     private NewsBean news;
+    private LoreBean lore;
     private int[] uids;
     @Override
     public String execute() throws Exception {
         Object data = this.adminServer.getData();
         Gson gson = new Gson();
+
         StringBuffer cc = new StringBuffer("window.__INIT=");
         cc.append(gson.toJson(data)).append(";");
         request.setAttribute("admin.data", cc);
@@ -116,6 +118,27 @@ public class AdminAction extends BaseAction {
         return JSON;
     }
 
+    /* ======== LoreBean*/
+    public String getAllLore(){
+        ResultUtils.set(this.data, adminServer.getAllLore());
+        return JSON;
+    }
+
+    public String delLore(){
+        ResultUtils.set(data, this.adminServer.delLore(this.uids));
+        return JSON;
+    }
+
+    public String addLore(){
+        Code code= adminServer.add(lore);
+        ResultUtils.set(data, code, lore);
+        return JSON;
+    }
+    public String updateLore(){
+        ResultUtils.set(data,adminServer.update(lore));
+        return JSON;
+    }
+
     /* ======== NewsBean*/
     public String getAllNews(){
         ResultUtils.set(this.data, adminServer.getAllNews());
@@ -183,5 +206,13 @@ public class AdminAction extends BaseAction {
 
     public void setNews(NewsBean news) {
         this.news = news;
+    }
+
+    public LoreBean getLore() {
+        return lore;
+    }
+
+    public void setLore(LoreBean lore) {
+        this.lore = lore;
     }
 }

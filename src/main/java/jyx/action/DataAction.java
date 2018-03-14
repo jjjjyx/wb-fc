@@ -1,14 +1,20 @@
 package jyx.action;
 
+import jyx.common.Code;
+import jyx.common.ResultUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 
 /**
  * 材料管理
@@ -40,6 +46,19 @@ public class DataAction extends BaseAction{
         System.out.println("文件类型" +fileContentType );
         System.out.println("文件大小" +file.length());
         System.out.println("文件临时路径" +file .getAbsolutePath());
+        ServletContext rel= ServletActionContext.getServletContext();
+        File uploadFile = new File(rel.getRealPath( "upload"));
+        System.out.println(uploadFile);
+        if (!uploadFile .exists()) {//判断输出路径是否存在
+            uploadFile.mkdir();
+        }
+        File f = new File(uploadFile, new Date().getTime()+"_" + fileFileName);
+        try {
+            FileUtils.copyFile(file, f);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ResultUtils.set(data, Code.SUCCESS);
         return JSON;
     }
     public String down(){

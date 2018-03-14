@@ -1,19 +1,16 @@
 package jyx.server;
 
 import jyx.common.Code;
-import jyx.dao.ActivityDao;
-import jyx.dao.GroupDao;
-import jyx.dao.NewsDao;
-import jyx.dao.UserDao;
-import jyx.model.ActivityBean;
-import jyx.model.GroupBean;
-import jyx.model.NewsBean;
-import jyx.model.UserBean;
+import jyx.dao.*;
+import jyx.model.*;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletContext;
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +32,10 @@ public class AdminServer {
     private NewsDao newsDao;
     @Autowired
     private ActivityDao activityDao;
+    @Autowired
+    private LoreDao loreDao;
+    private DataDao dataDao = DataDao.getInstance();
+
     private final String DEFAULT_PASS = "123456";
 
 
@@ -92,6 +93,35 @@ public class AdminServer {
             return Code.PARAMETER_FAIL;
         newsBean.update(g);
         this.newsDao.update(newsBean);
+        return Code.SUCCESS;
+    }
+
+
+    public List<LoreBean> getAllLore(){
+        return this.loreDao.loadAll();
+    }
+    public Code add(LoreBean loreBean) {
+        loreBean.setReleaseTime(new Date());
+        this.loreDao.save(loreBean);
+        return Code.SUCCESS;
+    }
+    public Code delLore(int[] ids){
+        for (int id : ids) {
+            LoreBean loreBean = this.loreDao.get(id);
+            if(loreBean==null)
+                continue;
+            this.loreDao.delete(loreBean);
+        }
+
+        return Code.SUCCESS;
+    }
+
+    public Code update(LoreBean g){
+        LoreBean loreBean = this.loreDao.get(g.getId());
+        if(loreBean==null)
+            return Code.PARAMETER_FAIL;
+        loreBean.update(g);
+        this.loreDao.update(loreBean);
         return Code.SUCCESS;
     }
 
@@ -172,6 +202,11 @@ public class AdminServer {
         map.put("activity_data",this.getAllActivity());
         map.put("group_data",this.getAllGroup());
         map.put("news_data",this.getAllNews());
+        map.put("lore_data",this.getAllLore());
+//        ServletContext rel= ServletActionContext.getServletContext();
+//        File uploadFile = new File(rel.getRealPath( "upload"));
+        map.put("data_data",dataDao.loadAll());
+
         return map;
     }
 }
