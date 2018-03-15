@@ -43,4 +43,9 @@ public class DataDao {
         return list;
     }
 
+    public File getFileByFn(String fn) {
+        ServletContext rel= ServletActionContext.getServletContext();
+        File uploadFile = new File(rel.getRealPath( "upload"),fn);
+        return uploadFile;
+    }
 }

@@ -2,12 +2,14 @@ package jyx.action;
 
 import jyx.common.Code;
 import jyx.common.ResultUtils;
+import jyx.dao.DataDao;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.ServletContext;
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -26,7 +28,7 @@ import java.util.Date;
         results = {
             @Result(name = "index", location = "/admin/index.jsp"),
             @Result(name = "file", type = "stream", params = {
-                    "inputName", "inputStream", "bufferSize", "4096"
+                    "inputName", "inputStream","contentType","${contentType};charset=ISO8859-1","contentDisposition","attachment;filename=${fileFileName}", "bufferSize", "4096"
             })
         },
         interceptorRefs = {
@@ -39,35 +41,47 @@ public class DataAction extends BaseAction{
     private String fileContentType;
     // 封装上传文件名的属性
     private String fileFileName;
-
+    private String fn;
     private FileInputStream inputStream;
+    private String contentType;
+    private DataDao dataDao = DataDao.getInstance();
+
     public String upload(){
-        System.out.println("文件名" +fileFileName );
-        System.out.println("文件类型" +fileContentType );
-        System.out.println("文件大小" +file.length());
-        System.out.println("文件临时路径" +file .getAbsolutePath());
-        ServletContext rel= ServletActionContext.getServletContext();
+        System.out.println("文件名:" +fileFileName );
+        System.out.println("文件类型:" +fileContentType );
+        System.out.println("文件大小:" +file.length());
+        System.out.println("文件临时路径:" +file .getAbsolutePath());
+        ServletContext rel = ServletActionContext.getServletContext();
         File uploadFile = new File(rel.getRealPath( "upload"));
-        System.out.println(uploadFile);
+
         if (!uploadFile .exists()) {//判断输出路径是否存在
             uploadFile.mkdir();
         }
         File f = new File(uploadFile, new Date().getTime()+"_" + fileFileName);
         try {
             FileUtils.copyFile(file, f);
+            ResultUtils.set(data, Code.SUCCESS);
         } catch (IOException e) {
-            e.printStackTrace();
+            ResultUtils.set(data, Code.ERROR);
         }
-        ResultUtils.set(data, Code.SUCCESS);
         return JSON;
     }
     public String down(){
-//        this.response.setContentType();
+        File path = dataDao.getFileByFn(fn);
+        Path p = path.toPath();
+        try {
+            this.inputStream = new FileInputStream(path);
+            this.fileFileName = new String(fn.substring(fn.indexOf('_')+1).getBytes(),"ISO8859-1");
+//            System.out.println("fileFileName = " + fileFileName);
+            this.contentType = Files.probeContentType(p);
+//            response.setContentType(contentType);
+        } catch (IOException e) {
+        }
         return "file";
     }
 
 //    public static void main(String[] args){
-//        Path path = Paths.get("E:\\Desktop\\蓝鲨信息BP（2.28）_ 第二版 .pptx");
+//        Path path = Paths.get("E:\\Desktop\\xxx.pptx");
 //        String contentType = null;
 //        try {
 //            contentType = Files.probeContentType(path);
@@ -108,5 +122,13 @@ public class DataAction extends BaseAction{
 
     public void setInputStream(FileInputStream inputStream) {
         this.inputStream = inputStream;
+    }
+
+    public String getFn() {
+        return fn;
+    }
+
+    public void setFn(String fn) {
+        this.fn = fn;
     }
 }
