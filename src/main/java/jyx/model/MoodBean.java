@@ -6,20 +6,25 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * 运动知识
+ * 动态
  */
-@Entity
-@Table(name = "fc_lore")
-public class LoreBean implements Bean<LoreBean>{
+public class MoodBean {
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
     private int id;
-
-    private String title;
     @Column(name = "content", nullable = true, length = 65535)
     private String content;
     private Date releaseTime;
+
+    // 动态类型
+    @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
+    @JoinColumn(name="gid")
+    private GroupBean gid;
+    // 发布者
+    @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
+    @JoinColumn(name="uid")
+    private UserBean uid;
 
     public int getId() {
         return id;
@@ -27,14 +32,6 @@ public class LoreBean implements Bean<LoreBean>{
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {
@@ -53,9 +50,19 @@ public class LoreBean implements Bean<LoreBean>{
         this.releaseTime = releaseTime;
     }
 
-    @Override
-    public void update(LoreBean a) {
-        this.title = a.getTitle();
-        this.content = a.getContent();
+    public GroupBean getGid() {
+        return gid;
+    }
+
+    public void setGid(GroupBean gid) {
+        this.gid = gid;
+    }
+
+    public UserBean getUid() {
+        return uid;
+    }
+
+    public void setUid(UserBean uid) {
+        this.uid = uid;
     }
 }

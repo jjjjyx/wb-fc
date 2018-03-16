@@ -11,7 +11,7 @@
                         <div class="am-form-group">
                             <div class="am-btn-toolbar">
                                 <div class="am-btn-group am-btn-group-xs">
-                                    <button type="button" class="am-btn am-btn-default am-btn-success" @click="dialogVisible = true,newActivity(currData = {})"><span class="am-icon-plus"></span> 新增</button>
+                                    <button type="button" class="am-btn am-btn-default am-btn-success" @click="resetFrom(),dialogVisible = true,newActivity(currData = {})"><span class="am-icon-plus"></span> 新增</button>
                                     <!--<button type="button" class="am-btn am-btn-default am-btn-secondary" @click="resetPassword"><span class="am-icon-refresh"></span> </button>-->
                                     <!--<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 查看</button>-->
                                     <button type="button" class="am-btn am-btn-default am-btn-danger" @click="deleteActivity"><span class="am-icon-trash-o"></span> 删除</button>
@@ -20,42 +20,15 @@
                         </div>
                     </div>
                     <div class="am-u-sm-12">
-                        <el-table ref="multipleTable" @selection-change=" val => multipleSelection = val"
-                                  :data="activityList"
-                                  tooltip-effect="dark"
-                                  style="width: 100%">
-                            <el-table-column
-                                    type="selection"
-                                    width="55">
-                            </el-table-column>
-                            <el-table-column
-                                prop="id"
-                                label="id">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="title"
-                                    label="标题">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="content"
-                                    label="内容">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="type"
-                                    label="类型">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="address"
-                                    label="活动地址">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="author"
-                                    label="负责人">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="releaseTime"
-                                    label="发布时间">
-                            </el-table-column>
+                        <el-table ref="multipleTable" @selection-change=" val => multipleSelection = val" :data="activityList" tooltip-effect="dark" style="width: 100%">
+                            <el-table-column type="selection" width="55"></el-table-column>
+                            <el-table-column prop="id" label="id"></el-table-column>
+                            <el-table-column prop="title" label="标题"></el-table-column>
+                            <!--<el-table-column prop="content" label="内容"></el-table-column>-->
+                            <el-table-column prop="type" label="类型"></el-table-column>
+                            <el-table-column prop="address" label="活动地址"></el-table-column>
+                            <el-table-column prop="author" label="负责人"></el-table-column>
+                            <el-table-column prop="releaseTime" label="发布时间"></el-table-column>
                             <el-table-column label="操作" width="180">
                                 <template scope="scope">
                                     <!--@click.native.prevent="deleteRow(scope.$index, tableData4)"-->
@@ -84,17 +57,13 @@
             </div>
         </div>
     </div>
-    <el-dialog append-to-body
-            title="提示"
-            :visible.sync="dialogVisible"
-            width="30%"
-            @close="handleClose">
+    <el-dialog append-to-body title="提示" :visible.sync="dialogVisible" width="30%" @close="handleClose">
         <el-form ref="form" :model="form" label-width="80px">
             <el-form-item label="标题">
                 <el-input v-model="form['activity.title']" ></el-input>
             </el-form-item>
             <el-form-item label="内容">
-                <el-input v-model="form['activity.content']" ></el-input>
+                <el-input v-model="form['activity.content']" type="textarea"></el-input>
             </el-form-item>
             <el-form-item label="类型">
                 <el-input v-model="form['activity.type']"></el-input>
@@ -103,11 +72,9 @@
                 <el-input v-model="form['activity.address']" ></el-input>
             </el-form-item>
             <el-form-item label="负责人">
-                <el-input v-model="form['activity.author']" :disabled="active=='updateActivity'" ></el-input>
+                <el-input v-model="form['activity.author']" disabled></el-input>
             </el-form-item>
-
         </el-form>
-
         <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="save()">保存</el-button>

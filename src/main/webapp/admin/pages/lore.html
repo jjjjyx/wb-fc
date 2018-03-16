@@ -36,10 +36,7 @@
                                     prop="title"
                                     label="标题">
                             </el-table-column>
-                            <el-table-column
-                                    prop="content"
-                                    label="内容">
-                            </el-table-column>
+                            <el-table-column prop="content" label="内容"></el-table-column>
 
                             <el-table-column
                                     prop="releaseTime"
@@ -83,7 +80,7 @@
                 <el-input v-model="form['lore.title']" ></el-input>
             </el-form-item>
             <el-form-item label="内容">
-                <el-input v-model="form['lore.content']" ></el-input>
+                <el-input v-model="form['lore.content']" type="textarea"></el-input>
             </el-form-item>
         </el-form>
 

@@ -229,7 +229,7 @@ public class BaseDao<T, PK extends Serializable> {
      */
     public List<T> loadAll() {
 
-//		List<T> lst = getSession().loadAll(entityClass);
+//		List<T> lst = getSession().loadDataAll(entityClass);
         Criteria criteria = getSession().createCriteria(entityClass);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 //		criteria

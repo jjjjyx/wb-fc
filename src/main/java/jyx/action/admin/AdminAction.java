@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * 管理员 相关操作
@@ -38,9 +39,11 @@ public class AdminAction extends BaseAction {
     private int[] uids;
     @Override
     public String execute() throws Exception {
-        Object data = this.adminServer.getData();
+        Map data = this.adminServer.getData();
         Gson gson = new Gson();
-
+        System.out.println("data = " + data);
+        UserBean userBean = (UserBean) this.session.getAttribute("user");
+        data.put("user",userBean);
         StringBuffer cc = new StringBuffer("window.__INIT=");
         cc.append(gson.toJson(data)).append(";");
         request.setAttribute("admin.data", cc);
@@ -72,7 +75,7 @@ public class AdminAction extends BaseAction {
         return JSON;
     }
     public String updateUser(){
-        System.out.println(this.user);
+
         ResultUtils.set(data,adminServer.update(user));
         return JSON;
     }
@@ -88,6 +91,8 @@ public class AdminAction extends BaseAction {
     }
 
     public String addActivity(){
+        UserBean userBean = (UserBean) this.session.getAttribute("user");
+        activity.setUid(userBean);
         Code code= adminServer.add(activity);
         ResultUtils.set(data, code, activity);
         return JSON;
@@ -151,6 +156,8 @@ public class AdminAction extends BaseAction {
     }
 
     public String addNews(){
+        UserBean userBean = (UserBean) this.session.getAttribute("user");
+        news.setUid(userBean);
         Code code= adminServer.add(news);
         ResultUtils.set(data, code, news);
         return JSON;

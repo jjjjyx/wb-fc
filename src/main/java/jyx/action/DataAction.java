@@ -28,7 +28,7 @@ import java.util.Date;
         results = {
             @Result(name = "index", location = "/admin/index.jsp"),
             @Result(name = "file", type = "stream", params = {
-                    "inputName", "inputStream","contentType","${contentType};charset=ISO8859-1","contentDisposition","attachment;filename=${fileFileName}", "bufferSize", "4096"
+                    "inputName", "inputStream","contentType","${contentType}","contentDisposition","attachment;filename=${fileFileName}", "bufferSize", "4096"
             })
         },
         interceptorRefs = {
@@ -42,6 +42,7 @@ public class DataAction extends BaseAction{
     // 封装上传文件名的属性
     private String fileFileName;
     private String fn;
+    private String dir;
     private FileInputStream inputStream;
     private String contentType;
     private DataDao dataDao = DataDao.getInstance();
@@ -52,7 +53,7 @@ public class DataAction extends BaseAction{
         System.out.println("文件大小:" +file.length());
         System.out.println("文件临时路径:" +file .getAbsolutePath());
         ServletContext rel = ServletActionContext.getServletContext();
-        File uploadFile = new File(rel.getRealPath( "upload"));
+        File uploadFile = new File(rel.getRealPath(dir));
 
         if (!uploadFile .exists()) {//判断输出路径是否存在
             uploadFile.mkdir();
@@ -71,7 +72,8 @@ public class DataAction extends BaseAction{
         Path p = path.toPath();
         try {
             this.inputStream = new FileInputStream(path);
-            this.fileFileName = new String(fn.substring(fn.indexOf('_')+1).getBytes(),"ISO8859-1");
+//            this.fileFileName = new String(fn.substring(fn.indexOf('_')+1).getBytes(),"ISO8859-1");
+            this.fileFileName = fn.substring(fn.indexOf('_')+1);
 //            System.out.println("fileFileName = " + fileFileName);
             this.contentType = Files.probeContentType(p);
 //            response.setContentType(contentType);
@@ -91,6 +93,14 @@ public class DataAction extends BaseAction{
 //        System.out.println("File content type is : " + contentType);
 //    }
 
+
+    public String getDir() {
+        return dir;
+    }
+
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
 
     public File getFile() {
         return file;
@@ -122,6 +132,14 @@ public class DataAction extends BaseAction{
 
     public void setInputStream(FileInputStream inputStream) {
         this.inputStream = inputStream;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
     }
 
     public String getFn() {

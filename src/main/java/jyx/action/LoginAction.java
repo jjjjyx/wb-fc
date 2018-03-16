@@ -16,8 +16,8 @@ import java.util.Map;
 @ParentPackage("default-package")
 @Namespace("/")
 @Action(value = "/sign", results = {
-        @Result(name = "success", location = "/login.jsp"),
-        @Result(name = "up", location = "/sign-up.jsp"),
+        @Result(name = "success", location = "./login.jsp"),
+        @Result(name = "up", location = "./sign-up.jsp"),
 }
 )
 public class LoginAction extends BaseAction{

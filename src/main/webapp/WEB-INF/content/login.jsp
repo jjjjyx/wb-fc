@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@include file="./assets/base/base.jsp" %>
+<%@include file="../../assets/base/base.jsp" %>
 <c:set var="defaultjs" value="sign"></c:set>
 <html>
 <head>
@@ -62,6 +62,6 @@
         </div>
     </div>
 </div>
-<%@include file="./assets/base/footer.jsp" %>
+<%@include file="../../assets/base/footer.jsp" %>
 </body>
 </html>

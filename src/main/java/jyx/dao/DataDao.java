@@ -13,6 +13,8 @@ import java.util.Map;
 
 public class DataDao {
     private static DataDao ourInstance = new DataDao();
+    private String DATE_PATH = "upload";
+    private String IMG_PATH = "img_upload";
 
     public static DataDao getInstance() {
         return ourInstance;
@@ -22,13 +24,15 @@ public class DataDao {
 
     }
 
-    public List<Map<String,String>> loadAll() {
+    public List<Map<String,String>> loadDataAll() {
 //        ServletContext rel= ServletActionContext.getServletContext();
 //        System.out.println(this.getClass().getClassLoader().getResource("upload").getFile());
         ServletContext rel= ServletActionContext.getServletContext();
-        File uploadFile = new File(rel.getRealPath( "upload"));
-        System.out.println(uploadFile);
-//
+        File uploadFile = new File(rel.getRealPath( DATE_PATH));
+
+        return this.loadAll(uploadFile);
+    }
+    private List<Map<String,String>> loadAll(File uploadFile){
         File[] files = uploadFile.listFiles();
         List<Map<String,String>> list = new ArrayList<>();
         Map<String,String> f;
@@ -43,9 +47,24 @@ public class DataDao {
         return list;
     }
 
+    public List<Map<String,String>> loadImgAll() {
+        ServletContext rel= ServletActionContext.getServletContext();
+
+        File uploadFile = new File(rel.getRealPath(IMG_PATH));
+
+        return this.loadAll(uploadFile);
+    }
+
+
+
     public File getFileByFn(String fn) {
         ServletContext rel= ServletActionContext.getServletContext();
-        File uploadFile = new File(rel.getRealPath( "upload"),fn);
+        File uploadFile = new File(rel.getRealPath(DATE_PATH),fn);
+        return uploadFile;
+    }
+    public File getImgByFn(String fn) {
+        ServletContext rel= ServletActionContext.getServletContext();
+        File uploadFile = new File(rel.getRealPath( IMG_PATH),fn);
         return uploadFile;
     }
 }

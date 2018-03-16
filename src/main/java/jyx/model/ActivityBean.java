@@ -4,10 +4,10 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * 活动
- *
  */
 @Entity
 @Table(name = "fc_activity")
@@ -17,6 +17,7 @@ public class ActivityBean implements Bean<ActivityBean> {
     @GeneratedValue(generator = "idGenerator")
     private int id;
     private String title;
+    @Column(name = "content", nullable = true, length = 65535)
     private String content;
     private String type;
     private String address;
@@ -27,6 +28,8 @@ public class ActivityBean implements Bean<ActivityBean> {
     @JoinColumn(name="uid")
     private UserBean uid;
 
+    @ManyToMany(mappedBy="activitys")
+    transient private Set<UserBean> users; // 双向配置
 
     public int getId() {
         return id;
@@ -91,6 +94,14 @@ public class ActivityBean implements Bean<ActivityBean> {
     public void setUid(UserBean uid) {
         this.uid = uid;
     }
+
+//    public Set<UserBean> getUsers() {
+//        return users;
+//    }
+//
+//    public void setUsers(Set<UserBean> users) {
+//        this.users = users;
+//    }
 
     @Override
     public void update(ActivityBean a) {

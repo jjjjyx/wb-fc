@@ -4,6 +4,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
+
 @Entity
 @Table(name = "fc_user")
 public class UserBean implements Bean<UserBean>{
@@ -23,12 +25,22 @@ public class UserBean implements Bean<UserBean>{
     private String city;
     private String avatar;
     private Date regTime; // 注册时间
+    private int integral; // 积分
 //    角色
     private int role;
 //    // 角色
 //    @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
 //    @JoinColumn(name="role")
 //    private Role role;
+    // 用户参与的活动
+    @ManyToMany(targetEntity=jyx.model.ActivityBean.class,cascade={CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinTable(name="fc_user_activity" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="a_id")})
+    transient private Set<ActivityBean> activitys;
+
+    // 用户关注 互相关注即为好友
+    @ManyToMany(targetEntity=jyx.model.UserBean.class,cascade={CascadeType.MERGE,CascadeType. PERSIST})
+    @JoinTable(name="fc_user_follow" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="f_id")})
+    transient private Set<UserBean> follows;
 
     @Override
     public void update(UserBean a) {
@@ -133,5 +145,27 @@ public class UserBean implements Bean<UserBean>{
         this.role = role;
     }
 
+    public Set<ActivityBean> getActivitys() {
+        return activitys;
+    }
 
+    public void setActivitys(Set<ActivityBean> activitys) {
+        this.activitys = activitys;
+    }
+
+    public Set<UserBean> getFollows() {
+        return follows;
+    }
+
+    public void setFollows(Set<UserBean> follows) {
+        this.follows = follows;
+    }
+
+    public int getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(int integral) {
+        this.integral = integral;
+    }
 }

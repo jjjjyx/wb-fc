@@ -189,6 +189,9 @@
             <li class="sidebar-nav-link">
                 <router-link to="/data_m" tag="a"><i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 材料管理</router-link>
             </li>
+            <li class="sidebar-nav-link">
+                <router-link to="/img" tag="a"><i class="am-icon-wpforms sidebar-nav-link-logo"></i> 运动图片管理</router-link>
+            </li>
 
         </ul>
     </div>

@@ -18,6 +18,7 @@ public class NewsBean implements Bean<NewsBean>{
     private int id;
 
     private String title;
+    @Column(name = "content", nullable = true, length = 65535)
     private String content;
     private Date releaseTime;
     private String author;

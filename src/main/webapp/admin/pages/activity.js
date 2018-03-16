@@ -49,14 +49,13 @@
                             this.store.commit("deleteActivity",item)
                         })
                     }
-                    
                 },
                 resetFrom(){
                     this.form['activity.id'] = "";
                     this.form['activity.title'] = "";
                     this.form['activity.content'] ="";
                     this.form['activity.type'] = "";
-                    this.form['activity.author'] = "";
+                    this.form['activity.author'] = this.store.states.user.username;
                 },
                 async save(){
                     let result = await api.npost("./!"+this.active,this.form)
@@ -85,7 +84,7 @@
                     this.form['activity.title'] = data.title;
                     this.form['activity.content'] = data.content;
                     this.form['activity.type'] = data.type;
-                    this.form['activity.author'] = data.author;
+                    this.form['activity.author'] = this.store.states.user.username;
                     this.active ="updateActivity";
                 }
             },

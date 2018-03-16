@@ -3,14 +3,11 @@ package jyx.server;
 import jyx.common.Code;
 import jyx.dao.*;
 import jyx.model.*;
-import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.ServletContext;
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -188,7 +185,6 @@ public class AdminServer {
         for (int uid : uids) {
             UserBean userBean = userDao.get(uid);
             if(userBean==null)
-//                return Code.PARAMETER_FAIL;
                 continue;
             userBean.setPassword(this.DEFAULT_PASS);
             userDao.update(userBean);
@@ -205,7 +201,8 @@ public class AdminServer {
         map.put("lore_data",this.getAllLore());
 //        ServletContext rel= ServletActionContext.getServletContext();
 //        File uploadFile = new File(rel.getRealPath( "upload"));
-        map.put("data_data",dataDao.loadAll());
+        map.put("data_data",dataDao.loadDataAll());
+        map.put("img_data",dataDao.loadImgAll());
 
         return map;
     }

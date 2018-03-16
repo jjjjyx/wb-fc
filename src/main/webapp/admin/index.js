@@ -62,6 +62,14 @@
                         title: '材料管理',
                         subTitle: 'data'
                     }
+                },
+                {
+                    path: "/img",
+                    component: require('./pages/img.js'),
+                    meta: {
+                        title: '运动图片管理',
+                        subTitle: 'img'
+                    }
                 }
             ]
         })
