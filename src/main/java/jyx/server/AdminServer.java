@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 后台管理服务
@@ -70,6 +67,7 @@ public class AdminServer {
     }
     public Code add(NewsBean newsBean) {
         newsBean.setReleaseTime(new Date());
+        newsBean.setComment_id(UUID.randomUUID().toString());
         this.newsDao.save(newsBean);
         return Code.SUCCESS;
     }
@@ -127,6 +125,7 @@ public class AdminServer {
     }
     public Code add(ActivityBean activityBean) {
         activityBean.setReleaseTime(new Date());
+        activityBean.setComment_id(UUID.randomUUID().toString());
         this.activityDao.save(activityBean);
         return Code.SUCCESS;
     }

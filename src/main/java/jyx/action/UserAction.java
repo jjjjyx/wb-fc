@@ -1,6 +1,8 @@
 package jyx.action;
 
+import jyx.common.ResultUtils;
 import jyx.model.NewsBean;
+import jyx.model.PostBean;
 import jyx.model.UserBean;
 import jyx.server.AdminServer;
 import jyx.server.UserServer;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Controller;
 @Results({
         @Result(name = "down", location = "./down.jsp"),
         @Result(name = "news", location = "./news.jsp"),
+        @Result(name = "home", location = "./home.jsp"),
         @Result(name = "fill_info", location = "./fill_info.jsp"),
         @Result(name = "fill_info_success", location = "/fill_info_success.jsp", type = "redirect"),
         @Result(name = "news_article", location = "./news_article.jsp")
@@ -28,7 +31,8 @@ public class UserAction extends BaseAction {
 
     private Integer id;
     private UserBean user;
-
+    private PostBean post;
+    private String _;
     /**
      * 完善用户信息
      *
@@ -52,6 +56,29 @@ public class UserAction extends BaseAction {
     @Action(value = "down")
     public String down() {
         return "down";
+    }
+    // 运动动态
+    @Action(value = "home")
+    public String home() {
+        UserBean u = (UserBean) session.getAttribute("user");
+        request.setAttribute("group_data",userServer.getGroup(0));
+        request.setAttribute("post_data",userServer.getPostData(u, _,10));
+        return "home";
+    }
+    @Action(value = "post")
+    public String post(){
+//      发表动态
+        UserBean u = (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,userServer.releasePost(post,u));
+
+        return JSON;
+    }
+    // 收藏 动态
+    @Action(value = "star")
+    public String star(){
+        UserBean u =  (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,userServer.star(this.id, u));
+        return JSON;
     }
 
     @Action(value = "news")
@@ -82,5 +109,21 @@ public class UserAction extends BaseAction {
 
     public void setUser(UserBean user) {
         this.user = user;
+    }
+
+    public PostBean getPost() {
+        return post;
+    }
+
+    public void setPost(PostBean post) {
+        this.post = post;
+    }
+
+    public String get_() {
+        return _;
+    }
+
+    public void set_(String _) {
+        this._ = _;
     }
 }

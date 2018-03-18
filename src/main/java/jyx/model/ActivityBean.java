@@ -1,5 +1,6 @@
 package jyx.model;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,21 +16,41 @@ public class ActivityBean implements Bean<ActivityBean> {
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
+    @Expose
     private int id;
-    private String title;
+    @Expose private String title;
     @Column(name = "content", nullable = true, length = 65535)
-    private String content;
-    private String type;
-    private String address;
-    private Date releaseTime;
-    private String author;
-
+    @Expose private String content;
+    @Expose private String type;
+    @Expose private String address;
+    @Expose private Date releaseTime;
+    @Expose private String author;
     @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
     @JoinColumn(name="uid")
     private UserBean uid;
 
     @ManyToMany(mappedBy="activitys")
-    transient private Set<UserBean> users; // 双向配置
+    private Set<UserBean> users; // 双向配置
+
+    private String comment_id;
+
+    public String getComment_id() {
+        return comment_id;
+    }
+
+    public void setComment_id(String comment_id) {
+        this.comment_id = comment_id;
+    }
+
+    public Set<UserBean> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<UserBean> users) {
+        this.users = users;
+    }
+
+
 
     public int getId() {
         return id;

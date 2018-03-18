@@ -1,6 +1,7 @@
 package jyx.action.admin;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import jyx.action.BaseAction;
 
 import jyx.common.Code;
@@ -40,8 +41,7 @@ public class AdminAction extends BaseAction {
     @Override
     public String execute() throws Exception {
         Map data = this.adminServer.getData();
-        Gson gson = new Gson();
-        System.out.println("data = " + data);
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         UserBean userBean = (UserBean) this.session.getAttribute("user");
         data.put("user",userBean);
         StringBuffer cc = new StringBuffer("window.__INIT=");

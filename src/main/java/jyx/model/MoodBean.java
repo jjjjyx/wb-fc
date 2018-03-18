@@ -1,5 +1,6 @@
 package jyx.model;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,10 +13,11 @@ public class MoodBean {
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
+    @Expose
     private int id;
     @Column(name = "content", nullable = true, length = 65535)
-    private String content;
-    private Date releaseTime;
+    @Expose private String content;
+    @Expose private Date releaseTime;
 
     // 动态类型
     @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)

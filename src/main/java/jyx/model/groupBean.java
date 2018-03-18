@@ -1,5 +1,6 @@
 package jyx.model;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
@@ -17,11 +18,12 @@ public class GroupBean implements Bean<GroupBean>{
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
+    @Expose
     private int id;
-    private String title;
-    private String content;
-    private String type;
-    private Date creteTime;
+    @Expose private String title;
+    @Expose private String content;
+    @Expose private String type;
+    @Expose private Date creteTime;
 
     public int getId() {
         return id;

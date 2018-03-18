@@ -1,5 +1,6 @@
 package jyx.model;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,12 +15,13 @@ public class LoreBean implements Bean<LoreBean>{
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
+    @Expose
     private int id;
 
-    private String title;
+    @Expose private String title;
     @Column(name = "content", nullable = true, length = 65535)
-    private String content;
-    private Date releaseTime;
+    @Expose private String content;
+    @Expose private Date releaseTime;
 
     public int getId() {
         return id;

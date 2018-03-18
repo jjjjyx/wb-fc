@@ -1,5 +1,6 @@
 package jyx.model;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,17 +16,28 @@ public class NewsBean implements Bean<NewsBean>{
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
+    @Expose
     private int id;
 
-    private String title;
+    @Expose private String title;
     @Column(name = "content", nullable = true, length = 65535)
-    private String content;
-    private Date releaseTime;
-    private String author;
+    @Expose private String content;
+    @Expose private Date releaseTime;
+    @Expose private String author;
 //    private String
     @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
     @JoinColumn(name="uid")
     private UserBean uid;
+
+    @Expose private String comment_id;
+
+    public String getComment_id() {
+        return comment_id;
+    }
+
+    public void setComment_id(String comment_id) {
+        this.comment_id = comment_id;
+    }
 
 
     public int getId() {

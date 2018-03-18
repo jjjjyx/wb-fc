@@ -1,5 +1,6 @@
 package jyx.model;
 
+import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,22 +13,23 @@ public class UserBean implements Bean<UserBean>{
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
-    private int uid;
+    @Expose private int uid;
     /**
      * 基本信息
      */
-    private String username; //z账号
-    private String password;
-    private String nickname;
-    private String sex;
-    private String love;
-    private String email;
-    private String city;
-    private String avatar;
-    private Date regTime; // 注册时间
-    private int integral; // 积分
+
+    @Expose private String username; //z账号
+    @Expose private String password;
+    @Expose private String nickname;
+    @Expose private String sex;
+    @Expose private String love;
+    @Expose private String email;
+    @Expose private String city;
+    @Expose private String avatar;
+    @Expose private Date regTime; // 注册时间
+    @Expose private int integral; // 积分
 //    角色
-    private int role;
+    @Expose private int role;
 //    // 角色
 //    @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
 //    @JoinColumn(name="role")
@@ -35,12 +37,17 @@ public class UserBean implements Bean<UserBean>{
     // 用户参与的活动
     @ManyToMany(targetEntity=jyx.model.ActivityBean.class,cascade={CascadeType.MERGE,CascadeType.PERSIST})
     @JoinTable(name="fc_user_activity" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="a_id")})
-    transient private Set<ActivityBean> activitys;
+    private Set<ActivityBean> activitys;
 
     // 用户关注 互相关注即为好友
     @ManyToMany(targetEntity=jyx.model.UserBean.class,cascade={CascadeType.MERGE,CascadeType. PERSIST})
     @JoinTable(name="fc_user_follow" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="f_id")})
-    transient private Set<UserBean> follows;
+    private Set<UserBean> follows;
+
+    // 用户收藏的动态
+    @ManyToMany(targetEntity=jyx.model.PostBean.class,cascade={CascadeType.MERGE,CascadeType. PERSIST})
+    @JoinTable(name="fc_user_star" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="p_id")})
+    private Set<PostBean> stars;
 
     @Override
     public void update(UserBean a) {
@@ -167,5 +174,13 @@ public class UserBean implements Bean<UserBean>{
 
     public void setIntegral(int integral) {
         this.integral = integral;
+    }
+
+    public Set<PostBean> getStars() {
+        return stars;
+    }
+
+    public void setStars(Set<PostBean> stars) {
+        this.stars = stars;
     }
 }

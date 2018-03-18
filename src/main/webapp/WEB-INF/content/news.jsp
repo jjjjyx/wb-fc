@@ -8,12 +8,13 @@
 <html>
 <head>
     <%@include file="../../assets/base/header.jsp" %>
+
 </head>
 <body>
 
 <div id="app">
     <%@include file="../../assets/base/nav.jsp" %>
-    <section class="am-g am-g-fixed blog-fixed blog-content">
+    <section class="am-g am-g-fixed blog-fixed blog-content" style="background: #fff">
         <div class="am-u-md-8 am-u-sm-12">
             <c:forEach items="${new_date}" var="n" varStatus="loop">
                 <article class="am-g blog-entry-article">
