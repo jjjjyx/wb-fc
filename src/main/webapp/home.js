@@ -15,8 +15,10 @@
                     form: {
                         'post.content':'',
                         'post.group_type':'',
+                        'post.media':[]
                     },
-                    curr_title:''
+                    curr_title:'',
+                    fileList:[]
                     
                 }
             },
@@ -26,8 +28,8 @@
                 async release(){
                     if(this.form["post.content"]){
                         if(this.form["post.group_type"]){
-                            let result = await api.npost('post',this.form)
-                            console.log(result);
+                            //this.form['post.media'] = this.fileList.map((f)=>{return f.response.data})
+                            let result = await api.npost('post', this.form)
                             //刷新页面
                             if(result.code ==0) {
                                 location.href =`'home?_=${this.form["post.group_type"]}`
@@ -40,14 +42,42 @@
                     }
                 },
                 async star(id){
-                    console.log(id)
+                    
                     let result = await api.npost("star",{id})
-                    console.log(result)
+
+                    if(result.code==0) {
+                        this.$message('收藏成功');
+                        location.reload()
+                    }
+                },
+                async thumbs_up(id,e){
+                    if(e) {
+                        this.$message('您已经赞过了');
+                        return;
+                    }
+                    let result = await api.npost("thumbs_up",{id})
+                    if(result.code==0) {
+                        this.$message('点赞成功');
+                        location.reload()
+                    }
                 },
                 handleCommand(command){
                     let [type,title] = command.split(":")
                     this.curr_title = title;
                     this.form["post.group_type"] = type;
+                },
+                submitUpload() {
+                    this.$refs.upload.submit();
+                },
+                handleRemove(file, fileList) {
+                    console.log(file, fileList);
+                },
+                handlePreview(file) {
+                    console.log(file);
+                },
+                handleSuccess(response, file, fileList){
+                    this.form['post.media'].push(response.data);
+                    //console.log(response, file, fileList)
                 }
             },
             created () {

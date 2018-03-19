@@ -4,7 +4,7 @@
 <%@include file="../../assets/base/base.jsp" %>
 <c:set var="moduleName" value="news"></c:set>
 <c:set var="cssPath" value="index"></c:set>
-
+<c:set var="defaultjs" value="new_article"></c:set>
 <html>
 <head>
     <%@include file="../../assets/base/header.jsp" %>
@@ -13,7 +13,7 @@
 
 <div id="app">
     <%@include file="../../assets/base/nav.jsp" %>
-    <section class="am-g am-g-fixed blog-fixed blog-content">
+    <section class="am-g am-g-fixed blog-fixed blog-content" style="background: #fff">
         <div class="am-u-md-8 am-u-sm-12">
             <article class="am-article blog-article-p">
                 <div class="am-article-hd">
@@ -31,6 +31,53 @@
                     </p>
                 </div>
             </article>
+            <div>
+                <hr>
+                <div class="send_activity">
+                    <div class="title_area am-cf">
+                        <div class="num S_txt2 am-fr am-text-xs" v-if="form['comment.content']">已经输入{{form['comment.content'].length}}个字</div>
+                    </div>
+                    <div class="input">
+                        <textarea name="" id="" v-model="form['comment.content']" class="W_input" style="height: 68px; margin: 0px; padding: 0px; border-style: none; border-width: 0px; font-size: 14px; word-wrap: break-word; line-height: 18px; overflow: hidden; outline: none;"></textarea>
+                    </div>
+                    <div class="func_area am-cf">
+                        <div class="func">
+                            <button class="am-btn am-btn-primary am-btn-sm" @click="release('${new_date.comment_id}')">评论</button>
+                        </div>
+                    </div>
+                </div>
+                <ul class="am-comments-list am-comments-list-flip">
+                    <li class="am-comment">
+                        <a href="#link-to-user-home">
+                            <img src="" alt="" class="am-comment-avatar" width="48" height="48"/>
+                        </a>
+
+                        <div class="am-comment-main">
+                            <header class="am-comment-hd">
+                                <!--<h3 class="am-comment-title">评论标题</h3>-->
+                                <div class="am-comment-meta">
+                                    <a href="#link-to-user" class="am-comment-author">某人</a>
+                                    评论于 <time datetime="2013-07-27T04:54:29-07:00" title="2013年7月27日 下午7:54 格林尼治标准时间+0800">2014-7-12 15:30</time>
+                                </div>
+                            </header>
+
+                            <div class="am-comment-bd">
+                                ...
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="am-comment">
+                        ...
+                    </li>
+
+                    ...
+
+                    <li class="am-comment am-comment-flip"></li>
+
+                    <li class="am-comment am-comment-highlight"></li>
+                </ul>
+            </div>
         </div>
         <div class="am-u-md-4 am-u-sm-12 blog-sidebar">
             <div class="blog-sidebar-widget blog-bor">

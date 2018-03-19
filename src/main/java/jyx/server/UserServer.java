@@ -176,17 +176,48 @@ public class UserServer extends ServiceBase {
         List<PostBean> list = postDao.find(hql.toString(), 0, i, map);
         UserBean userBean = userDao.get(u.getUid());
         Set<PostBean> ps = userBean.getStars();
+        Set<PostBean> ts = userBean.getThumbs_up();
 //        if(ps==null) {
 //            ps = new HashSet<>();
 //            userBean.setStars(ps);
 //        }
         List<Map> list_m = list.stream().map((item) -> {
             Map ii = Utils.transBean2Map(item);
+            String[] m = (String[]) ii.get("media");
+            if(m!=null) {
+                ii.remove("media");
+                List<String> img = new ArrayList<>();
+                List<String> mp4 = new ArrayList<>();
+                for (String s : m) {
+                    String ext = s.substring(s.lastIndexOf(".") + 1);
+                    if(ext.equalsIgnoreCase("mp4")){
+                        mp4.add(s);
+                    }else {
+                        img.add(s);
+                    }
+                }
+                if(mp4.size()>0){
+                    ii.put("mp4s",mp4);
+                    ii.put("media.length",mp4.size());
+                } else {
+                    ii.put("imgs",img);
+                    ii.put("media.length",img.size());
+                }
+
+            }
             // 查询到 当前用户是否有收藏
             if (ps != null) {
                 for (PostBean p : ps) {
                     if (p.getId() == (Integer) ii.get("id")) {
                         ii.put("isStar", true);
+                        break;
+                    }
+                }
+            }
+            if (ts != null) {
+                for (PostBean p : ts) {
+                    if (p.getId() == (Integer) ii.get("id")) {
+                        ii.put("isThumbs_up", true);
                         break;
                     }
                 }
@@ -215,6 +246,37 @@ public class UserServer extends ServiceBase {
         }
         ps.add(postBean);
         userDao.update(userBean);
+        return Code.SUCCESS;
+    }
+
+    /**
+     * 赞
+     */
+    public Code thumbs_up(Integer id, UserBean u) {
+        PostBean postBean = postDao.get(id);
+        if (postBean == null) {
+            return Code.PARAMETER_FAIL;
+        }
+        UserBean userBean = userDao.get(u.getUid());
+        Set<PostBean> ps = userBean.getThumbs_up();
+        if (ps == null) {
+            ps = new HashSet<>();
+            userBean.setThumbs_up(ps);
+        }
+        Integer i = postBean.getThumbs_up();
+        if(i==null) {
+            i = 0;
+        }
+        i++;
+        postBean.setThumbs_up(i);
+        ps.add(postBean);
+        userDao.update(userBean);
+        postDao.update(postBean);
+        return Code.SUCCESS;
+    }
+
+    public Code comment(String c_id, UserBean u, CommentBean commentBean) {
+
         return Code.SUCCESS;
     }
 }

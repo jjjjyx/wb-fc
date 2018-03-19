@@ -2,7 +2,9 @@ package jyx.model;
 
 import com.google.gson.annotations.Expose;
 import org.hibernate.annotations.GenericGenerator;
-
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import java.util.Date;
 
@@ -11,6 +13,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "fc_post")
+@TypeDef(name = "json", typeClass = JsonType.class)
+
 public class PostBean {
     @Id
     @GenericGenerator(name = "idGenerator", strategy = "increment")
@@ -33,6 +37,12 @@ public class PostBean {
 
     @Expose
     private Integer thumbs_up;
+
+    @Type(type = "json",parameters = {@Parameter(name ="type",value="[Ljava.lang.String;")})
+    @Column(name="media", nullable=true, length = 65535)
+    @Expose
+    private String[] media;
+
 
     // 评论id
     @Expose
@@ -92,5 +102,29 @@ public class PostBean {
 
     public void setComment_id(String comment_id) {
         this.comment_id = comment_id;
+    }
+
+
+    public String[] getMedia() {
+        return media;
+    }
+
+    public void setMedia(String[] media) {
+        this.media = media;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PostBean postBean = (PostBean) o;
+
+        return id == postBean.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

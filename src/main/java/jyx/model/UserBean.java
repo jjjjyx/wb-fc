@@ -49,6 +49,11 @@ public class UserBean implements Bean<UserBean>{
     @JoinTable(name="fc_user_star" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="p_id")})
     private Set<PostBean> stars;
 
+    // 用户收藏的动态
+    @ManyToMany(targetEntity=jyx.model.PostBean.class,cascade={CascadeType.MERGE,CascadeType. PERSIST})
+    @JoinTable(name="fc_user_thumbs_up" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="t_id")})
+    private Set<PostBean> thumbs_up;
+
     @Override
     public void update(UserBean a) {
         if(a==null) return;
@@ -182,5 +187,13 @@ public class UserBean implements Bean<UserBean>{
 
     public void setStars(Set<PostBean> stars) {
         this.stars = stars;
+    }
+
+    public Set<PostBean> getThumbs_up() {
+        return thumbs_up;
+    }
+
+    public void setThumbs_up(Set<PostBean> thumbs_up) {
+        this.thumbs_up = thumbs_up;
     }
 }

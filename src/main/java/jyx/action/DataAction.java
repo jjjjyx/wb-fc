@@ -58,10 +58,12 @@ public class DataAction extends BaseAction{
         if (!uploadFile .exists()) {//判断输出路径是否存在
             uploadFile.mkdir();
         }
-        File f = new File(uploadFile, new Date().getTime()+"_" + fileFileName);
+        long l = new Date().getTime();
+        String name = l+"_" + fileFileName;
+        File f = new File(uploadFile, name);
         try {
             FileUtils.copyFile(file, f);
-            ResultUtils.set(data, Code.SUCCESS);
+            ResultUtils.set(data, Code.SUCCESS, (Object)name);
         } catch (IOException e) {
             ResultUtils.set(data, Code.ERROR);
         }

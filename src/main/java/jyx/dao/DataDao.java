@@ -15,6 +15,7 @@ public class DataDao {
     private static DataDao ourInstance = new DataDao();
     private String DATE_PATH = "upload";
     private String IMG_PATH = "img_upload";
+    private String POST_PATH = "dist";
 
     public static DataDao getInstance() {
         return ourInstance;
@@ -55,6 +56,13 @@ public class DataDao {
         return this.loadAll(uploadFile);
     }
 
+    public List<Map<String,String>> loadPostAll() {
+        ServletContext rel= ServletActionContext.getServletContext();
+        File uploadFile = new File(rel.getRealPath(POST_PATH));
+
+        return this.loadAll(uploadFile);
+    }
+
 
 
     public File getFileByFn(String fn) {
@@ -65,6 +73,12 @@ public class DataDao {
     public File getImgByFn(String fn) {
         ServletContext rel= ServletActionContext.getServletContext();
         File uploadFile = new File(rel.getRealPath( IMG_PATH),fn);
+        return uploadFile;
+    }
+
+    public File getPostByFn(String fn) {
+        ServletContext rel= ServletActionContext.getServletContext();
+        File uploadFile = new File(rel.getRealPath(POST_PATH),fn);
         return uploadFile;
     }
 }

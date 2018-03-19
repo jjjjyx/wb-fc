@@ -1,6 +1,7 @@
 package jyx.action;
 
 import jyx.common.ResultUtils;
+import jyx.model.CommentBean;
 import jyx.model.NewsBean;
 import jyx.model.PostBean;
 import jyx.model.UserBean;
@@ -32,7 +33,9 @@ public class UserAction extends BaseAction {
     private Integer id;
     private UserBean user;
     private PostBean post;
+    private CommentBean commentBean;
     private String _;
+    private String c_id;
     /**
      * 完善用户信息
      *
@@ -65,6 +68,11 @@ public class UserAction extends BaseAction {
         request.setAttribute("post_data",userServer.getPostData(u, _,10));
         return "home";
     }
+    @Action(value = "group")
+    public String group() {
+        request.setAttribute("hide_send",true);
+        return this.home();
+    }
     @Action(value = "post")
     public String post(){
 //      发表动态
@@ -81,6 +89,21 @@ public class UserAction extends BaseAction {
         return JSON;
     }
 
+    // 点赞动态
+    @Action(value = "thumbs_up")
+    public String thumbs_up(){
+        UserBean u =  (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,userServer.thumbs_up(this.id, u));
+        return JSON;
+    }
+    // 评论
+    @Action(value = "comment")
+    public String comment(){
+        UserBean u =  (UserBean) session.getAttribute("user");
+
+        ResultUtils.set(data,userServer.comment(this.c_id, u, this.commentBean));
+        return JSON;
+    }
     @Action(value = "news")
     public String news() {
         if (id != null) {
@@ -125,5 +148,21 @@ public class UserAction extends BaseAction {
 
     public void set_(String _) {
         this._ = _;
+    }
+
+    public CommentBean getCommentBean() {
+        return commentBean;
+    }
+
+    public void setCommentBean(CommentBean commentBean) {
+        this.commentBean = commentBean;
+    }
+
+    public String getC_id() {
+        return c_id;
+    }
+
+    public void setC_id(String c_id) {
+        this.c_id = c_id;
     }
 }
