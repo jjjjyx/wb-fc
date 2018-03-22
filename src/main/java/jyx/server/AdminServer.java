@@ -28,6 +28,11 @@ public class AdminServer {
     private ActivityDao activityDao;
     @Autowired
     private LoreDao loreDao;
+    @Autowired
+    private PostDao postDao;
+    @Autowired
+    private IntegralDao integralDao;
+
     private DataDao dataDao = DataDao.getInstance();
 
     private final String DEFAULT_PASS = "123456";
@@ -202,7 +207,84 @@ public class AdminServer {
 //        File uploadFile = new File(rel.getRealPath( "upload"));
         map.put("data_data",dataDao.loadDataAll());
         map.put("img_data",dataDao.loadImgAll());
-
+        map.put("leaderboard_data",this.getLastLeaderboard());
         return map;
+    }
+
+    public List<PostBean> getLastLeaderboard(){
+        // 查看本周的投票排行榜
+        Calendar calendar=Calendar.getInstance(Locale.CHINA);
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date start = calendar.getTime();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        Date end = calendar.getTime();
+//        System.out.println(start);
+//        System.out.println(end);
+        Map<String,Object> map = new HashMap<>();
+        map.put("start",start);
+        map.put("end",end);
+        String hql = "from PostBean where releaseTime > :start and releaseTime <= :end and thumbs_up >0 order by thumbs_up desc";
+        List<PostBean> list = postDao.find(hql,0,10,map);
+        return list;
+    }
+
+    public static void main(String[] args) {
+//        Calendar calendar=Calendar.getInstance(Locale.CHINA);
+//        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+//        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+//        Date start = calendar.getTime();
+//        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+//        Date end = calendar.getTime();
+//        System.out.println(start);
+//        System.out.println(end);
+        Calendar calendar=Calendar.getInstance(Locale.CHINA);
+        System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));
+    }
+
+    public Code issue() {
+        Calendar calendar=Calendar.getInstance(Locale.CHINA);
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date start = calendar.getTime();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        Date end = calendar.getTime();
+
+        String id = calendar.get(Calendar.YEAR)+""+calendar.get(Calendar.MONDAY)+""+calendar.get(Calendar.WEEK_OF_YEAR);
+        IntegralBean integralBean = integralDao.get(id);
+        if(integralBean !=null) {
+            return Code.PARAME_ERROR;
+        }
+        integralBean = new IntegralBean();
+
+//        System.out.println(start);
+//        System.out.println(end);
+        Map<String,Object> map = new HashMap<>();
+        map.put("start",start);
+        map.put("end",end);
+        String hql = "from PostBean where releaseTime > :start and releaseTime <= :end and thumbs_up >0 order by thumbs_up desc";
+        List<PostBean> list = postDao.find(hql,0,10,map);
+        Integer ids[] = new Integer[list.size()];
+        Integer i = 100;
+        int index =0;
+        for (PostBean postBean : list) {
+            UserBean u = postBean.getUid();
+            Integer f = u.getIntegral();
+            if(f==null) {
+                f = null;
+            }
+            ids[index++] = postBean.getId();
+            f+=i;
+            u.setIntegral(f);
+            i-=10;
+            userDao.update(u);
+        }
+        // 生成报告
+        // id= 年+月+当年星期数
+        integralBean.setId(id);
+        integralBean.setCreateTime(new Date());
+        integralBean.setPost_ids(ids);
+        integralDao.save(integralBean);
+        return Code.SUCCESS;
     }
 }

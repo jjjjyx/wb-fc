@@ -22,9 +22,9 @@ public class PostBean {
     @Expose
     private int id;
     // 所属用户
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne( fetch = FetchType.EAGER)
     @JoinColumn(name = "uid")
-    private UserBean uid;
+    @Expose private UserBean uid;
     // 所属圈子 不做外键了 直接存放group的type
     @Expose
     private String group_type;

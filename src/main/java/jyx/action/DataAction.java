@@ -17,6 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 材料管理
@@ -61,14 +63,20 @@ public class DataAction extends BaseAction{
         long l = new Date().getTime();
         String name = l+"_" + fileFileName;
         File f = new File(uploadFile, name);
+        Map<String,Object> o = new HashMap<>();
+        o.put("fn",name);
+        o.put("name",name.substring(name.indexOf('_')+1));
+        o.put("type",name.substring(name.lastIndexOf(".") + 1));
+        o.put("size", FileUtils.byteCountToDisplaySize(file.length()));
         try {
             FileUtils.copyFile(file, f);
-            ResultUtils.set(data, Code.SUCCESS, (Object)name);
+            ResultUtils.set(data, Code.SUCCESS, o);
         } catch (IOException e) {
             ResultUtils.set(data, Code.ERROR);
         }
         return JSON;
     }
+
     public String down(){
         File path = dataDao.getFileByFn(fn);
         Path p = path.toPath();
@@ -83,6 +91,8 @@ public class DataAction extends BaseAction{
         }
         return "file";
     }
+
+
 
 //    public static void main(String[] args){
 //        Path path = Paths.get("E:\\Desktop\\xxx.pptx");
@@ -151,4 +161,5 @@ public class DataAction extends BaseAction{
     public void setFn(String fn) {
         this.fn = fn;
     }
+
 }

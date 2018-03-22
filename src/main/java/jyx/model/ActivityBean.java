@@ -1,6 +1,8 @@
 package jyx.model;
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -25,11 +27,12 @@ public class ActivityBean implements Bean<ActivityBean> {
     @Expose private String address;
     @Expose private Date releaseTime;
     @Expose private String author;
-    @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
+    @ManyToOne(fetch= FetchType.EAGER)
     @JoinColumn(name="uid")
     private UserBean uid;
-
-    @ManyToMany(mappedBy="activitys")
+//    cascade={CascadeType.MERGE,CascadeType.PERSIST}
+    @ManyToMany(mappedBy="activitys", fetch = FetchType.EAGER,targetEntity=jyx.model.UserBean.class)
+    @Cascade(value = {CascadeType.DELETE})
     private Set<UserBean> users; // 双向配置
 
     private String comment_id;
@@ -134,5 +137,20 @@ public class ActivityBean implements Bean<ActivityBean> {
         // 作者不允许修改
 //        this.author = a.getAuthor();
         this.type = a.getType();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ActivityBean that = (ActivityBean) o;
+
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 }

@@ -8,6 +8,43 @@
 <html>
 <head>
     <%@include file="../../assets/base/header.jsp" %>
+    <style>
+        .leader-board li:first-child span.am-badge{
+            background-color: #dd514c;
+        }
+        .leader-board li:nth-child(2) span.am-badge{
+            background-color: #F37B1D;
+        }
+        .leader-board li:nth-child(3) span.am-badge{
+            background-color: #3bb4f2;
+        }
+        .leader-board img {
+            border-radius: 50%;
+            width: 50px;
+        }
+        .leader-board a {
+            margin-left:15px;
+            display: inline-block !important;
+        }
+        .leader-board  {
+            list-style: beige;
+            padding-left: 1em;
+        }
+        .leader-board li {
+            display: list-item;
+            list-style: inherit;
+        }
+        .list-stlt {
+            list-style: inherit;
+            padding-left: 1em;
+        }
+        .list-stlt li{
+            display: list-item;
+            list-style: inherit;
+        }
+
+
+    </style>
 </head>
 <body>
 <%--<c:if test="${user.role==100}">--%>
@@ -61,7 +98,7 @@
                                         <a href="#" class="am-text-truncate"><i class="am-icon-fa"></i> ${n.title}</a>
                                         <div>
                                             <time style="font-size: 13px;">发布时间：<fmt:formatDate value="${n.releaseTime}" pattern="yyyy-MM-dd HH:mm"/></time>
-                                            <button class="am-btn am-btn-primary am-btn-xs">报名</button>
+                                            <button class="am-btn am-btn-primary am-btn-xs" @click="acSsign('${n.id}')">报名</button>
                                         </div>
                                     </li>
                                 </c:forEach>
@@ -75,8 +112,8 @@
                                 <c:forEach items="${fc_img}" var="n">
                                 <div class="am-u-sm-4">
                                     <div class="am-thumbnail">
-                                        <img src="${path}/img_upload/${n}" alt=""/>
-                                        <h3 class="am-thumbnail-caption">图片标题 #1</h3>
+                                        <img src="${path}/img_upload/${n.fn}" alt=""/>
+                                        <h3 class="am-thumbnail-caption am-text-xs">${n.name}</h3>
                                     </div>
                                 </div>
                                 </c:forEach>
@@ -99,15 +136,30 @@
                 </div>
                 <div class="col-md-3 am-u-md-3">
                     <div class="am-panel am-panel-default">
-                        <div class="am-panel-hd">面板标题</div>
+                        <div class="am-panel-hd">热门资料下载</div>
                         <div class="am-panel-bd">
-                            热门资料推荐
+                            <ul class="am-list list-stlt">
+                                <c:forEach items="${hot_data}" var="n">
+                                    <li>
+                                        <%--<span class="am-badge am-badge-danger" style="cursor: pointer">点击下载</span>--%>
+                                        <a href="down">${n.name}</a>
+                                    </li>
+                                </c:forEach>
+                            </ul>
                         </div>
                     </div>
                     <div class="am-panel am-panel-default">
                         <div class="am-panel-hd">积分排行榜</div>
                         <div class="am-panel-bd">
-                            面板内容
+                            <ol class="am-list leader-board ">
+                                <c:forEach items="${leader_board}" var="n">
+                                    <li>
+                                        <span class="am-badge"> ${n.integral} 分</span>
+                                        <img src="assets/img/user (${n.uid % 28}).png" alt="">
+                                        <a href="user?uid=${n.uid}">${n.nickname}</a>
+                                    </li>
+                                </c:forEach>
+                            </ol>
                         </div>
                     </div>
                 </div>

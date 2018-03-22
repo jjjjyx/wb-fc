@@ -83,7 +83,7 @@
                             </el-upload>
                         </el-popover>
                         <div class="kind" >
-                            
+
                             <a href="#" v-popover:popover4><i class="am-icon-image"></i> 图片</a>
                             <a href="#" v-popover:popover5><i class="am-icon-video"></i> 视频</a>
                         </div>
@@ -114,7 +114,7 @@
                             <div class="WB_face">
                                 <div class="face">
                                     <a href="#">
-                                        <img src="assets/img/user06.png" alt="" class="W_face_radius">
+                                        <img src="assets/img/user (${n['uid'].uid % 28}).png" alt="" class="W_face_radius">
                                     </a>
                                 </div>
                             </div>
@@ -139,15 +139,15 @@
                                                 <img src="dist/${img}" alt="">
                                             </li>
                                         </c:forEach>
-                                        <c:forEach items="${n['mp4s']}" var="mp4">
-                                            <li class="WB_video  S_bg1 WB_video_mini WB_video_h5">
-                                                <div class="WB_h5video">
-                                                    <video alt="" controls="controls">
-                                                        <source src="dist/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
-                                                    </video>
-                                                </div>
-                                            </li>
-                                        </c:forEach>
+                                        <%--<c:forEach items="${n['mp4s']}" var="mp4">--%>
+                                            <%--<li class="WB_video  S_bg1 WB_video_mini WB_video_h5">--%>
+                                                <%--<div class="WB_h5video">--%>
+                                                    <%--<video alt="" controls="controls">--%>
+                                                        <%--<source src="dist/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>--%>
+                                                    <%--</video>--%>
+                                                <%--</div>--%>
+                                            <%--</li>--%>
+                                        <%--</c:forEach>--%>
                                         </ul>
                                     </div>
                                 </div>
@@ -182,10 +182,10 @@
                                             <%--</a>--%>
                                         <%--</li>--%>
                                         <li>
-                                            <a class="S_txt2" href="javascript:void(0);">
+                                            <a class="S_txt2" href="javascript:void(0);" @click="comment('${n['comment_id']}')">
                                                 <span class="pos">
                                                     <span class="line S_line1">
-                                                        <span><i class="am-icon-commenting"></i> <em>100</em>
+                                                        <span><i class="am-icon-commenting"></i> <em>${n['comment_num']}</em>
                                                         </span>
                                                     </span>
                                                 </span>
@@ -196,10 +196,10 @@
                                                 <span class="pos">
                                                     <span class="line S_line1">
                                                          <c:if test="${!n['isThumbs_up']}">
-                                                             <span><i class="am-icon-thumbs-up" ></i> <em>${n['thumbs_up']}</em></span>
+                                                             <span>投票 <em>${n['thumbs_up']}</em></span>
                                                          </c:if>
                                                         <c:if test="${n['isThumbs_up']}">
-                                                            <span><i class="am-icon-thumbs-up S_spetxt" ></i> <em>${n['thumbs_up']}</em></span>
+                                                            <span>已投票 <em>${n['thumbs_up']}</em></span>
                                                         </c:if>
 
                                                     </span>
@@ -216,6 +216,9 @@
             </div>
         </div>
     </section>
+    <el-dialog title="评论动态" :visible.sync="dialogTableVisible">
+        <fc-comment :comment-id="currPostId"></fc-comment>
+    </el-dialog>
 
 </div>
 <%@include file="../../assets/base/footer.jsp" %>

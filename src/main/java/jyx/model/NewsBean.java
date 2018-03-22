@@ -25,7 +25,7 @@ public class NewsBean implements Bean<NewsBean>{
     @Expose private Date releaseTime;
     @Expose private String author;
 //    private String
-    @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
+    @ManyToOne(fetch= FetchType.EAGER)
     @JoinColumn(name="uid")
     private UserBean uid;
 

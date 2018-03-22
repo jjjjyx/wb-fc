@@ -3,6 +3,7 @@ package jyx.utils;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,10 +12,13 @@ import java.util.UUID;
 public class Utils {
 
     public static void main(String[] args) {
-        System.out.println(UUID.randomUUID());
+
+        File f = new File("");
+
+
     }
 
-    // Bean --> Map 1: 利用Introspector和PropertyDescriptor 将Bean --> Map
+    // Bean --> Map 1: 利用Introspector和PropertyDescriptor 将 Bean --> Map
     public static Map<String, Object> transBean2Map(Object obj) {
 
         if(obj == null){
@@ -41,4 +45,6 @@ public class Utils {
 
         return map;
     }
+
+
 }

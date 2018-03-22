@@ -152,7 +152,7 @@
         <div class="tpl-sidebar-user-panel">
             <div class="tpl-user-panel-slide-toggleable">
                 <div class="tpl-user-panel-profile-picture">
-                    <img src="${path}/assets/img/user04.png" alt="">
+                    <img src="${path}/assets/img/user (${user.uid%28}).png" alt="">
                 </div>
                 <span class="user-panel-logged-in-text">
               <i class="am-icon-circle-o am-text-success tpl-user-panel-status-icon"></i>
@@ -182,9 +182,7 @@
                 <router-link to="/lore" tag="a"><i class="am-icon-wpforms sidebar-nav-link-logo"></i> 运动知识管理</router-link>
             </li>
             <li class="sidebar-nav-link">
-                <a href="chart.html">
-                    <i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 动态管理
-                </a>
+                <router-link to="/post" tag="a"><i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 动态管理</router-link>
             </li>
             <li class="sidebar-nav-link">
                 <router-link to="/data_m" tag="a"><i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 材料管理</router-link>

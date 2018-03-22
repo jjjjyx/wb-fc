@@ -1,5 +1,7 @@
 package jyx.dao;
 
+import jyx.common.Code;
+import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.util.ResourceUtils;
 
@@ -43,6 +45,7 @@ public class DataDao {
             f.put("fn",fileName);
             f.put("name",fileName.substring(fileName.indexOf('_')+1));
             f.put("type",fileName.substring(fileName.lastIndexOf(".") + 1));
+            f.put("size", FileUtils.byteCountToDisplaySize(file.length()));
             list.add(f);
         }
         return list;
@@ -80,5 +83,18 @@ public class DataDao {
         ServletContext rel= ServletActionContext.getServletContext();
         File uploadFile = new File(rel.getRealPath(POST_PATH),fn);
         return uploadFile;
+    }
+
+    public Code delFCData(String[] fns) {
+        ServletContext rel= ServletActionContext.getServletContext();
+        File uploadFile = new File(rel.getRealPath( DATE_PATH));
+        for (String fn : fns) {
+            File file = new File(uploadFile,fn);
+            if(file.exists()) {
+                file.delete();
+            }
+        }
+
+        return Code.SUCCESS;
     }
 }

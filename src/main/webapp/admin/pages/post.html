@@ -1,0 +1,71 @@
+<div>
+    <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">动态排行榜</div>
+                </div>
+                <div class="widget-body  am-fr">
+
+                    <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                        <div class="am-form-group">
+                            <div class="am-btn-toolbar">
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <button type="button" class="am-btn am-btn-default am-btn-success" @click="issue"><span class="am-icon-plus"></span> 发放积分</button>
+                                    <!--<button type="button" class="am-btn am-btn-default am-btn-secondary" @click="resetPassword"><span class="am-icon-refresh"></span> </button>-->
+                                    <!--<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 查看</button>-->
+                                    <!--<button type="button" class="am-btn am-btn-default am-btn-danger" @click="deleteNews"><span class="am-icon-trash-o"></span> 删除</button>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12">
+                        <el-table ref="multipleTable"
+                                  :data="postList"
+                                  tooltip-effect="dark"
+                                  style="width: 100%">
+                            <el-table-column
+                                    type="index"
+                                    width="50">
+                            </el-table-column>
+                            <el-table-column
+                                    label="用户">
+                                <template scope="scope">
+                                    {{scope.row.uid.nickname}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="thumbs_up"
+                                    label="票数">
+                            </el-table-column>
+                            <!--<el-table-column-->
+                            <!--prop="content"-->
+                            <!--label="内容">-->
+                            <!--</el-table-column>-->
+                            <el-table-column label="内容">
+                                <template scope="scope">
+                                    {{scope.row.content}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="附件数">
+                                <template scope="scope">
+                                    {{scope.row.media?scope.row.media.length:0}}
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="releaseTime"
+                                    label="发布时间">
+                            </el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="am-u-lg-12 am-cf">
+                        <div class="am-fr">
+                            <el-pagination small layout="prev, pager, next" :current-page.sync="currPage" :total="store.states.news_data.length">
+                            </el-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

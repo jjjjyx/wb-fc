@@ -70,6 +70,14 @@
                         title: '运动图片管理',
                         subTitle: 'img'
                     }
+                },
+                {
+                    path: "/post",
+                    component: require('./pages/post.js'),
+                    meta: {
+                        title: '动态管理',
+                        subTitle: 'post'
+                    }
                 }
             ]
         })

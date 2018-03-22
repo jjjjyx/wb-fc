@@ -78,16 +78,28 @@
 			<result name="json" type="json">
 				<param name="root">data</param>
 				<!--data.result\[\d+\]\.parentDir,-->
-				<!--<param name="excludeProperties">-->
+				<param name="excludeProperties">
+					data\.\w+.activitys,
+					data\.\w+.follows,
+					data\.\w+.password,
+					data\.\w+.stars,
+					data\.\w+.thumbs_up,
+					data\.\w+.users,
+					data\[\d\].\w+.activitys,
+					data\[\d\].\w+.follows,
+					data\[\d\].\w+.password,
+					data\[\d\].\w+.stars,
+					data\[\d\].\w+.thumbs_up,
+					data\[\d\].\w+.users
 					<!--data\[\d+\]\.parentDir,-->
 					<!--.*\.fileOutDetail\.fileBean-->
-				<!--</param>-->
+				</param>
 			</result>
 			<result name="input" type="json">
 				<param name="root">data</param>
 				<!--<param name="excludeProperties">-->
-					<!--data\[\d+\].parentDir,-->
-					<!--data.fileList\[\d+\].parentDir-->
+
+					<!--&lt;!&ndash;data.fileList\[\d+\].parentDir&ndash;&gt;-->
 				<!--</param>-->
 			</result>
 		</global-results>

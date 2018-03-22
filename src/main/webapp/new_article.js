@@ -1,12 +1,13 @@
 !+(function () {
     define(function (require) {
         let api = require('js/api')
+        let FcComment = require('js/comment')
         let Vue = require('vue')
         //let VueRouter = require('js/lib/vue-router.min')
         //let validator = require('js/lib/vue-validator.min')
         //let ELEMENT = require('ELEMENT')
         //let cookie = require('js/lib/js.cookie')
-        
+        //let CommentConstructor = Vue.extend(comment)
         const app = new Vue({
             el: '#app',
             name: 'new_article',
@@ -17,7 +18,7 @@
                     }
                 }
             },
-            components: {},
+            components: {FcComment},
             computed: {},
             methods: {
                 async release(id){
@@ -38,7 +39,16 @@
             created () {
             },
             mounted () {
-                console.log(11)
+                //let el = this.$refs.comment;
+                //let option = {
+                //    comment_id:el.dataset.commentId,
+                //    position: 'top'
+                //}
+                //let instance = new CommentConstructor({
+                //    data:option
+                //})
+                //instance.$mount();
+                //el.parentNode.replaceChild(instance.$el,el)
             }
         })
     })

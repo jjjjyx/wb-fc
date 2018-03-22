@@ -2,6 +2,7 @@
     define(function (require) {
         let api = require('js/api')
         let Vue = require('vue')
+        let FcComment = require('js/comment')
         //let VueRouter = require('js/lib/vue-router.min')
         //let validator = require('js/lib/vue-validator.min')
         let ELEMENT =  require('ELEMENT')
@@ -18,13 +19,19 @@
                         'post.media':[]
                     },
                     curr_title:'',
-                    fileList:[]
+                    fileList:[],
+                    dialogTableVisible: false,
+                    currPostId: null
                     
                 }
             },
-            components: {},
+            components: {FcComment},
             computed: {},
             methods: {
+                comment(id){
+                    this.currPostId = id;
+                    this.dialogTableVisible = true;
+                },
                 async release(){
                     if(this.form["post.content"]){
                         if(this.form["post.group_type"]){
@@ -32,6 +39,8 @@
                             let result = await api.npost('post', this.form)
                             //刷新页面
                             if(result.code ==0) {
+                                //
+                                alert("发布成功，积分+1")
                                 location.href =`'home?_=${this.form["post.group_type"]}`
                             }
                         }else {

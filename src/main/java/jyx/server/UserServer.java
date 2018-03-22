@@ -33,6 +33,8 @@ public class UserServer extends ServiceBase {
     private LoreDao loreDao;
     @Autowired
     private PostDao postDao;
+    @Autowired
+    private CommentDao commentDao;
     private DataDao dataDao = DataDao.getInstance();
 
     public UserBean getUser(String username, String password) {
@@ -112,14 +114,14 @@ public class UserServer extends ServiceBase {
     }
 
     // 运动图片
-    public List<String> getFCImg(int i) {
+    public List<Map<String, String>> getFCImg(int i) {
         List<Map<String, String>> list = dataDao.loadImgAll();
 
         if (i > 0) {
             list = list.stream().limit((long) i).collect(Collectors.toList());
         }
-        List<String> l = list.stream().map((item) -> item.get("fn")).collect(Collectors.toList());
-        return l;
+//        List<String> l = list.stream().map((item) -> item.get("fn")).collect(Collectors.toList());
+        return list;
     }
 
     // 下载材料
@@ -127,6 +129,7 @@ public class UserServer extends ServiceBase {
         List<Map<String, String>> list = dataDao.loadDataAll();
         if (i > 0) {
             list = list.stream().limit((long) i).collect(Collectors.toList());
+            Collections.shuffle(list);
         }
         return list;
     }
@@ -139,12 +142,18 @@ public class UserServer extends ServiceBase {
 
     // 热门资料
     public List<Map<String, String>> getHotData(int i) {
+
+//        List
+
         return null;
     }
 
     // 获取排行榜用户
-    public List<Map<String, String>> getLeaderboard(int i) {
-        return null;
+    public List<UserBean> getLeaderboard(int i) {
+        // 前10
+        String hql = "from UserBean order by integral desc";
+        List<UserBean> list = this.userDao.find(hql,0,10,null);
+        return list;
     }
 
     public NewsBean getNewsById(Integer id) {
@@ -156,19 +165,28 @@ public class UserServer extends ServiceBase {
         post.setComment_id(UUID.randomUUID().toString());
         post.setReleaseTime(new Date());
         post.setThumbs_up(0);
+//        UserBean userBean = userDao.get(u.getUid());
         post.setUid(u);
+        Integer i = u.getIntegral();
+        if(i==null) i = 0;
+        i++;
+        u.setIntegral(i);
 
         postDao.save(post);
-
+        userDao.update(u);
         return Code.SUCCESS;
     }
 
-    public List<Map> getPostData(UserBean u, String group, int i) {
-        StringBuilder hql = new StringBuilder("from PostBean ");
+    public List<Map> getPostData(UserBean u, String group, int i, Integer uid) {
+        StringBuilder hql = new StringBuilder("from PostBean where 1=1 ");
         Map<String, Object> map = new HashMap<>();
         if (group != null && "" != group && !"all".equals(group)) {
-            hql.append("where group_type = :gt");
+            hql.append("and group_type = :gt");
             map.put("gt", group);
+        }
+        if(uid !=null) {
+            hql.append("and uid.id=:uid");
+            map.put("uid", uid);
         }
         hql.append(" order by releaseTime desc");
 //        System.out.println(hql);
@@ -222,6 +240,11 @@ public class UserServer extends ServiceBase {
                     }
                 }
             }
+            // 查询动态的评论个数
+            Map<String,Object> p = new HashMap<>();
+            p.put("pid",item.getComment_id());
+            int comment_num = this.commentDao.count("from CommentBean where pid=:pid ", p);
+            ii.put("comment_num", comment_num);
             return ii;
         }).collect(Collectors.toList());
 //        for (PostBean postBean : list) {
@@ -276,7 +299,171 @@ public class UserServer extends ServiceBase {
     }
 
     public Code comment(String c_id, UserBean u, CommentBean commentBean) {
+        commentBean.setPid(c_id);
+        UserBean userBean = userDao.get(u.getUid());
+        commentBean.setUid(userBean);
+        commentBean.setReleaseTime(new Date());
 
+//        Integer i = u.getIntegral();
+//        if(i==null) i = 0;
+//        i++;
+//        u.setIntegral(i);
+        commentDao.save(commentBean);
+//        userDao.update(u);
+        return Code.SUCCESS;
+    }
+
+    /**
+     *
+     * @param c_id
+     * @param u
+     * @return
+     */
+    public List<CommentBean> getComments(String c_id,UserBean u){
+//        List<Map<String,Object>> list = ;
+        List<CommentBean> l = this.commentDao.find("from CommentBean where pid=?0 order by releaseTime desc",new Object[]{c_id});
+//        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+//        String s = gson.toJson(l);
+//        Object o = gson.fromJson(s,List.class);
+
+        return l;
+    }
+
+    public Map<String,Object> getCurrActivity(int i, UserBean u, boolean b){
+        List<ActivityBean> list =null;
+        if(b){
+//            UserBean userBean = userDao.get(u.getUid());
+            list = activityDao.find("from ActivityBean where uid=?0",new Object[]{u});
+        }else {
+            list = this.activityDao.loadAll();
+        }
+        // 按年月分组
+        Map<String,Object> y = new HashMap<>();
+        Map<String,List<Map<String,Object>>> m;
+        List<Map<String,Object>> l;
+        Calendar cal = Calendar.getInstance();
+        UserBean userBean = userDao.get(u.getUid());
+        Set<ActivityBean> sab = userBean.getActivitys();
+        for (ActivityBean activityBean : list) {
+            cal.setTime(activityBean.getReleaseTime());
+            int yi = cal.get(Calendar.YEAR);
+            int mi = cal.get(Calendar.MONTH) + 1;
+            m = (Map<String, List<Map<String,Object>>>) y.get(String.valueOf(yi));
+            if(m==null) {
+                m = new HashMap<>();
+                y.put(String.valueOf(yi),m);
+            }
+            l = m.get(String.valueOf(mi));
+            if(l==null) {
+                l = new ArrayList<>();
+                m.put(String.valueOf(mi),l);
+            }
+            Map mmm = Utils.transBean2Map(activityBean);
+            if(sab.contains(activityBean)) {
+                mmm.put("isB", true);
+            }
+            l.add(mmm);
+        }
+
+        return y;
+    }
+
+    public Code releaseActivity(ActivityBean activity, UserBean u) {
+        activity.setUid(u);
+        activity.setReleaseTime(new Date());
+        activity.setComment_id(UUID.randomUUID().toString());
+        this.activityDao.save(activity);
+        return Code.SUCCESS;
+    }
+
+    public Code activitySign(Integer id, UserBean u) {
+        ActivityBean activityBean = this.activityDao.get(id) ;
+        UserBean userBean = userDao.get(u.getUid());
+        Set<ActivityBean> ps = userBean.getActivitys();
+        if (ps == null) {
+            ps = new HashSet<>();
+            userBean.setActivitys(ps);
+        }
+        ps.add(activityBean);
+        userDao.update(userBean);
+        return Code.SUCCESS;
+    }
+    public Code activityUnSign(Integer id, UserBean u) {
+        ActivityBean activityBean = this.activityDao.get(id) ;
+        UserBean userBean = userDao.get(u.getUid());
+        Set<ActivityBean> ps = userBean.getActivitys();
+        if (ps == null) {
+            ps = new HashSet<>();
+            userBean.setActivitys(ps);
+        }else
+            ps.remove(activityBean);
+        userDao.update(userBean);
+        return Code.SUCCESS;
+    }
+
+    public Code delActivity(Integer id) {
+        ActivityBean activityBean = this.activityDao.get(id);
+        activityBean.setUsers(null);
+        this.activityDao.update(activityBean);
+        this.activityDao.delete(activityBean);
+        return Code.SUCCESS;
+    }
+
+    public List<Map<String,Object>> getMyAB(UserBean userBean) {
+        UserBean u = userDao.get(userBean.getUid());
+        return u.getActivitys().stream().map((item)->{
+            Map<String,Object> m = Utils.transBean2Map(item);
+            Object o = m.get("users");
+            if(o!=null) {
+                o = o.toString();
+            }
+            return m;
+        }).collect(Collectors.toList());
+    }
+
+
+    public Code downFile(UserBean userBean) {
+        int ii = userBean.getIntegral();
+        if(ii>=5) {
+            ii-=5;
+            userBean.setIntegral(ii);
+            this.userDao.update(userBean);
+            return Code.SUCCESS;
+        }
+        return Code.ACCESS_FAIL;
+    }
+
+    public Map<String,Object> searchUser(Integer uid,UserBean u) {
+        UserBean u1 = userDao.get(uid);
+        Map<String,Object> map = Utils.transBean2Map(u1);
+        UserBean userBean =  this.userDao.get(u.getUid());
+        if(userBean.getFollows().contains(u1)) {
+            map.put("is_f",true);
+        }
+        return map;
+    }
+
+    public Code follow(UserBean u, Integer uid) {
+        u = this.userDao.get(u.getUid());
+        Set<UserBean> su = u.getFollows();
+        UserBean userBean = this.userDao.get(uid);
+        if(su==null) {
+            su = new HashSet<>();
+            u.setFollows(su);
+        }
+        su.add(userBean);
+        this.userDao.update(u);
+        return Code.SUCCESS;
+    }
+
+    public Code unfollow(UserBean u, Integer uid) {
+        u = this.userDao.get(u.getUid());
+        Set<UserBean> su = u.getFollows();
+        if(su!=null) {
+            UserBean userBean = this.userDao.get(uid);
+            su.remove(userBean);
+            this.userDao.update(u);
+        }
         return Code.SUCCESS;
     }
 }

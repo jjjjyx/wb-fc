@@ -10,23 +10,36 @@ import java.util.Date;
 @Table(name = "fc_comments")
 public class CommentBean {
     @Id
+    @GenericGenerator(name = "idGenerator", strategy = "increment")
+    @GeneratedValue(generator = "idGenerator")
+    @Expose private Integer id;
     @Expose
-    private String id;
+    // uuid
+    private String pid;
+    // 内容中自带指向引用
     @Expose private String content;
     @Expose private Date releaseTime;
 
-    @ManyToOne(cascade= CascadeType.ALL,fetch= FetchType.EAGER)
+    @ManyToOne(fetch= FetchType.EAGER)
     @JoinColumn(name="uid")
+    @Expose
     private UserBean uid;
 
-    @Expose private String p_comment_id;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
     public String getContent() {
@@ -51,28 +64,5 @@ public class CommentBean {
 
     public void setUid(UserBean uid) {
         this.uid = uid;
-    }
-
-    public String getP_comment_id() {
-        return p_comment_id;
-    }
-
-    public void setP_comment_id(String p_comment_id) {
-        this.p_comment_id = p_comment_id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CommentBean that = (CommentBean) o;
-
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
     }
 }

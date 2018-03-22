@@ -9,7 +9,8 @@ define(['js/api', 'vue'], function (api, Vue) {
                 news_data: [],
                 lore_data: [],
                 data_data: [],
-                img_data: []
+                img_data: [],
+                leaderboard_data:[]
             }
             
             for (let prop in initialState) {

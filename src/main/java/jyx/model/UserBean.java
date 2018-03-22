@@ -1,6 +1,7 @@
 package jyx.model;
 
 import com.google.gson.annotations.Expose;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -35,22 +36,24 @@ public class UserBean implements Bean<UserBean>{
 //    @JoinColumn(name="role")
 //    private Role role;
     // 用户参与的活动
-    @ManyToMany(targetEntity=jyx.model.ActivityBean.class,cascade={CascadeType.MERGE,CascadeType.PERSIST})
+    @ManyToMany(targetEntity=jyx.model.ActivityBean.class,fetch = FetchType.EAGER)
+    //@Cascade(value = {org.hibernate.annotations.CascadeType.ALL})
+    @Cascade(value = {org.hibernate.annotations.CascadeType.DELETE})
     @JoinTable(name="fc_user_activity" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="a_id")})
     private Set<ActivityBean> activitys;
 
     // 用户关注 互相关注即为好友
-    @ManyToMany(targetEntity=jyx.model.UserBean.class,cascade={CascadeType.MERGE,CascadeType. PERSIST})
+    @ManyToMany(targetEntity=jyx.model.UserBean.class,fetch = FetchType.EAGER)
     @JoinTable(name="fc_user_follow" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="f_id")})
     private Set<UserBean> follows;
 
     // 用户收藏的动态
-    @ManyToMany(targetEntity=jyx.model.PostBean.class,cascade={CascadeType.MERGE,CascadeType. PERSIST})
+    @ManyToMany(targetEntity=jyx.model.PostBean.class,fetch = FetchType.EAGER)
     @JoinTable(name="fc_user_star" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="p_id")})
     private Set<PostBean> stars;
 
-    // 用户收藏的动态
-    @ManyToMany(targetEntity=jyx.model.PostBean.class,cascade={CascadeType.MERGE,CascadeType. PERSIST})
+    // 用户投票（点赞）的动态
+    @ManyToMany(targetEntity=jyx.model.PostBean.class,fetch = FetchType.EAGER)
     @JoinTable(name="fc_user_thumbs_up" ,joinColumns={@JoinColumn(name= "u_id")},inverseJoinColumns={@JoinColumn (name="t_id")})
     private Set<PostBean> thumbs_up;
 
@@ -195,5 +198,20 @@ public class UserBean implements Bean<UserBean>{
 
     public void setThumbs_up(Set<PostBean> thumbs_up) {
         this.thumbs_up = thumbs_up;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserBean userBean = (UserBean) o;
+
+        return uid == userBean.uid;
+    }
+
+    @Override
+    public int hashCode() {
+        return uid;
     }
 }

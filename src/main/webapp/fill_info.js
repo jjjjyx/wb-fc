@@ -28,7 +28,11 @@
             },
             components: {},
             computed: {},
-            methods: {},
+            methods: {
+                test(aa){
+                    console.log(aa)
+                }
+            },
             created () {
             },
             mounted () {

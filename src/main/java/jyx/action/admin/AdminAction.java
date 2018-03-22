@@ -6,6 +6,7 @@ import jyx.action.BaseAction;
 
 import jyx.common.Code;
 import jyx.common.ResultUtils;
+import jyx.dao.DataDao;
 import jyx.model.*;
 import jyx.server.AdminServer;
 import org.apache.struts2.ServletActionContext;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.ServletContext;
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.util.Date;
 import java.util.Map;
@@ -38,6 +40,8 @@ public class AdminAction extends BaseAction {
     private NewsBean news;
     private LoreBean lore;
     private int[] uids;
+    private String[] fns;
+    private DataDao dataDao = DataDao.getInstance();
     @Override
     public String execute() throws Exception {
         Map data = this.adminServer.getData();
@@ -167,6 +171,15 @@ public class AdminAction extends BaseAction {
         return JSON;
     }
 
+    public String delFiles(){
+        ResultUtils.set(data,dataDao.delFCData(this.fns));
+        return JSON;
+    }
+    public String issue(){
+        ResultUtils.set(data,adminServer.issue());
+        return JSON;
+    }
+
     public int[] getUids() {
         return uids;
     }
@@ -221,5 +234,13 @@ public class AdminAction extends BaseAction {
 
     public void setLore(LoreBean lore) {
         this.lore = lore;
+    }
+
+    public String[] getFns() {
+        return fns;
+    }
+
+    public void setFns(String[] fns) {
+        this.fns = fns;
     }
 }

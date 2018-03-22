@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@include file="../../assets/base/base.jsp" %>
 <c:set var="moduleName" value="news"></c:set>
 <c:set var="cssPath" value="index"></c:set>
@@ -26,8 +27,13 @@
                         <span> @${n.author} &nbsp;</span>
                         <span><fmt:formatDate value="${n.releaseTime}" pattern="yyyy/MM/dd"/></span>
                         <h1><a href="news?id=${n.id}"> ${n.title}</a></h1>
-                        <p style="text-indent: 2ch">${n.content.substring(0,80)}
-                        </p>
+                        <c:if test="${fn:length(n.content)>80}">
+                            <p style="text-indent: 2ch">${n.content.substring(0,80)}</p>
+                        </c:if>
+                                <c:if test="${fn:length(n.content)<=80}">
+                        <p style="text-indent: 2ch">${n.content}</p>
+                            </c:if>
+
                         <p><a href="" class="blog-continue">continue reading</a></p>
                     </div>
                 </article>

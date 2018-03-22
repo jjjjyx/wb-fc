@@ -52,9 +52,9 @@ public class MainAction extends BaseAction {
             // 运动图片 5张
             request.setAttribute("fc_img",userServer.getFCImg(5));
             // 材料 最近5个
-            request.setAttribute("fc_data",userServer.getFCData(5));
+            request.setAttribute("fc_data",userServer.getFCData(6));
             // 热门资料 6
-            request.setAttribute("hot_data",userServer.getHotData(6));
+            request.setAttribute("hot_data",userServer.getFCData(3));
             // 排行榜
             request.setAttribute("leader_board",userServer.getLeaderboard(10));
             return "index";
