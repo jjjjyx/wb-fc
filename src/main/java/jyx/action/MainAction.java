@@ -56,7 +56,8 @@ public class MainAction extends BaseAction {
             // 热门资料 6
             request.setAttribute("hot_data",userServer.getFCData(3));
             // 排行榜
-            request.setAttribute("leader_board",userServer.getLeaderboard(10));
+            request.setAttribute("leader_board",userServer.getLeaderboard(10,user));
+//            request.setAttribute("user_follows",userServer.getUserFollows());
             return "index";
         }
 //        Date start = (Date) session.getAttribute("vcStarrTime");

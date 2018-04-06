@@ -17,6 +17,7 @@
                     dialogVisible: false,
                     currData:null,
                     active:'',
+                    multipleSelection: []
                 }
             },
             components: {},
@@ -34,11 +35,25 @@
                 handlePreview(file) {
                     console.log(file);
                 },
+                handleSuccess (response, file, fileList) {
+                    this.store.commit('addImg', response.data)
+                },
                 handleExceed(files, fileList) {
                     this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
                 },
                 beforeRemove(file, fileList) {
                     return this.$confirm(`确定移除 ${ file.name }？`);
+                },
+                async deleteImg(){
+                    let fns = this.multipleSelection.map(item=>item.fn);
+    
+                    let result = await api.npost("./!delImg",{fns})
+                    this.$message(result.msg);
+                    if(result.code==0){
+                        this.multipleSelection.forEach((item)=>{
+                            this.store.commit("deleteImg",item)
+                        })
+                    }
                 }
             },
             created () {

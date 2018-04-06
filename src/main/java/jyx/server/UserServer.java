@@ -149,11 +149,22 @@ public class UserServer extends ServiceBase {
     }
 
     // 获取排行榜用户
-    public List<UserBean> getLeaderboard(int i) {
+    public List<Map<String,Object>> getLeaderboard(int i, UserBean user) {
         // 前10
         String hql = "from UserBean order by integral desc";
         List<UserBean> list = this.userDao.find(hql,0,10,null);
-        return list;
+        // 查找出来的用户列表进行
+        List lm = list.stream().map((UserBean item)->{
+//            Utils::transBean2Map
+            Map ii = Utils.transBean2Map(item);
+
+            UserBean userBean =  this.userDao.get(user.getUid());
+            if(userBean.getFollows().contains(item)) {
+                ii.put("is_f",true);
+            }
+            return ii;
+        }).collect(Collectors.toList());
+        return lm;
     }
 
     public NewsBean getNewsById(Integer id) {
@@ -466,4 +477,7 @@ public class UserServer extends ServiceBase {
         }
         return Code.SUCCESS;
     }
+
+//    public List<> getUserFollows() {
+//    }
 }

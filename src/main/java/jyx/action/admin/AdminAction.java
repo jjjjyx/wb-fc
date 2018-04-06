@@ -179,6 +179,10 @@ public class AdminAction extends BaseAction {
         ResultUtils.set(data,adminServer.issue());
         return JSON;
     }
+    public String delImg(){
+        ResultUtils.set(data,dataDao.delImg(this.fns));
+        return JSON;
+    }
 
     public int[] getUids() {
         return uids;

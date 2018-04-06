@@ -10,7 +10,6 @@
     <%@include file="../../assets/base/header.jsp" %>
 </head>
 <body>
-
 <div id="app">
     <%@include file="../../assets/base/nav.jsp" %>
     <section class="am-g am-g-fixed blog-fixed blog-content" style="background: #fff">
@@ -31,7 +30,7 @@
                     </p>
                 </div>
             </article>
-            <fc-comment :comment-id="${new_date.comment_id}"></fc-comment>
+            <fc-comment :comment-id="'${new_date.comment_id}'"></fc-comment>
             <%--<div ref="comment" data-comment-id="${new_date.comment_id}">--%>
 
             <%--</div>--%>

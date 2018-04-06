@@ -97,4 +97,16 @@ public class DataDao {
 
         return Code.SUCCESS;
     }
+
+    public Code delImg(String[] fns) {
+        ServletContext rel= ServletActionContext.getServletContext();
+        File uploadFile = new File(rel.getRealPath( IMG_PATH));
+        for (String fn : fns) {
+            File file = new File(uploadFile,fn);
+            if(file.exists()) {
+                file.delete();
+            }
+        }
+        return Code.SUCCESS;
+    }
 }

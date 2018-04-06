@@ -98,15 +98,15 @@
                                                         <img src="dist/${img}" alt="">
                                                     </li>
                                                 </c:forEach>
-                                                    <%--<c:forEach items="${n['mp4s']}" var="mp4">--%>
-                                                    <%--<li class="WB_video  S_bg1 WB_video_mini WB_video_h5">--%>
-                                                    <%--<div class="WB_h5video">--%>
-                                                    <%--<video alt="" controls="controls">--%>
-                                                    <%--<source src="dist/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>--%>
-                                                    <%--</video>--%>
-                                                    <%--</div>--%>
-                                                    <%--</li>--%>
-                                                    <%--</c:forEach>--%>
+                                                    <c:forEach items="${n['mp4s']}" var="mp4">
+                                                    <li class="WB_video  S_bg1 WB_video_mini WB_video_h5">
+                                                    <div class="WB_h5video">
+                                                    <video alt="" controls="controls">
+                                                    <source src="dist/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                                                    </video>
+                                                    </div>
+                                                    </li>
+                                                    </c:forEach>
                                             </ul>
                                         </div>
                                     </div>

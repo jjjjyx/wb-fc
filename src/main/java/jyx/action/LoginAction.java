@@ -18,6 +18,7 @@ import java.util.Map;
 @Action(value = "/sign", results = {
         @Result(name = "success", location = "./login.jsp"),
         @Result(name = "up", location = "./sign-up.jsp"),
+        @Result(name = "out", location = "./out.jsp"),
 }
 )
 public class LoginAction extends BaseAction{
@@ -64,7 +65,7 @@ public class LoginAction extends BaseAction{
     public String out() {
         session.removeAttribute("user");
         session.invalidate();
-        return "session-null";
+        return "out";
     }
 
     public String up() {
@@ -78,6 +79,8 @@ public class LoginAction extends BaseAction{
         }
         return JSON;
     }
+
+
 
     public String getUsername() {
         return username;

@@ -29,6 +29,7 @@ log/
 db.properties
 config.properties
 /target/
+/llll/
 .idea
 src/main/webapp/assets
 src/main/webapp/dist

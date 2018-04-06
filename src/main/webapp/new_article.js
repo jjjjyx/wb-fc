@@ -39,6 +39,7 @@
             created () {
             },
             mounted () {
+                console.log(111);
                 //let el = this.$refs.comment;
                 //let option = {
                 //    comment_id:el.dataset.commentId,
