@@ -21,8 +21,10 @@ import java.util.Map;
 @Results({
         @Result(name = "down", location = "./down.jsp"),
         @Result(name = "news", location = "./news.jsp"),
-        @Result(name = "home", location = "./home.jsp"),
+        @Result(name = "mood", location = "./home.jsp"),
         @Result(name = "user-info", location = "./user-info.jsp"),
+        @Result(name = "people", location = "./people.jsp"),
+        @Result(name = "inbox", location = "./inbox.jsp"),
         @Result(name = "my-ab", location = "./my-ab.jsp"),
         @Result(name = "my-ab", location = "./my-ab.jsp"),
         @Result(name = "adel", location = "/activity",type = "redirectAction"),
@@ -48,13 +50,14 @@ public class UserAction extends BaseAction {
     private ActivityBean activity;
     private String fn;
 
+    // 查看用户信息
     @Action(value = "user")
     public String user() {
         UserBean u = (UserBean) session.getAttribute("user");
         Map<String, Object> userBean = this.userServer.searchUser(uid,u);
         if(userBean !=null){
             request.setAttribute("userData",userBean);
-            request.setAttribute("post_data",userServer.getPostData(u, _,10, (Integer) userBean.get("uid")));
+            request.setAttribute("post_data",userServer.getPostData(u, _,10, (Integer) userBean.get("uid"), null));
         }else {
             return "noUser";
         }
@@ -72,6 +75,20 @@ public class UserAction extends BaseAction {
         ResultUtils.set(data,this.userServer.unfollow(u,this.uid));
         return JSON;
     }
+
+    @Action(value = "people")
+    public String people(){
+        return "people";
+    }
+
+    @Action(value = "inbox")
+    public String inbox(){
+        UserBean u = (UserBean) session.getAttribute("user");
+//        Map<String, Object> userBean = this.userServer.searchUser(uid,u);
+        return "inbox";
+    }
+
+
 
     /**
      * 完善用户信息
@@ -126,6 +143,7 @@ public class UserAction extends BaseAction {
         userServer.delActivity(this.id);
         return "adel";
     }
+    // 进入下载页面
     @Action(value = "down")
     public String down() {
         request.setAttribute("files",userServer.getFCData(0));
@@ -154,29 +172,32 @@ public class UserAction extends BaseAction {
 
     @Action(value = "my-aa")
     public String maa() {
-
         UserBean u =  (UserBean) session.getAttribute("user");
         request.setAttribute("activity_data",userServer.getCurrActivity(0,u, true));
         return "my-aa";
     }
     // 运动动态
-    @Action(value = "home")
-    public String home() {
+    @Action(value = "mood")
+    public String mood() {
         UserBean u = (UserBean) session.getAttribute("user");
-        request.setAttribute("group_data",userServer.getGroup(0));
-        request.setAttribute("post_data",userServer.getPostData(u, _,10, null));
-        return "home";
+        request.setAttribute("post_data",userServer.getPostData(u, _,10, null,PostType.mood));
+        request.setAttribute("mode", PostType.mood);
+        return "mood";
     }
+    // 圈子
     @Action(value = "group")
     public String group() {
-        request.setAttribute("hide_send",true);
-        return this.home();
+        UserBean u = (UserBean) session.getAttribute("user");
+        request.setAttribute("post_data",userServer.getPostData(u, null,10, null, PostType.group));
+        request.setAttribute("group_data",userServer.getGroup(0));
+        request.setAttribute("mode", PostType.group);
+        return "mood";
     }
     @Action(value = "post")
     public String post(){
 //      发表动态
         UserBean u = (UserBean) session.getAttribute("user");
-        ResultUtils.set(data,userServer.releasePost(post,u));
+        ResultUtils.set(data,userServer.releasePost(post, u));
 
         return JSON;
     }
@@ -195,6 +216,14 @@ public class UserAction extends BaseAction {
         ResultUtils.set(data,userServer.thumbs_up(this.id, u));
         return JSON;
     }
+
+    // 点赞动态
+    @Action(value = "un-thumbs_up")
+    public String unThumbs_up(){
+        UserBean u =  (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,userServer.unThumbs_up(this.id, u));
+        return JSON;
+    }
     // 评论
     @Action(value = "comment")
     public String comment(){
@@ -204,9 +233,15 @@ public class UserAction extends BaseAction {
             CommentBean commentBean = new CommentBean();
             commentBean.setContent(this.content);
             ResultUtils.set(data,userServer.comment(this.c_id, u, commentBean));
-        }else {
+        } else {
             ResultUtils.set(data, userServer.getComments(this.c_id, u));
         }
+        return JSON;
+    }
+    @Action(value = "del-comment")
+    public String delComment(){
+        UserBean u =  (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,userServer.delComment(this.id, u));
         return JSON;
     }
     @Action(value = "news")

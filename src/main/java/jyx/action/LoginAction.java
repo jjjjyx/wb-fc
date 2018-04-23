@@ -1,4 +1,5 @@
 package jyx.action;
+
 import jyx.common.Code;
 import jyx.common.ResultUtils;
 import jyx.model.UserBean;
@@ -9,6 +10,7 @@ import org.apache.struts2.convention.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import javax.servlet.http.Cookie;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +23,7 @@ import java.util.Map;
         @Result(name = "out", location = "./out.jsp"),
 }
 )
-public class LoginAction extends BaseAction{
+public class LoginAction extends BaseAction {
     protected Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     UserServer userService;
@@ -35,7 +37,7 @@ public class LoginAction extends BaseAction{
         return SUCCESS;
     }
 
-    public String signup(){
+    public String signup() {
         return "up";
     }
 
@@ -45,16 +47,17 @@ public class LoginAction extends BaseAction{
 
         UserBean userBean = userService.getUser(username, password);
         data = new HashMap<String, Object>();
+
         if (userBean == null) {
-            if(logger.isDebugEnabled()) {
-                logger.debug("用户[{}] 登录失败",this.getUsername());
+            if (logger.isDebugEnabled()) {
+                logger.debug("用户[{}] 登录失败", this.getUsername());
             }
             data.put("code", 3);
             data.put("msg", "登录失败");
         } else {
             // 用户登录成功
             // 输出到日志
-            logger.info("user [{}] 登录成功",userBean.getUsername());
+            logger.info("user [{}] 登录成功", userBean.getUsername());
             session.setAttribute("user", userBean);
             data.put("code", 0);
             data.put("msg", "登录成功");
@@ -79,7 +82,6 @@ public class LoginAction extends BaseAction{
         }
         return JSON;
     }
-
 
 
     public String getUsername() {

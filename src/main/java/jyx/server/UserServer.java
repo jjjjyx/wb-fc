@@ -178,6 +178,7 @@ public class UserServer extends ServiceBase {
         post.setThumbs_up(0);
 //        UserBean userBean = userDao.get(u.getUid());
         post.setUid(u);
+        // 增加积分
         Integer i = u.getIntegral();
         if(i==null) i = 0;
         i++;
@@ -188,17 +189,24 @@ public class UserServer extends ServiceBase {
         return Code.SUCCESS;
     }
 
-    public List<Map> getPostData(UserBean u, String group, int i, Integer uid) {
+    public List<Map> getPostData(UserBean u, String group, int i, Integer uid, PostType postType) {
         StringBuilder hql = new StringBuilder("from PostBean where 1=1 ");
         Map<String, Object> map = new HashMap<>();
         if (group != null && "" != group && !"all".equals(group)) {
             hql.append("and group_type = :gt");
             map.put("gt", group);
         }
+        // 查询某个用户 要去掉私密
         if(uid !=null) {
-            hql.append("and uid.id=:uid");
+            hql.append("and uid.id=:uid and group_type !='private'");
             map.put("uid", uid);
         }
+
+        if(postType!=null) { // == null 获取全部
+            hql.append("and type=:type");
+            map.put("type", postType);
+        }
+
         hql.append(" order by releaseTime desc");
 //        System.out.println(hql);
 //        String hql = "from PostBean order by releaseTime desc";
@@ -206,11 +214,19 @@ public class UserServer extends ServiceBase {
         UserBean userBean = userDao.get(u.getUid());
         Set<PostBean> ps = userBean.getStars();
         Set<PostBean> ts = userBean.getThumbs_up();
-//        if(ps==null) {
-//            ps = new HashSet<>();
-//            userBean.setStars(ps);
-//        }
-        List<Map> list_m = list.stream().map((item) -> {
+
+        List<Map> list_m = list.stream().filter((item)->{
+            // 如果是私密的必须是当前用户的
+            if ("private".equalsIgnoreCase(item.getGroup_type())) {
+                if (item.getUid().equals(userBean)) {
+                    return true;
+                }else {
+                    return false;
+                }
+            }else {
+                return true;
+            }
+        }).map((item) -> {
             Map ii = Utils.transBean2Map(item);
             String[] m = (String[]) ii.get("media");
             if(m!=null) {
@@ -258,9 +274,6 @@ public class UserServer extends ServiceBase {
             ii.put("comment_num", comment_num);
             return ii;
         }).collect(Collectors.toList());
-//        for (PostBean postBean : list) {
-//            System.out.println(Utils.transBean2Map(postBean));
-//        }
         return list_m;
     }
 
@@ -309,6 +322,32 @@ public class UserServer extends ServiceBase {
         return Code.SUCCESS;
     }
 
+
+    /**
+     * 取消赞
+     */
+    public Code unThumbs_up(Integer id, UserBean u) {
+        PostBean postBean = postDao.get(id);
+        if (postBean == null) {
+            return Code.PARAMETER_FAIL;
+        }
+        UserBean userBean = userDao.get(u.getUid());
+        Set<PostBean> ps = userBean.getThumbs_up();
+        if (ps == null) {
+            return Code.PARAMETER_FAIL;
+        }
+        Integer i = postBean.getThumbs_up();
+        if(i==null) {
+            return Code.PARAMETER_FAIL;
+        }
+        i--;
+        postBean.setThumbs_up(i);
+        ps.remove(postBean);
+        postDao.update(postBean);
+        userDao.update(userBean);
+        return Code.SUCCESS;
+    }
+
     public Code comment(String c_id, UserBean u, CommentBean commentBean) {
         commentBean.setPid(c_id);
         UserBean userBean = userDao.get(u.getUid());
@@ -322,6 +361,17 @@ public class UserServer extends ServiceBase {
         commentDao.save(commentBean);
 //        userDao.update(u);
         return Code.SUCCESS;
+    }
+
+    public Code delComment(Integer c_id, UserBean u) {
+        CommentBean commentBean = commentDao.get(c_id);
+        // 查看是不是当前用户的
+        if (commentBean.getUid().equals(u)) {
+            commentDao.delete(commentBean);
+            return Code.SUCCESS;
+        }else {
+            return Code.PARAME_ERROR;
+        }
     }
 
     /**
@@ -478,6 +528,14 @@ public class UserServer extends ServiceBase {
         return Code.SUCCESS;
     }
 
-//    public List<> getUserFollows() {
-//    }
+    /**
+     * 获取用户好友
+     * @return
+     */
+    public List<Map<String,Object>> getUserFollows() {
+
+        return null;
+    }
+
+
 }

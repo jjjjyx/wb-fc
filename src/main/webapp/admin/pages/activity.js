@@ -22,7 +22,8 @@
                         "activity.title":"",
                         "activity.content":"",
                         "activity.author":"",
-                        "activity.type":""
+                        "activity.type":"",
+                        "activity.address":""
                     },
                     multipleSelection:[]
                 }
@@ -55,6 +56,7 @@
                     this.form['activity.title'] = "";
                     this.form['activity.content'] ="";
                     this.form['activity.type'] = "";
+                    this.form['activity.address'] = "";
                     this.form['activity.author'] = this.store.states.user.username;
                 },
                 async save(){
@@ -66,6 +68,7 @@
                         obj.content = this.form['activity.content']
                         obj.type = this.form['activity.type']
                         obj.author = this.form['activity.author']
+                        obj.address = this.form['activity.address']
                        
                         if(this.active=='addActivity'){
                             obj = result.data;
@@ -84,6 +87,7 @@
                     this.form['activity.title'] = data.title;
                     this.form['activity.content'] = data.content;
                     this.form['activity.type'] = data.type;
+                    this.form['activity.address'] = data.address;
                     this.form['activity.author'] = this.store.states.user.username;
                     this.active ="updateActivity";
                 }

@@ -49,9 +49,9 @@
                            class="am-form-field">
                     <span v-show="errors.has('password')" class="am-text-danger">{{ errors.first('password') }}</span>
                 </div>
-                <div class="am-form-group tpl-login-remember-me">
-                    <div class="checkbox"><label> <input type="checkbox" v-model="keep" > 记住十万年 </label></div>
-                </div>
+                <%--<div class="am-form-group tpl-login-remember-me">--%>
+                    <%--<div class="checkbox"><label> <input type="checkbox" v-model="keep" > 记住十万年 </label></div>--%>
+                <%--</div>--%>
                 <div class="am-form-group">
                     <button type="submit" class="am-btn am-btn-primary  am-btn-block tpl-btn-bg-color-success  tpl-login-btn">提交</button>
                 </div>

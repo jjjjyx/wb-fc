@@ -37,7 +37,8 @@
                         }
                     })
                 },
-                sb_yao_de_yun_dong_zhi_shi(title,content){
+                sb(e,title){
+                    let content = e.target.dataset.content
                     this.$alert(content, title, {
                         confirmButtonText: '确定'
                     });

@@ -9,8 +9,8 @@
 <head>
     <%@include file="../../assets/base/header.jsp" %>
     <style>
-        ul,
-        li {
+        section ul,
+        section li {
             /* list-style: none; */
             padding-left: 2em !important;
         }

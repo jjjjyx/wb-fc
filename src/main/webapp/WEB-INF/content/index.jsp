@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"   %>
 <%@include file="../../assets/base/base.jsp" %>
 <c:set var="moduleName" value="index"></c:set>
 <c:set var="cssPath" value="index"></c:set>
@@ -87,7 +88,8 @@
                             <ul class="am-list">
                             <c:forEach items="${lore}" var="n">
                                 <li>
-                                    <a href="#" class="am-text-truncate" @click="sb_yao_de_yun_dong_zhi_shi('${n.title}','${n.content}')">${n.title}</a>
+
+                                    <a href="#" class="am-text-truncate" @click="sb($event,'<c:out value="${n.title}"/>')" data-content="<c:out value="${n.content}"/>">${n.title}</a>
                                     <div>
                                         <time style="font-size: 13px;"><fmt:formatDate value="${n.releaseTime}" pattern="yyyy-MM-dd HH:mm"/></time>
                                     </div>
@@ -162,9 +164,6 @@
                         <div class="am-panel-hd">积分排行榜</div>
                         <div class="am-panel-bd">
                             <ol class="am-list leader-board ">
-                                <%
-                                    System.out.println("request.getAttribute(\"leader_board\") = " + request.getAttribute("leader_board"));
-                                %>
                                 <c:forEach items="${leader_board}" var="n">
                                     <li>
                                         <span class="am-badge"> ${n['integral']} 分</span>

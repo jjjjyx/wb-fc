@@ -36,8 +36,10 @@ public class PostBean {
     private String content;
 
     @Expose
-    private Integer thumbs_up;
 
+    private Integer thumbs_up;
+    @Enumerated(EnumType.STRING)
+    @Expose private PostType type = PostType.group; // 默认是group
     @Type(type = "json",parameters = {@Parameter(name ="type",value="[Ljava.lang.String;")})
     @Column(name="media", nullable=true, length = 65535)
     @Expose
@@ -126,5 +128,13 @@ public class PostBean {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    public PostType getType() {
+        return type;
+    }
+
+    public void setType(PostType type) {
+        this.type = type;
     }
 }

@@ -56,14 +56,14 @@
                     <span v-show="errors.has('c_p')" class="am-text-danger">{{ errors.first('c_p') }}</span>
                 </div>
 
-                <div class="am-form-group tpl-login-remember-me">
-                    <input id="remember-me" type="checkbox">
-                    <label for="remember-me">
+                <%--<div class="am-form-group tpl-login-remember-me">--%>
+                    <%--<input id="remember-me" type="checkbox">--%>
+                    <%--<label for="remember-me">--%>
 
-                        我已阅读并同意 <a href="javascript:;">《用户注册协议》</a>
-                    </label>
+                        <%--我已阅读并同意 <a href="javascript:;">《用户注册协议》</a>--%>
+                    <%--</label>--%>
 
-                </div>
+                <%--</div>--%>
                 <div class="am-form-group">
                     <button type="submit"
                             class="am-btn am-btn-primary  am-btn-block tpl-btn-bg-color-success  tpl-login-btn">提交
