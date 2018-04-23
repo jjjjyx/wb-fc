@@ -8,8 +8,10 @@
 
         Vue.use(ELEMENT)
         Vue.prototype.$ELEMENT = { size: 'small' };
-        
-        const app = new Vue( {
+    
+        let headerFrom = require("js/header-from")
+        const app = new Vue({
+            mixins:[headerFrom],
             el: '#app',
             name: 'fill_info.js',
             data: function () {

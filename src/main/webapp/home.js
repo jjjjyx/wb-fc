@@ -8,7 +8,9 @@
         let ELEMENT = require('ELEMENT')
         //let cookie = require('js/lib/js.cookie')
         Vue.use(ELEMENT)
+        let headerFrom = require("js/header-from")
         const app = new Vue({
+            mixins:[headerFrom],
             el: '#app',
             name: 'home',
             data: function () {
@@ -22,13 +24,21 @@
                     fileList: [],
                     dialogTableVisible: false,
                     currPostId: null,
-                    private: false
+                    private: false,
+                    comment_position: 'top'
                 }
             },
             components: {FcComment},
             computed: {},
             methods: {
-                comment (id) {
+                comment (id,is) {
+                    let post_type = this.$refs.post_type.value
+                    if (post_type == 'mood' || is) {
+                        this.comment_position = 'top'
+                    }else { // 圈子只能好友评论 ，
+                        this.$message("他还不是您的好友，您无权评论")
+                        this.comment_position = 'hide'
+                    }
                     this.currPostId = id
                     this.dialogTableVisible = true
                 },
@@ -49,7 +59,7 @@
                                 if (post_type == 'mood') {
                                     location.href = post_type
                                 } else {
-                                    location.href = `${post_type}_=${q['post.group_type']}`
+                                    location.href = `${post_type}?_=${q['post.group_type']}`
                                 }
                             }
                         } else {

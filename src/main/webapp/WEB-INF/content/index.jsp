@@ -105,10 +105,9 @@
                         <ul class="am-list">
                             <c:forEach items="${lore}" var="n">
                                 <li>
-
-                                    <a href="#" class="am-text-truncate"
-                                       @click="sb($event,'<c:out value="${n.title}"/>')"
-                                       data-content="<c:out value="${n.content}"/>">${n.title}</a>
+                                    <%--@click="sb($event,'<c:out value="${n.title}"/>')"--%>
+                                    <%--data-content="<c:out value="${n.content}"/>"--%>
+                                    <a href="lore?id=${n.id}" class="am-text-truncate">${n.title}</a>
                                     <div>
                                         <time style="font-size: 13px;"><fmt:formatDate value="${n.releaseTime}"
                                                                                        pattern="yyyy-MM-dd HH:mm"/></time>
@@ -162,7 +161,6 @@
                         <ul class="am-list">
                             <c:forEach items="${fc_data}" var="n">
                                 <li>
-
                                     <a href="down">${n.name}
                                         <span class="am-badge am-badge-danger am-fr" style="cursor: pointer">点击下载</span>
                                     </a>
@@ -197,7 +195,7 @@
                                             ${n['nickname']}
                                         <span class="am-badge am-fr"> ${n['integral']} 分</span>
                                         <c:if test="${n['is_f']}">
-                                            <span class="am-badge am-fr">已关注</span>
+                                            <span class="am-badge am-fr" @click="ung('${n['uid']}')">已关注</span>
                                         </c:if>
                                         <c:if test="${!n['is_f']}">
                                             <span class="am-badge am-fr" @click="g('${n['uid']}')">关注</span>

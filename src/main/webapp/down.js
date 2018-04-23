@@ -22,7 +22,9 @@
             document.body.removeChild(ifa);
             
         }
+        let headerFrom = require("js/header-from")
         const app = new Vue({
+            mixins:[headerFrom],
             el: '#app',
             name: 'down',
             data: function () {

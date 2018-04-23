@@ -188,7 +188,7 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="S_txt2" @click="comment('${n['comment_id']}')">
+                                                <a class="S_txt2" @click="comment('${n['comment_id']}','${n['is_comment']}')">
                                                 <span class="pos">
                                                     <span class="line S_line1">
                                                         <i class="am-icon-commenting"></i> <em>${n['comment_num']}</em>
@@ -221,8 +221,8 @@
             </div>
         </div>
     </section>
-    <el-dialog title="评论动态" :visible.sync="dialogTableVisible">
-        <fc-comment :comment-id="currPostId" cur="${user.uid}"></fc-comment>
+    <el-dialog title="评论" :visible.sync="dialogTableVisible">
+        <fc-comment :comment-id="currPostId" cur="${user.uid}" :position="comment_position"></fc-comment>
     </el-dialog>
 
 </div>

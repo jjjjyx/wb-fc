@@ -149,17 +149,17 @@ public class UserServer extends ServiceBase {
     }
 
     // 获取排行榜用户
-    public List<Map<String,Object>> getLeaderboard(int i, UserBean user) {
+    public List<Map<String, Object>> getLeaderboard(int i, UserBean user) {
         // 前10
         String hql = "from UserBean order by integral desc";
-        List<UserBean> list = this.userDao.find(hql,0,10,null);
+        List<UserBean> list = this.userDao.find(hql, 0, 10, null);
         // 查找出来的用户列表进行
-        List lm = list.stream().map((UserBean item)->{
+        List lm = list.stream().map((UserBean item) -> {
 //            Utils::transBean2Map
             Map ii = Utils.transBean2Map(item);
 
-            UserBean userBean =  this.userDao.get(user.getUid());
-            ii.put("is_f",userBean.getFollows().contains(item));
+            UserBean userBean = this.userDao.get(user.getUid());
+            ii.put("is_f", userBean.getFollows().contains(item));
             return ii;
         }).collect(Collectors.toList());
         return lm;
@@ -168,7 +168,9 @@ public class UserServer extends ServiceBase {
     public NewsBean getNewsById(Integer id) {
         return newsDao.get(id);
     }
-
+    public LoreBean getLoreById(Integer id) {
+        return loreDao.get(id);
+    }
 
     public Code releasePost(PostBean post, UserBean u) {
         post.setComment_id(UUID.randomUUID().toString());
@@ -178,7 +180,7 @@ public class UserServer extends ServiceBase {
         post.setUid(u);
         // 增加积分
         Integer i = u.getIntegral();
-        if(i==null) i = 0;
+        if (i == null) i = 0;
         i++;
         u.setIntegral(i);
 
@@ -195,13 +197,13 @@ public class UserServer extends ServiceBase {
             map.put("gt", group);
         }
         // 查询某个用户 要去掉私密
-        if(uid !=null) {
-            hql.append("and uid.id=:uid and group_type !='private'");
+        if (uid != null) {
+            hql.append(" and uid.id=:uid and group_type !='private'");
             map.put("uid", uid);
         }
 
-        if(postType!=null) { // == null 获取全部
-            hql.append("and type=:type");
+        if (postType != null) { // == null 获取全部
+            hql.append(" and type=:type");
             map.put("type", postType);
         }
 
@@ -212,39 +214,39 @@ public class UserServer extends ServiceBase {
         UserBean userBean = userDao.get(u.getUid());
         Set<PostBean> ps = userBean.getStars();
         Set<PostBean> ts = userBean.getThumbs_up();
-
-        List<Map> list_m = list.stream().filter((item)->{
+        Set<UserBean> follows = userBean.getFollows();
+        List<Map> list_m = list.stream().filter((item) -> {
             // 如果是私密的必须是当前用户的
             if ("private".equalsIgnoreCase(item.getGroup_type())) {
                 if (item.getUid().equals(userBean)) {
                     return true;
-                }else {
+                } else {
                     return false;
                 }
-            }else {
+            } else {
                 return true;
             }
         }).map((item) -> {
             Map ii = Utils.transBean2Map(item);
             String[] m = (String[]) ii.get("media");
-            if(m!=null) {
+            if (m != null) {
                 ii.remove("media");
                 List<String> img = new ArrayList<>();
                 List<String> mp4 = new ArrayList<>();
                 for (String s : m) {
                     String ext = s.substring(s.lastIndexOf(".") + 1);
-                    if(ext.equalsIgnoreCase("mp4")){
+                    if (ext.equalsIgnoreCase("mp4")) {
                         mp4.add(s);
-                    }else {
+                    } else {
                         img.add(s);
                     }
                 }
-                if(mp4.size()>0){
-                    ii.put("mp4s",mp4);
-                    ii.put("media.length",mp4.size());
+                if (mp4.size() > 0) {
+                    ii.put("mp4s", mp4);
+                    ii.put("media.length", mp4.size());
                 } else {
-                    ii.put("imgs",img);
-                    ii.put("media.length",img.size());
+                    ii.put("imgs", img);
+                    ii.put("media.length", img.size());
                 }
 
             }
@@ -266,10 +268,22 @@ public class UserServer extends ServiceBase {
                 }
             }
             // 查询动态的评论个数
-            Map<String,Object> p = new HashMap<>();
-            p.put("pid",item.getComment_id());
+            Map<String, Object> p = new HashMap<>();
+            p.put("pid", item.getComment_id());
             int comment_num = this.commentDao.count("from CommentBean where pid=:pid ", p);
             ii.put("comment_num", comment_num);
+            // 检查当前用户是否与说说是好友 没有评论权限
+            if (userBean.equals(item.getUid())) {
+                ii.put("is_comment",true); // 自己
+            }else if (follows.contains(item.getUid())) {// 用户关注了
+                Set<UserBean> _f = item.getUid().getFollows();
+                if (_f.contains(userBean)) {
+                    // 互相关注 为好友
+                    ii.put("is_comment",true);
+                }
+            }
+
+
             return ii;
         }).collect(Collectors.toList());
         return list_m;
@@ -309,7 +323,7 @@ public class UserServer extends ServiceBase {
             userBean.setThumbs_up(ps);
         }
         Integer i = postBean.getThumbs_up();
-        if(i==null) {
+        if (i == null) {
             i = 0;
         }
         i++;
@@ -335,7 +349,7 @@ public class UserServer extends ServiceBase {
             return Code.PARAMETER_FAIL;
         }
         Integer i = postBean.getThumbs_up();
-        if(i==null) {
+        if (i == null) {
             return Code.PARAMETER_FAIL;
         }
         i--;
@@ -367,20 +381,19 @@ public class UserServer extends ServiceBase {
         if (commentBean.getUid().equals(u)) {
             commentDao.delete(commentBean);
             return Code.SUCCESS;
-        }else {
+        } else {
             return Code.PARAME_ERROR;
         }
     }
 
     /**
-     *
      * @param c_id
      * @param u
      * @return
      */
-    public List<CommentBean> getComments(String c_id,UserBean u){
+    public List<CommentBean> getComments(String c_id, UserBean u) {
 //        List<Map<String,Object>> list = ;
-        List<CommentBean> l = this.commentDao.find("from CommentBean where pid=?0 order by releaseTime desc",new Object[]{c_id});
+        List<CommentBean> l = this.commentDao.find("from CommentBean where pid=?0 order by releaseTime desc", new Object[]{c_id});
 //        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 //        String s = gson.toJson(l);
 //        Object o = gson.fromJson(s,List.class);
@@ -388,18 +401,18 @@ public class UserServer extends ServiceBase {
         return l;
     }
 
-    public Map<String,Object> getCurrActivity(int i, UserBean u, boolean b){
-        List<ActivityBean> list =null;
-        if(b){
+    public Map<String, Object> getCurrActivity(int i, UserBean u, boolean b) {
+        List<ActivityBean> list = null;
+        if (b) {
 //            UserBean userBean = userDao.get(u.getUid());
-            list = activityDao.find("from ActivityBean where uid=?0",new Object[]{u});
-        }else {
+            list = activityDao.find("from ActivityBean where uid=?0", new Object[]{u});
+        } else {
             list = this.activityDao.loadAll();
         }
         // 按年月分组
-        Map<String,Object> y = new HashMap<>();
-        Map<String,List<Map<String,Object>>> m;
-        List<Map<String,Object>> l;
+        Map<String, Object> y = new HashMap<>();
+        Map<String, List<Map<String, Object>>> m;
+        List<Map<String, Object>> l;
         Calendar cal = Calendar.getInstance();
         UserBean userBean = userDao.get(u.getUid());
         Set<ActivityBean> sab = userBean.getActivitys();
@@ -407,18 +420,18 @@ public class UserServer extends ServiceBase {
             cal.setTime(activityBean.getReleaseTime());
             int yi = cal.get(Calendar.YEAR);
             int mi = cal.get(Calendar.MONTH) + 1;
-            m = (Map<String, List<Map<String,Object>>>) y.get(String.valueOf(yi));
-            if(m==null) {
+            m = (Map<String, List<Map<String, Object>>>) y.get(String.valueOf(yi));
+            if (m == null) {
                 m = new HashMap<>();
-                y.put(String.valueOf(yi),m);
+                y.put(String.valueOf(yi), m);
             }
             l = m.get(String.valueOf(mi));
-            if(l==null) {
+            if (l == null) {
                 l = new ArrayList<>();
-                m.put(String.valueOf(mi),l);
+                m.put(String.valueOf(mi), l);
             }
             Map mmm = Utils.transBean2Map(activityBean);
-            if(sab.contains(activityBean)) {
+            if (sab.contains(activityBean)) {
                 mmm.put("isB", true);
             }
             l.add(mmm);
@@ -436,7 +449,7 @@ public class UserServer extends ServiceBase {
     }
 
     public Code activitySign(Integer id, UserBean u) {
-        ActivityBean activityBean = this.activityDao.get(id) ;
+        ActivityBean activityBean = this.activityDao.get(id);
         UserBean userBean = userDao.get(u.getUid());
         Set<ActivityBean> ps = userBean.getActivitys();
         if (ps == null) {
@@ -447,14 +460,15 @@ public class UserServer extends ServiceBase {
         userDao.update(userBean);
         return Code.SUCCESS;
     }
+
     public Code activityUnSign(Integer id, UserBean u) {
-        ActivityBean activityBean = this.activityDao.get(id) ;
+        ActivityBean activityBean = this.activityDao.get(id);
         UserBean userBean = userDao.get(u.getUid());
         Set<ActivityBean> ps = userBean.getActivitys();
         if (ps == null) {
             ps = new HashSet<>();
             userBean.setActivitys(ps);
-        }else
+        } else
             ps.remove(activityBean);
         userDao.update(userBean);
         return Code.SUCCESS;
@@ -468,12 +482,12 @@ public class UserServer extends ServiceBase {
         return Code.SUCCESS;
     }
 
-    public List<Map<String,Object>> getMyAB(UserBean userBean) {
+    public List<Map<String, Object>> getMyAB(UserBean userBean) {
         UserBean u = userDao.get(userBean.getUid());
-        return u.getActivitys().stream().map((item)->{
-            Map<String,Object> m = Utils.transBean2Map(item);
+        return u.getActivitys().stream().map((item) -> {
+            Map<String, Object> m = Utils.transBean2Map(item);
             Object o = m.get("users");
-            if(o!=null) {
+            if (o != null) {
                 o = o.toString();
             }
             return m;
@@ -483,8 +497,8 @@ public class UserServer extends ServiceBase {
 
     public Code downFile(UserBean userBean) {
         int ii = userBean.getIntegral();
-        if(ii>=5) {
-            ii-=5;
+        if (ii >= 5) {
+            ii -= 5;
             userBean.setIntegral(ii);
             this.userDao.update(userBean);
             return Code.SUCCESS;
@@ -492,20 +506,45 @@ public class UserServer extends ServiceBase {
         return Code.ACCESS_FAIL;
     }
 
-    public Map<String,Object> searchUser(Integer uid,UserBean u) {
+    // 获取用户的详情
+    public Map<String, Object> searchUser(Integer uid, UserBean u) {
         UserBean u1 = userDao.get(uid);
-        Map<String,Object> map = Utils.transBean2Map(u1);
-        UserBean userBean =  this.userDao.get(u.getUid());
-        map.put("is_f",userBean.getFollows().contains(u1));
-
+        Map<String, Object> map = Utils.transBean2Map(u1);
+        UserBean userBean = this.userDao.get(u.getUid());
+        map.put("is_f", userBean.getFollows().contains(u1));
         return map;
+    }
+
+    // 根据用户名查找用户
+    public List searchUsers(UserBean u, String query) {
+        UserBean userBean = userDao.get(u.getUid());
+        List<UserBean> list = userDao.find("from UserBean where nickname like ?0", new Object[]{"%" + query + "%"});
+        Set<UserBean> follows = userBean.getFollows();
+
+        // 清除一下不需要的信息
+//        for (UserBean userBean : list) {
+//            userBean.setPassword("");
+//        }
+        return list.stream().map((item) -> {
+//            item.setPassword("");
+            // 判断是不是好友
+            Map map = Utils.transBean2Map(item);
+            // 是否关注
+            map.put("is_f", follows.contains(item));
+            map.remove("password");
+            map.remove("follows");
+            map.remove("activitys");
+            map.remove("stars");
+            map.remove("thumbs_up");
+            return map;
+        }).collect(Collectors.toList());
     }
 
     public Code follow(UserBean u, Integer uid) {
         u = this.userDao.get(u.getUid());
         Set<UserBean> su = u.getFollows();
         UserBean userBean = this.userDao.get(uid);
-        if(su==null) {
+        if (su == null) {
             su = new HashSet<>();
             u.setFollows(su);
         }
@@ -517,7 +556,7 @@ public class UserServer extends ServiceBase {
     public Code unfollow(UserBean u, Integer uid) {
         u = this.userDao.get(u.getUid());
         Set<UserBean> su = u.getFollows();
-        if(su!=null) {
+        if (su != null) {
             UserBean userBean = this.userDao.get(uid);
             su.remove(userBean);
             this.userDao.update(u);
@@ -527,12 +566,14 @@ public class UserServer extends ServiceBase {
 
     /**
      * 获取用户好友
+     *
      * @return
      */
-    public List<Map<String,Object>> getUserFollows() {
+    public List<Map<String, Object>> getUserFollows() {
 
         return null;
     }
+
 
 
 }

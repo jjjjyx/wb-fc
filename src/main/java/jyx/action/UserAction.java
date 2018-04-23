@@ -29,6 +29,7 @@ import java.util.Map;
         @Result(name = "my-ab", location = "./my-ab.jsp"),
         @Result(name = "adel", location = "/activity",type = "redirectAction"),
         @Result(name = "noUser", location = "/!execute.action",type = "redirectAction"),
+        @Result(name = "lore", location = "./lore.jsp"),
         @Result(name = "activity", location = "./activity.jsp"),
         @Result(name = "fill_info", location = "./fill_info.jsp"),
         @Result(name = "fill_info_success", location = "/fill_info_success.jsp", type = "redirect"),
@@ -49,7 +50,7 @@ public class UserAction extends BaseAction {
     private String c_id;
     private ActivityBean activity;
     private String fn;
-
+    private String query;
     // 查看用户信息
     @Action(value = "user")
     public String user() {
@@ -63,6 +64,12 @@ public class UserAction extends BaseAction {
         }
         return "user-info";
     }
+    @Action(value = "search_user")
+    public String searchUser(){
+        UserBean u = (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,this.userServer.searchUsers(u,this.query));
+        return JSON;
+    }
     @Action(value = "follow")
     public String follow(){
         UserBean u = (UserBean) session.getAttribute("user");
@@ -75,7 +82,18 @@ public class UserAction extends BaseAction {
         ResultUtils.set(data,this.userServer.unfollow(u,this.uid));
         return JSON;
     }
-
+    // 运动知识页面
+    @Action(value = "lore")
+    public String lore(){
+        if (id != null) {
+            LoreBean news = userServer.getLoreById(id);
+            if (news != null) {
+                request.setAttribute("lore_date", news);
+                return "lore";
+            }
+        }
+        return "noUser";
+    }
     @Action(value = "people")
     public String people(){
         return "people";
@@ -188,7 +206,7 @@ public class UserAction extends BaseAction {
     @Action(value = "group")
     public String group() {
         UserBean u = (UserBean) session.getAttribute("user");
-        request.setAttribute("post_data",userServer.getPostData(u, null,10, null, PostType.group));
+        request.setAttribute("post_data",userServer.getPostData(u, this._,10, null, PostType.group));
         request.setAttribute("group_data",userServer.getGroup(0));
         request.setAttribute("mode", PostType.group);
         return "mood";
@@ -336,5 +354,13 @@ public class UserAction extends BaseAction {
 
     public void setUid(Integer uid) {
         this.uid = uid;
+    }
+
+    public String getQuery() {
+        return query;
+    }
+
+    public void setQuery(String query) {
+        this.query = query;
     }
 }

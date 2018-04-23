@@ -7,8 +7,10 @@
         let ELEMENT = require('ELEMENT')
         //let cookie = require('js/lib/js.cookie')
         Vue.use(ELEMENT);
-        
+    
+        let headerFrom = require("js/header-from")
         const app = new Vue({
+            mixins:[headerFrom],
             el: '#app',
             name: 'activity',
             data: function () {

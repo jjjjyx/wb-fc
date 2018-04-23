@@ -8,7 +8,9 @@
         //let ELEMENT = require('ELEMENT')
         //let cookie = require('js/lib/js.cookie')
         //let CommentConstructor = Vue.extend(comment)
+        let headerFrom = require("js/header-from")
         const app = new Vue({
+            mixins:[headerFrom],
             el: '#app',
             name: 'new_article',
             data: function () {
