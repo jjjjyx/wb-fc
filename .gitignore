@@ -32,6 +32,7 @@ config.properties
 /llll/
 .idea
 src/main/webapp/assets/js/lib
+src/main/webapp/assets/fonts
 src/main/webapp/assets/css/fonts
 src/main/webapp/assets/css/*.css
 !src/main/webapp/assets/css/*.css
