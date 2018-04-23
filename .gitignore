@@ -31,7 +31,12 @@ config.properties
 /target/
 /llll/
 .idea
-src/main/webapp/assets
+src/main/webapp/assets/js/lib
+src/main/webapp/assets/css/fonts
+src/main/webapp/assets/css/*.css
+!src/main/webapp/assets/css/*.css
+src/main/webapp/assets/i
+src/main/webapp/assets/img
 src/main/webapp/dist
 src/main/webapp/upload
 src/main/webapp/img_upload
