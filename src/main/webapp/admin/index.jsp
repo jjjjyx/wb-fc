@@ -7,7 +7,6 @@
 <html>
 <head>
     <%@include file="../assets/base/header.jsp" %>
-
 </head>
 <body class="theme-white">
 <div class="am-g tpl-g" id="app">

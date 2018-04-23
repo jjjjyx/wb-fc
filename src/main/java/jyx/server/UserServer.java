@@ -159,9 +159,7 @@ public class UserServer extends ServiceBase {
             Map ii = Utils.transBean2Map(item);
 
             UserBean userBean =  this.userDao.get(user.getUid());
-            if(userBean.getFollows().contains(item)) {
-                ii.put("is_f",true);
-            }
+            ii.put("is_f",userBean.getFollows().contains(item));
             return ii;
         }).collect(Collectors.toList());
         return lm;
@@ -498,9 +496,8 @@ public class UserServer extends ServiceBase {
         UserBean u1 = userDao.get(uid);
         Map<String,Object> map = Utils.transBean2Map(u1);
         UserBean userBean =  this.userDao.get(u.getUid());
-        if(userBean.getFollows().contains(u1)) {
-            map.put("is_f",true);
-        }
+        map.put("is_f",userBean.getFollows().contains(u1));
+
         return map;
     }
 
