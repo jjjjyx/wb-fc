@@ -1624,6 +1624,30 @@ only screen and (min-device-pixel-ratio: 2) {
   }
 
 }
-el-select {
+el-select, el-dialog, el-button {
   display: none;
+}
+// 活动
+.cuk-layout-aside {
+  padding: 0px 0px 10px;
+  overflow-y: auto;
+  //width: 220px;
+  background: #fff;
+  margin-right: 10px;
+  .cuk-menu {
+    padding:0 2em;
+  }
+  .cuk-menu li {
+    padding-left: 2em;
+  }
+  .cuk-menu li.am-active a {
+    color: #10D07A;
+  }
+
+}
+.layout-menu-title {
+  padding: 30px 30px 20px;
+}
+.cuk-layout-content {
+  background: #fff;
 }

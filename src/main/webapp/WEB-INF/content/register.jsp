@@ -70,7 +70,7 @@
                     </button>
                 </div>
                     <div class="am-form-group">
-                        <a href="./sign" class="am-text-xs">已有账号</a>
+                        <a href="login" class="am-text-xs">已有账号</a>
                     </div>
             </form>
         </div>

@@ -27,10 +27,10 @@
                 validateBeforeSubmit(){
                     this.$validator.validateAll().then((v)=>{
                         if(v) {
-                            api.npost('./sign!up',{username:this.username, password:this.password}).then((v)=>{
+                            api.npost('./sign/up',{username:this.username, password:this.password}).then((v)=>{
                                 if(v.code==0) {
                                     alert("注册成功,点击确定将跳转到首页")
-                                    location.href="./!execute"
+                                    location.href="./"
                                 }else {
                                     alert(v.msg);
                                 }

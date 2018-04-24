@@ -20,7 +20,7 @@
             <c:forEach items="${new_date}" var="n" varStatus="loop">
                 <article class="am-g blog-entry-article">
                     <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
-                        <img src="assets/i/f${n.id%20+4}.jpg" alt="" class="am-u-sm-12">
+                        <img src="assets/i/f${n.id%16+4}.jpg" alt="" class="am-u-sm-12">
                     </div>
                     <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
                         <span><a href="" class="blog-color">article &nbsp;</a></span>
@@ -46,21 +46,12 @@
         <div class="am-u-md-4 am-u-sm-12 blog-sidebar">
             <div class="blog-sidebar-widget blog-bor">
                 <h2 class="blog-text-center blog-title"><span>About ME</span></h2>
-                <img src="assets/i/f14.jpg" alt="about me" class="blog-entry-img" >
+                <img src="assets/img/user (${user.uid % 28}).png" alt="about me" class="blog-entry-img" >
                 <p>
                     我是${user.nickname}
                 </p><p>我不想成为一个庸俗的人。十年百年后，当我们死去，质疑我们的人同样死去，后人看到的是裹足不前、原地打转的你，还是一直奔跑、走到远方的我？</p>
             </div>
-            <div class="blog-sidebar-widget blog-bor">
-                <h2 class="blog-text-center blog-title"><span>Contact ME</span></h2>
-                <p>
-                    <a href=""><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
-                    <a href=""><span class="am-icon-github am-icon-fw blog-icon"></span></a>
-                    <a href=""><span class="am-icon-weibo am-icon-fw blog-icon"></span></a>
-                    <a href=""><span class="am-icon-reddit am-icon-fw blog-icon"></span></a>
-                    <a href=""><span class="am-icon-weixin am-icon-fw blog-icon"></span></a>
-                </p>
-            </div>
+
             <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g ">
                 <h2 class="blog-title"><span>TAG cloud</span></h2>
                 <div class="am-u-sm-12 blog-clear-padding">

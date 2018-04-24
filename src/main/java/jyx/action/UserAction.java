@@ -25,14 +25,11 @@ import java.util.Map;
         @Result(name = "user-info", location = "./user-info.jsp"),
         @Result(name = "people", location = "./people.jsp"),
         @Result(name = "inbox", location = "./inbox.jsp"),
-        @Result(name = "my-ab", location = "./my-ab.jsp"),
-        @Result(name = "my-ab", location = "./my-ab.jsp"),
-        @Result(name = "adel", location = "/activity",type = "redirectAction"),
-        @Result(name = "noUser", location = "/!execute.action",type = "redirectAction"),
+        @Result(name = "noUser", location = "./",type = "redirectAction"),
+        @Result(name = "activity", location = "./activity/all",type = "redirectAction"),
         @Result(name = "lore", location = "./lore.jsp"),
-        @Result(name = "activity", location = "./activity.jsp"),
         @Result(name = "fill_info", location = "./fill_info.jsp"),
-        @Result(name = "fill_info_success", location = "/fill_info_success.jsp", type = "redirect"),
+        @Result(name = "fill_info_success", location = "./fill_info_success", type = "redirect"),
         @Result(name = "news_article", location = "./news_article.jsp")
 })
 public class UserAction extends BaseAction {
@@ -48,14 +45,13 @@ public class UserAction extends BaseAction {
     private String content;
     private String _;
     private String c_id;
-    private ActivityBean activity;
     private String fn;
     private String query;
     // 查看用户信息
-    @Action(value = "user")
+    @Action(value = "user/{uid}")
     public String user() {
         UserBean u = (UserBean) session.getAttribute("user");
-        Map<String, Object> userBean = this.userServer.searchUser(uid,u);
+        Map<String, Object> userBean = this.userServer.searchUser(this.uid,u);
         if(userBean !=null){
             request.setAttribute("userData",userBean);
             request.setAttribute("post_data",userServer.getPostData(u, _,10, (Integer) userBean.get("uid"), null));
@@ -63,6 +59,10 @@ public class UserAction extends BaseAction {
             return "noUser";
         }
         return "user-info";
+    }
+    @Action("activity")
+    public String activity(){
+        return "activity";
     }
     @Action(value = "search_user")
     public String searchUser(){
@@ -77,7 +77,7 @@ public class UserAction extends BaseAction {
         return JSON;
     }
     @Action(value = "unfollow")
-    public String unfollow(){
+    public String unFollow(){
         UserBean u = (UserBean) session.getAttribute("user");
         ResultUtils.set(data,this.userServer.unfollow(u,this.uid));
         return JSON;
@@ -106,8 +106,6 @@ public class UserAction extends BaseAction {
         return "inbox";
     }
 
-
-
     /**
      * 完善用户信息
      *
@@ -128,56 +126,13 @@ public class UserAction extends BaseAction {
         return "fill_info";
     }
 
-    @Action(value = "activity")
-    public String activity() {
-        String m = request.getMethod();
-        UserBean u =  (UserBean) session.getAttribute("user");
-        if ("Post".equalsIgnoreCase(m)) {
-            ResultUtils.set(data, userServer.releaseActivity(this.activity,u));
-            return JSON;
-        }else {
-            request.setAttribute("activity_data",userServer.getCurrActivity(0,u,false));
-        }
-        return "activity";
-    }
-
-    @Action(value = "activity-sign")
-    public String activitySign() {
-        UserBean u =  (UserBean) session.getAttribute("user");
-        ResultUtils.set(data, userServer.activitySign(this.id,u));
-        return JSON;
-
-    }
-    @Action(value = "as2")
-    public String unActivitySign() {
-        UserBean u =  (UserBean) session.getAttribute("user");
-        ResultUtils.set(data, userServer.activityUnSign(this.id,u));
-        return JSON;
-    }
-
-    @Action(value = "adel")
-    public String delActivity() {
-//        UserBean u =  (UserBean) session.getAttribute("");
-        userServer.delActivity(this.id);
-        return "adel";
-    }
     // 进入下载页面
     @Action(value = "down")
     public String down() {
         request.setAttribute("files",userServer.getFCData(0));
         return "down";
     }
-    // 我参加的
-    @Action(value = "my-ab")
-    public String mbb() {
-        UserBean userBean = (UserBean) this.session.getAttribute("user");
-        Object data = this.userServer.getMyAB(userBean);
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        StringBuffer cc = new StringBuffer("window.__INIT=");
-        cc.append(gson.toJson(data)).append(";");
-        request.setAttribute("ab.data",cc);
-        return "my-ab";
-    }
+
     // 用户下载文件
     @Action(value = "uf")
     public String uf(){
@@ -188,12 +143,7 @@ public class UserAction extends BaseAction {
         return JSON;
     }
 
-    @Action(value = "my-aa")
-    public String maa() {
-        UserBean u =  (UserBean) session.getAttribute("user");
-        request.setAttribute("activity_data",userServer.getCurrActivity(0,u, true));
-        return "my-aa";
-    }
+
     // 运动动态
     @Action(value = "mood")
     public String mood() {
@@ -332,13 +282,6 @@ public class UserAction extends BaseAction {
         this.content = content;
     }
 
-    public ActivityBean getActivity() {
-        return activity;
-    }
-
-    public void setActivity(ActivityBean activity) {
-        this.activity = activity;
-    }
 
     public String getFn() {
         return fn;

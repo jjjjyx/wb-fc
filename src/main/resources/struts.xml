@@ -4,15 +4,14 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
-	<constant name="struts.devMode" value="true" />
+	<constant name="struts.devMode" value="false" />
 	<constant name="struts.i18n.encoding" value="utf-8"></constant>
 	<constant name="struts.objectFactory" value="spring" />
 	<!-- -->
 	<constant name="struts.objectFactory.spring.autoWire" value="name" />
 	<!-- 是否开启动态方法调用 -->
 	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
-	<constant name="struts.objectFactory.spring.autoWire.alwaysRespect"
-		value="true" />
+	<constant name="struts.objectFactory.spring.autoWire.alwaysRespect" value="true" />
 	<!-- 设置浏览器是否缓存静态内容。默认值为true(生产环境下使用),开发阶段最好关闭  -->  
 	<constant name="struts.serve.static.browserCache" value="false" />
 
@@ -20,6 +19,11 @@
 	<constant name="struts.ui.theme" value="simple"></constant>
 	<!-- 上传文件是所允许的文件最大值 -->
 	<constant name="struts.multipart.maxSize" value="1048576000"></constant>
+
+	<constant name="struts.enable.SlashesInActionNames" value="true"/>
+	<constant name="struts.mapper.alwaysSelectFullNamespace" value="false"/>
+	<constant name="struts.patternMatcher" value="regex" />
+	<constant name="struts.action.extension" value=","/>
 	<!-- 设置文件上传时的临时文件夹时F盘下的temp文件夹 -->
 
 	<constant name="struts.action.excludePattern" value="/ws*,^ws://.$"/>
@@ -56,15 +60,15 @@
 		<global-results>
 			<result name="session-null" type="redirectAction">
 				<param name="namespace">/</param>
-				<param name="actionName">sign!execute</param>
+				<param name="actionName">login</param>
 			</result>
-			<result name="completion-info" type="redirectAction">
-				<param name="namespace">/</param>
-				<param name="actionName">!execute?_#info-form</param>
-			</result>
+			<!--<result name="completion-info" type="redirectAction">-->
+				<!--<param name="namespace">/</param>-->
+				<!--<param name="actionName">!execute?_#info-form</param>-->
+			<!--</result>-->
 			<result name="access-fail" type="redirectAction">
 				<param name="namespace">/</param>
-				<param name="actionName">!execute?_#info-form</param>
+				<param name="actionName">home</param>
 			</result>
 
 			<result name="err-handler" type="chain">

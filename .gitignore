@@ -35,6 +35,7 @@ src/main/webapp/assets/js/lib
 src/main/webapp/assets/fonts
 src/main/webapp/assets/css/fonts
 src/main/webapp/assets/css/*.css
+!src/main/webapp/assets/css/app.css
 src/main/webapp/assets/i
 src/main/webapp/assets/img
 src/main/webapp/dist

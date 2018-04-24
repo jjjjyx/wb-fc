@@ -56,7 +56,7 @@
                     <button type="submit" class="am-btn am-btn-primary  am-btn-block tpl-btn-bg-color-success  tpl-login-btn">提交</button>
                 </div>
                 <div class="am-form-group">
-                    <a href="./sign!signup" class="am-text-xs">没有账号？去注册</a>
+                    <a href="./register" class="am-text-xs">没有账号？去注册</a>
                 </div>
             </form>
         </div>

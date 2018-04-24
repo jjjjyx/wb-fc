@@ -15,6 +15,6 @@
     });
 
 //    requirejs(['vue','assets/js/header-from.js'],function (vue,headerFrom) {
-        requirejs(['./${defaultjs}']);
+        requirejs(['${path}/${defaultjs}.js']);
 //    });
 })();</script>

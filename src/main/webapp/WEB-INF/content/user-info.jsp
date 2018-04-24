@@ -27,7 +27,7 @@
                         <div class="shadow  S_shadow">
                             <div class="pf_photo">
                                 <p class="photo_wrap">
-                                    <img src="assets/img/user (${userData['uid'] % 28}).png" alt="" class="photo">
+                                    <img src="${path}/assets/img/user (${userData['uid'] % 28}).png" alt="" class="photo">
                                 </p>
                             </div>
                             <div class="pf_username">
@@ -73,7 +73,7 @@
                                 <div class="WB_face">
                                     <div class="face">
                                         <a href="#">
-                                            <img src="assets/img/user (${n['uid'].uid % 28}).png" alt="" class="W_face_radius">
+                                            <img src="${path}/assets/img/user (${n['uid'].uid % 28}).png" alt="" class="W_face_radius">
                                         </a>
                                     </div>
                                 </div>
@@ -95,14 +95,14 @@
                                             <ul class="WB_media_a_mn WB_media_a_m${n['media.length']} am-cf">
                                                 <c:forEach items="${n['imgs']}" var="img">
                                                     <li class="WB_pic li_1 S_bg1 S_line2 bigcursor li_n_mix_w">
-                                                        <img src="dist/${img}" alt="">
+                                                        <img src="${path}/dist/${img}" alt="">
                                                     </li>
                                                 </c:forEach>
                                                     <c:forEach items="${n['mp4s']}" var="mp4">
                                                     <li class="WB_video  S_bg1 WB_video_mini WB_video_h5">
                                                     <div class="WB_h5video">
                                                     <video alt="" controls="controls">
-                                                    <source src="dist/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                                                    <source src="${path}/dist/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
                                                     </video>
                                                     </div>
                                                     </li>
@@ -160,7 +160,6 @@
                                                         <c:if test="${n['isThumbs_up']}">
                                                             <span>已投票 <em>${n['thumbs_up']}</em></span>
                                                         </c:if>
-
                                                     </span>
                                                 </span>
                                                 </a>

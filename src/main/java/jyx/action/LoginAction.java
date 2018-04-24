@@ -16,13 +16,13 @@ import java.util.Map;
 
 @Controller
 @ParentPackage("default-package")
-@Namespace("/")
-@Action(value = "/sign", results = {
+@Namespace("/sign")
+
+@Results({
         @Result(name = "success", location = "./login.jsp"),
         @Result(name = "up", location = "./sign-up.jsp"),
         @Result(name = "out", location = "./out.jsp"),
-}
-)
+})
 public class LoginAction extends BaseAction {
     protected Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
@@ -31,16 +31,16 @@ public class LoginAction extends BaseAction {
     private String password;
 //    private UserBean userBean;
 
-    @Override
+
     public String execute() throws Exception {
         System.out.println("访问登录页面");
         return SUCCESS;
     }
 
-    public String signup() {
-        return "up";
-    }
-
+//    public String signup() {
+//        return "up";
+//    }
+    @Action(value = "in")
     public String in() {
         if (logger.isDebugEnabled())
             logger.debug("用户[{}] 请求登录", this.getUsername());
@@ -64,15 +64,14 @@ public class LoginAction extends BaseAction {
         }
         return JSON;
     }
-
+    @Action(value = "out")
     public String out() {
         session.removeAttribute("user");
         session.invalidate();
         return "out";
     }
-
+    @Action(value = "up")
     public String up() {
-
         if (userService.checkUserName(getUsername())) {
             UserBean userBean = userService.signUp(this.getUsername(), this.getPassword());
             session.setAttribute("user", userBean);

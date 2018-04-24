@@ -8,7 +8,7 @@
         //let cookie = require('js/lib/js.cookie')
         const store = require('../admin-store.js')
         return {
-            template: require('dom!./news.html'),
+            template: require('dom!pages/news.html'),
             name: 'news.js',
             data: function () {
                 return {

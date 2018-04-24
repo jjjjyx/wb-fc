@@ -55,7 +55,6 @@ public class AdminAction extends BaseAction {
     }
 
     /* ======== UserBean*/
-
     public String resetPass(){
         ResultUtils.set(this.data, adminServer.resetPass(uids));
         return JSON;

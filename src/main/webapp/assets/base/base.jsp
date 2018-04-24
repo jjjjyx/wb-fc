@@ -7,3 +7,6 @@
        value="${pageContext.request.scheme}://${pageContext.request.serverName }${path }"></c:set>
 <c:set var="defaultjs" value="index"></c:set>
 <c:set var="moduleName" value=""></c:set>
+<%
+    String path = request.getContextPath();
+%>

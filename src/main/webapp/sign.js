@@ -37,7 +37,7 @@
                                 username: this.username,
                                 password: this.password
                             };
-                            api.npost('./sign!in', p).then(({code, data}) => {
+                            api.npost('sign/in', p).then(({code, data}) => {
                                 if (code == 0) {
                                     if(this.keep) {
                                         cookie.set("keep_me",true,{ expires: 7, path: "/" })
@@ -67,7 +67,7 @@
                     },
                     validate: function (value, check) {
                         return new Promise((resolve) => {
-                            api.nget('./sign!checkAccount', {value, check}).
+                            api.nget('./sign/checkAccount', {value, check}).
                                 then(({code, data}) => {
                                     if (code == 0) {
                                         resolve(false)

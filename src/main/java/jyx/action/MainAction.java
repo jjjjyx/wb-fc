@@ -19,21 +19,18 @@ import java.util.HashMap;
 @Controller
 @ParentPackage("default-package")
 @Namespace("/")
-@Action(value = "/", results = {
-            @Result(name = "login", location = "./login.jsp"),
-            @Result(name = "index", location = "./index.jsp"),
-            @Result(name = "error", location = "./error.jsp")
-        },
-        interceptorRefs = {
-            @InterceptorRef("userStack")
-        }
-)
+@Results({
+        @Result(name = "login", location = "./login.jsp"),
+        @Result(name = "home", location = "./index.jsp"),
+        @Result(name = "error", location = "./error.jsp")
+})
 public class MainAction extends BaseAction {
     private Exception exception;
     protected Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private UserServer userServer;
     @Override
+    @Action(value = "index")
     public String execute() throws Exception {
         logger.info("欢迎访问 xx系统 v{}", 1.0);
 
@@ -58,7 +55,7 @@ public class MainAction extends BaseAction {
             // 排行榜
             request.setAttribute("leader_board",userServer.getLeaderboard(10,user));
 //            request.setAttribute("user_follows",userServer.getUserFollows());
-            return "index";
+            return "home";
         }
 //        Date start = (Date) session.getAttribute("vcStarrTime");
 //        Date current = new Date();

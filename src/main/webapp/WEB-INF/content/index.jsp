@@ -191,8 +191,7 @@
                             <c:forEach items="${leader_board}" var="n">
                                 <li>
                                     <img src="assets/img/user (${n["uid"] % 28}).png" alt="">
-                                    <a href="user?uid=${n['uid']}">
-                                            ${n['nickname']}
+                                    <a href="user/${n['uid']}">${n['nickname']}
                                         <span class="am-badge am-fr"> ${n['integral']} 分</span>
                                         <c:if test="${n['is_f']}">
                                             <span class="am-badge am-fr" @click="ung('${n['uid']}')">已关注</span>
