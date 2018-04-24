@@ -54,6 +54,8 @@ public class MainAction extends BaseAction {
             request.setAttribute("hot_data",userServer.getFCData(3));
             // 排行榜
             request.setAttribute("leader_board",userServer.getLeaderboard(10,user));
+            // 未读消息 个数
+            request.setAttribute("inbox_msg",userServer.getNoReadInBox(user));
 //            request.setAttribute("user_follows",userServer.getUserFollows());
             return "home";
         }

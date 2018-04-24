@@ -8,7 +8,7 @@
         //let cookie = require('js/lib/js.cookie')
         const store = require("../admin-store.js");
        return {
-            template: require('dom!pages/img.html'),
+            template: require('dom!pages/img2.html'),
             name: 'img',
             data: function () {
                 return {
@@ -26,6 +26,11 @@
                     let start = (this.currPage -1) *10;
                     let end = start +10
                     return this.store.states.img_data.slice(start,end)
+                },
+                activityList(){
+                    let start = (this.currPage -1) *10;
+                    let end = start +10
+                    return this.store.states.activity_data.slice(start,end)
                 }
             },
             methods: {

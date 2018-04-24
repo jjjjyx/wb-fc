@@ -17,11 +17,10 @@ import java.util.Map;
 @Controller
 @ParentPackage("default-package")
 @Namespace("/sign")
-
 @Results({
         @Result(name = "success", location = "./login.jsp"),
         @Result(name = "up", location = "./sign-up.jsp"),
-        @Result(name = "out", location = "./out.jsp"),
+        @Result(name = "out", location = "../out.jsp"),
 })
 public class LoginAction extends BaseAction {
     protected Logger logger = LoggerFactory.getLogger(getClass());

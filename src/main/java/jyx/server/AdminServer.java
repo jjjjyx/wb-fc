@@ -219,8 +219,8 @@ public class AdminServer {
         Date start = calendar.getTime();
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         Date end = calendar.getTime();
-//        System.out.println(start);
-//        System.out.println(end);
+        System.out.println(start);
+        System.out.println(end);
         Map<String,Object> map = new HashMap<>();
         map.put("start",start);
         map.put("end",end);

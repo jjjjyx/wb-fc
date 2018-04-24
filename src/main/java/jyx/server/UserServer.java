@@ -34,6 +34,8 @@ public class UserServer extends ServiceBase {
     @Autowired
     private PostDao postDao;
     @Autowired
+    private InboxDao inboxDao;
+    @Autowired
     private CommentDao commentDao;
     private DataDao dataDao = DataDao.getInstance();
 
@@ -168,6 +170,7 @@ public class UserServer extends ServiceBase {
     public NewsBean getNewsById(Integer id) {
         return newsDao.get(id);
     }
+
     public LoreBean getLoreById(Integer id) {
         return loreDao.get(id);
     }
@@ -274,12 +277,12 @@ public class UserServer extends ServiceBase {
             ii.put("comment_num", comment_num);
             // 检查当前用户是否与说说是好友 没有评论权限
             if (userBean.equals(item.getUid())) {
-                ii.put("is_comment",true); // 自己
-            }else if (follows.contains(item.getUid())) {// 用户关注了
+                ii.put("is_comment", true); // 自己
+            } else if (follows.contains(item.getUid())) {// 用户关注了
                 Set<UserBean> _f = item.getUid().getFollows();
                 if (_f.contains(userBean)) {
                     // 互相关注 为好友
-                    ii.put("is_comment",true);
+                    ii.put("is_comment", true);
                 }
             }
 
@@ -401,49 +404,54 @@ public class UserServer extends ServiceBase {
         return l;
     }
 
-    public Map<String, Object> getCurrActivity(int i, UserBean u, boolean b) {
+    public List getCurrActivity(int i, UserBean u, boolean b) {
         List<ActivityBean> list = null;
         if (b) {
-//            UserBean userBean = userDao.get(u.getUid());
-            list = activityDao.find("from ActivityBean where uid=?0", new Object[]{u});
+            list = activityDao.find("from ActivityBean where uid=?0 and status != ?1 order by releaseTime desc", new Object[]{u, ActivityStatus.del});
         } else {
-            list = this.activityDao.loadAll();
+            list = this.activityDao.find("from ActivityBean where status != ?0 order by releaseTime desc", new Object[]{ActivityStatus.del});
         }
-        // 按年月分组
-        Map<String, Object> y = new HashMap<>();
-        Map<String, List<Map<String, Object>>> m;
-        List<Map<String, Object>> l;
-        Calendar cal = Calendar.getInstance();
+        return list;
+    }
+    public Set getUserJoinActivity(UserBean u){
         UserBean userBean = userDao.get(u.getUid());
-        Set<ActivityBean> sab = userBean.getActivitys();
-        for (ActivityBean activityBean : list) {
-            cal.setTime(activityBean.getReleaseTime());
-            int yi = cal.get(Calendar.YEAR);
-            int mi = cal.get(Calendar.MONTH) + 1;
-            m = (Map<String, List<Map<String, Object>>>) y.get(String.valueOf(yi));
-            if (m == null) {
-                m = new HashMap<>();
-                y.put(String.valueOf(yi), m);
-            }
-            l = m.get(String.valueOf(mi));
-            if (l == null) {
-                l = new ArrayList<>();
-                m.put(String.valueOf(mi), l);
-            }
-            Map mmm = Utils.transBean2Map(activityBean);
-            if (sab.contains(activityBean)) {
-                mmm.put("isB", true);
-            }
-            l.add(mmm);
-        }
+        return userBean.getActivitys();
+    }
 
-        return y;
+    public List getFinishActivity(){
+        List<ActivityBean> list = this.activityDao.find("from ActivityBean where status = ?0 order by releaseTime desc", new Object[]{ActivityStatus.end});
+        return list;
+    }
+
+    public void endActivity(UserBean u, Integer id) {
+        ActivityBean activityBean = activityDao.get(id);
+        if (u.equals(activityBean.getUid())) {
+            activityBean.setStatus(ActivityStatus.end);
+            activityDao.update(activityBean);
+        }
+    }
+
+//    public List<Map<String, Object>> getMyAB(UserBean userBean) {
+//        UserBean u = userDao.get(userBean.getUid());
+//        return u.getActivitys().stream().map((item) -> {
+//            Map<String, Object> m = Utils.transBean2Map(item);
+//            Object o = m.get("users");
+//            if (o != null) {
+//                o = o.toString();
+//            }
+//            return m;
+//        }).collect(Collectors.toList());
+//    }
+    public ActivityBean queryActivityBean(Integer id) {
+        return this.activityDao.get(id);
     }
 
     public Code releaseActivity(ActivityBean activity, UserBean u) {
         activity.setUid(u);
         activity.setReleaseTime(new Date());
         activity.setComment_id(UUID.randomUUID().toString());
+        activity.setStatus(ActivityStatus.ready);
+
         this.activityDao.save(activity);
         return Code.SUCCESS;
     }
@@ -481,19 +489,6 @@ public class UserServer extends ServiceBase {
         this.activityDao.delete(activityBean);
         return Code.SUCCESS;
     }
-
-    public List<Map<String, Object>> getMyAB(UserBean userBean) {
-        UserBean u = userDao.get(userBean.getUid());
-        return u.getActivitys().stream().map((item) -> {
-            Map<String, Object> m = Utils.transBean2Map(item);
-            Object o = m.get("users");
-            if (o != null) {
-                o = o.toString();
-            }
-            return m;
-        }).collect(Collectors.toList());
-    }
-
 
     public Code downFile(UserBean userBean) {
         int ii = userBean.getIntegral();
@@ -575,5 +570,57 @@ public class UserServer extends ServiceBase {
     }
 
 
+    public Code activityComment(UserBean u, CommentBean commentBean) {
+        UserBean userBean = userDao.get(u.getUid());
+        commentBean.setUid(userBean);
+        commentBean.setReleaseTime(new Date());
+        commentDao.save(commentBean);
+        return Code.SUCCESS;
+    }
 
+    public UserBean queryUserBean(int uid) {
+        return userDao.get(uid);
+    }
+
+    public List follows(UserBean u) {
+        UserBean userBean = userDao.get(u.getUid());
+        return userBean.getFollows().stream().map((item)->{
+            Map map = Utils.transBean2Map(item);
+            map.remove("password");
+            map.remove("follows");
+            map.remove("activitys");
+            map.remove("stars");
+            map.remove("thumbs_up");
+            return map;
+        }).collect(Collectors.toList());
+    }
+
+
+    public Code sendInbox(UserBean u, InboxBean inbox, Integer uid) {
+        inbox.setCarateTime(new Date());
+        inbox.setRead(false);
+        inbox.setSender(userDao.get(u.getUid()));
+        inbox.setReceive(userDao.get(uid));
+        inboxDao.save(inbox);
+        return Code.SUCCESS;
+    }
+
+    public List<InboxBean> getUserInbox(UserBean u){
+        String sql = "from InboxBean where sender = ?0 or receive = ?1 order by carateTime desc";
+        List<InboxBean> list = inboxDao.find(sql,new Object[]{u,u});
+        for (InboxBean inboxBean : list) {
+            if (u.equals(inboxBean.getReceive()) && !inboxBean.isRead()) {
+                inboxBean.setRead(true);
+                inboxDao.update(inboxBean);
+            }
+        }
+        return list;
+    }
+
+    public Integer getNoReadInBox(UserBean user) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("receive",user);
+        Integer i = inboxDao.count("from InboxBean where receive =:receive and isRead = 0",map);
+        return i;
+    }
 }

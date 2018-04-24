@@ -47,6 +47,7 @@ public class UserAction extends BaseAction {
     private String c_id;
     private String fn;
     private String query;
+    private InboxBean inbox;
     // 查看用户信息
     @Action(value = "user/{uid}")
     public String user() {
@@ -68,6 +69,15 @@ public class UserAction extends BaseAction {
     public String searchUser(){
         UserBean u = (UserBean) session.getAttribute("user");
         ResultUtils.set(data,this.userServer.searchUsers(u,this.query));
+        return JSON;
+    }
+
+
+
+    @Action(value = "user_follow")
+    public String userFollow(){
+        UserBean u = (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,this.userServer.follows(u));
         return JSON;
     }
     @Action(value = "follow")
@@ -102,8 +112,15 @@ public class UserAction extends BaseAction {
     @Action(value = "inbox")
     public String inbox(){
         UserBean u = (UserBean) session.getAttribute("user");
-//        Map<String, Object> userBean = this.userServer.searchUser(uid,u);
+        request.setAttribute("inboxs_data",userServer.getUserInbox(u));
         return "inbox";
+    }
+
+    @Action(value = "send-private")
+    public String sendInbox(){
+        UserBean u = (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,this.userServer.sendInbox(u,this.inbox,this.uid));
+        return JSON;
     }
 
     /**
@@ -305,5 +322,13 @@ public class UserAction extends BaseAction {
 
     public void setQuery(String query) {
         this.query = query;
+    }
+
+    public InboxBean getInbox() {
+        return inbox;
+    }
+
+    public void setInbox(InboxBean inbox) {
+        this.inbox = inbox;
     }
 }

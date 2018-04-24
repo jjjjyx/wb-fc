@@ -6,7 +6,7 @@ const template =
     <ul class="am-comments-list am-comments-list-flip">
         <li class="am-comment" v-for="(item,index) in comments">
             <a href="#link-to-user-home">
-                <img :src="\`assets/img/user (\${item.uid.uid % 28}).png\`" alt="" class="am-comment-avatar" width="48" height="48"/>
+                <img :src="\`\${path}/assets/img/user (\${item.uid.uid % 28}).png\`" alt="" class="am-comment-avatar" width="48" height="48"/>
             </a>
             <div class="am-comment-main">
                 <header class="am-comment-hd">
@@ -19,7 +19,31 @@ const template =
                     <a v-if="item.uid.uid==cur" @click="del(item,index)"><i class="am-icon-close"></i></a>
                 </div>
                 </header>
-                <div class="am-comment-bd" v-html="f(item.content)"></div>
+                <div class="am-comment-bd" >
+                    <div class="WB_text W_f14" v-html="f(item.content)"></div>
+                    <div class="WB_media_wrap am-cf" v-if="item.imgs">
+                         <div class="media_box">
+                             <ul :class="'WB_media_a_mn  am-cf WB_media_a_m'+item.imgs.length">
+                                    <li class="WB_pic li_1 S_bg1 S_line2 bigcursor li_n_mix_w" v-for="img in item.imgs">
+                                        <img :src="\`\${path}/dist/\${img}\`" alt="">
+                                    </li>
+                             </ul>
+                         </div>
+                    </div>
+                    <div class="WB_media_wrap am-cf" v-if="item.mp4s">
+                         <div class="media_box">
+                             <ul :class="'WB_media_a_mn  am-cf WB_media_a_m'+item.mp4s.length">
+                                    <li class="WB_video  S_bg1 WB_video_mini WB_video_h5" v-for="img in item.mp4s">
+                                        <div class="WB_h5video">
+                                            <video alt="" controls="controls">
+                                                <source :src="path+'dist/'+img" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                                            </video>
+                                        </div>
+                                    </li>
+                             </ul>
+                         </div>
+                    </div>
+                </div>
             </div>
         </li>
         <li v-if="!comments.length">
@@ -32,6 +56,7 @@ const template =
     define(function (require) {
         let api = require('js/api')
         let Send = require('js/send')
+        let path = window.config.remote.root +"/";
         return {
             template,
             name: 'comment',
@@ -42,7 +67,8 @@ const template =
                         'content':'',
                         'c_id': this.commentId
                     },
-                    comments:[]
+                    comments:[],
+                    path
                 }
             },
             props:['commentId','cur','position'],
@@ -58,13 +84,28 @@ const template =
                 },
                 fetch(){
                     if (this.commentId)
-                    api.nget("comment",{c_id:this.commentId}).then((data)=>{
-                        this.comments = data.data;
+                    api.nget(`${path}/comment`, {c_id:this.commentId}).then((data)=>{
+                        this.comments = data.data.map((item)=>{
+                            if (item.media && item.media.length) {
+                                let imgs = []
+                                let mp4s = []
+                                item.media.forEach((s)=>{
+                                    if (s.endsWith(".mp4") || s.endsWith(".MP4")) {
+                                        mp4s.push(s)
+                                    }else {
+                                        imgs.push(s)
+                                    }
+                                })
+                                item.mp4s = mp4s
+                                item.imgs = imgs
+                            }
+                            return item;
+                        });
+                        console.log(this.comments)
                     })
                 },
                 del (item,index) {
-                    api.npost("del-comment",{id:item.id}).then((data)=>{
-                        console.log(data)
+                    api.npost(`${path}/del-comment`,{id:item.id}).then((data)=>{
                         if (data.code==0) {
                             this.comments.splice(index, 1)
                             this.$message("删除成功")

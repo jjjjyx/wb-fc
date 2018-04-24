@@ -5,6 +5,7 @@ package jyx.action;
 
 import jyx.common.ResultUtils;
 import jyx.model.ActivityBean;
+import jyx.model.CommentBean;
 import jyx.model.UserBean;
 import jyx.server.UserServer;
 import org.apache.struts2.convention.annotation.*;
@@ -20,10 +21,12 @@ import org.springframework.stereotype.Controller;
 @Results({
         @Result(name = "activity", location = "./activity.jsp"),
         @Result(name = "all", location = "./all.jsp"),
-        @Result(name = "join", location = "./join.jsp"),
-        @Result(name = "found", location = "./found.jsp"),
-        @Result(name = "finish", location = "./finish.jsp"),
+        @Result(name = "join", location = "./activity.jsp"),
+        @Result(name = "found", location = "./activity.jsp"),
+        @Result(name = "finish", location = "./activity.jsp"),
+        @Result(name = "info", location = "./a-info.jsp"),
         @Result(name = "del", location = "all", type = "redirectAction"),
+        @Result(name = "end", location = "all/${id}", type = "redirectAction"),
 //        @Result(name = "user-activity-list", location = "./my-ab.jsp"),
 //        @Result(name = "my-ab", location = "./my-ab.jsp"),
 })
@@ -31,48 +34,83 @@ public class ActivityAction extends BaseAction {
     protected Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     private UserServer userServer;
-
+    private CommentBean comment;
     private Integer id;
     private ActivityBean activity;
-
+    private String c_id;
+    @Action(value = "/{id}")
+    public String info() throws Exception {
+//        UserBean u = (UserBean) session.getAttribute("user");
+        ActivityBean activityBean = userServer.queryActivityBean(this.id);
+        if (activityBean==null) return "del";
+        request.setAttribute("activityBean",activityBean);
+        return "info";
+    }
     //    @Override
     @Action(value = "all")
     public String all() throws Exception {
-        String m = request.getMethod();
         UserBean u = (UserBean) session.getAttribute("user");
-        if ("Post".equalsIgnoreCase(m)) {
-            ResultUtils.set(data, userServer.releaseActivity(this.activity, u));
-            return JSON;
-        } else {
-            request.setAttribute("activity_data", userServer.getCurrActivity(0, u, false));
-        }
+        request.setAttribute("activity_data", userServer.getCurrActivity(0, u, false));
+        request.setAttribute("userBean",userServer.queryUserBean(u.getUid()));
         return "activity";
     }
 
-    @Action(value = "join")
-    public String join() {
-        return "join";
+    @Action(value = "end/{id}")
+    public String end() throws Exception {
+        UserBean u = (UserBean) session.getAttribute("user");
+        userServer.endActivity(u,this.id);
+        return "end";
     }
-
-    @Action(value = "found")
-    public String found() {
-        return "found";
-    }
-
-    @Action(value = "finish")
-    public String finish() {
-        return "finish";
-    }
-
 
     // 删除活动
     @Action(value = "del/{id}")
     public String delActivity() {
-        System.out.println("del/id = " + id);
-//        UserBean u =  (UserBean) session.getAttribute("");
-//        userServer.delActivity(this.id);
-        return "del";
+        UserBean u = (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,userServer.delActivity(id));
+        return JSON;
     }
+
+    @Action(value = "comment")
+    public String comment(){
+        UserBean u = (UserBean) session.getAttribute("user");
+//        userServer.endActivity(u,this.id);
+        ResultUtils.set(data, userServer.activityComment(u, this.comment));
+        return JSON;
+    }
+
+    @Action(value = "save")
+    public String save(){
+        UserBean u = (UserBean) session.getAttribute("user");
+        ResultUtils.set(data, userServer.releaseActivity(this.activity, u));
+        return JSON;
+    }
+
+    @Action(value = "join")
+    public String join() {
+        UserBean u = (UserBean) session.getAttribute("user");
+        request.setAttribute("activity_data", userServer.getUserJoinActivity(u));
+        request.setAttribute("userBean",userServer.queryUserBean(u.getUid()));
+        return "activity";
+    }
+    // 我创建的
+    @Action(value = "found")
+    public String found() {
+        UserBean u = (UserBean) session.getAttribute("user");
+        request.setAttribute("activity_data", userServer.getCurrActivity(0,u,true));
+        request.setAttribute("userBean",userServer.queryUserBean(u.getUid()));
+        return "activity";
+    }
+
+    @Action(value = "finish")
+    public String finish() {
+        UserBean u = (UserBean) session.getAttribute("user");
+        request.setAttribute("activity_data", userServer.getFinishActivity());
+        request.setAttribute("userBean",userServer.queryUserBean(u.getUid()));
+        return "activity";
+    }
+
+
+
 
     // 活动报名
     @Action(value = "sign")
@@ -84,7 +122,7 @@ public class ActivityAction extends BaseAction {
     }
 
     // 取消报名
-    @Action(value = "un_sign")
+    @Action(value = "unsign")
     public String unActivitySign() {
         UserBean u = (UserBean) session.getAttribute("user");
         ResultUtils.set(data, userServer.activityUnSign(this.id, u));
@@ -106,7 +144,7 @@ public class ActivityAction extends BaseAction {
 //    @Action(value = "my-aa")
 //    public String maa() {
 //        UserBean u =  (UserBean) session.getAttribute("user");
-//        request.setAttribute("activity_data",userServer.getCurrActivity(0,u, true));
+//        request.setAttribute("activity_data",userServer.getCurrActivity(0, u, true));
 //        return "my-aa";
 //    }
 
@@ -124,5 +162,21 @@ public class ActivityAction extends BaseAction {
 
     public void setActivity(ActivityBean activity) {
         this.activity = activity;
+    }
+
+    public CommentBean getComment() {
+        return comment;
+    }
+
+    public void setComment(CommentBean comment) {
+        this.comment = comment;
+    }
+
+    public String getC_id() {
+        return c_id;
+    }
+
+    public void setC_id(String c_id) {
+        this.c_id = c_id;
     }
 }

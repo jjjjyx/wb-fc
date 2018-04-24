@@ -1,0 +1,58 @@
+<div >
+    <div class="row">
+        <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">材料管理 - 编辑活动过程</div>
+                </div>
+                <div class="widget-body  am-fr">
+
+                    <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                        <div class="am-form-group">
+                            <div class="am-btn-toolbar">
+                                <el-upload class="upload-demo" action="../file!upload?dir=img_upload" :on-success="handleSuccess" style="float: left;">
+                                    <el-button size="small" type="primary">点击上传</el-button>
+                                </el-upload>
+                                <div class="am-btn-group am-btn-group-xs">
+                                    <!--<button type="button" class="am-btn am-btn-default am-btn-success" @click="dialogVisible = true,newActivity(currData = {})"><span class="am-icon-plus"></span> 上传新文件</button>-->
+                                    <!--<button type="button" class="am-btn am-btn-default am-btn-secondary" @click="resetPassword"><span class="am-icon-refresh"></span> </button>-->
+                                    <!--<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 查看</button>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12">
+                        <el-table ref="multipleTable" @selection-change=" val => multipleSelection = val" :data="activityList" tooltip-effect="dark" style="width: 100%">
+                            <!--<el-table-column type="selection" width="55"></el-table-column>-->
+                            <el-table-column type="expand">
+                                <template scope="props">
+                                    <el-upload class="upload-demo" action="../file!upload?dir=img_upload" :on-success="handleSuccess" style="float: left;">
+                                        <el-button size="small" type="primary">点击添加</el-button>
+                                    </el-upload>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="id" label="id"></el-table-column>
+                            <el-table-column prop="title" label="标题"></el-table-column>
+                            <!--<el-table-column prop="content" label="内容"></el-table-column>-->
+                            <el-table-column prop="type" label="类型"></el-table-column>
+                            <el-table-column prop="address" label="活动地址"></el-table-column>
+                            <el-table-column prop="author" label="负责人"></el-table-column>
+                            <el-table-column prop="status" label="状态"></el-table-column>
+                            <el-table-column prop="releaseTime" label="发布时间"></el-table-column>
+                        </el-table>
+                    </div>
+                    <div class="am-u-lg-12 am-cf">
+                        <div class="am-fr">
+                            <el-pagination
+                                    small
+                                    layout="prev, pager, next"
+                                    :current-page.sync="currPage"
+                                    :total="store.states.data_data.length">
+                            </el-pagination>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

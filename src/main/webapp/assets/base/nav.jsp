@@ -37,7 +37,7 @@
                     <div class="user-item">
                         <img :src="`${path}/assets/img/user (\${item.uid % 28}).png`" alt="">
                         <div class="user-item-info">
-                            <span class="am-badge am-fr am-text-xs" :class="{'am-badge-secondary':item.is_f}">{{item.is_f?'取消':''}}关注</span>
+                            <span class="am-badge am-fr am-text-xs" :class="{'am-badge-secondary':item.is_f}" @click="nav_follow($event,item)">{{item.is_f?'取消':''}}关注</span>
                             <span class="am-block">{{item.nickname}}</span>
                             <span class="am-text-xs">积分：{{item.integral}} <i class="am-icon-database"></i></span>
                         </div>
@@ -45,13 +45,14 @@
                 </el-option>
             </el-select>
             <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right">
-                <li ><a href="inbox"><i class="am-icon-comments"></i></a></li>
-                <li ><a href="people?uid=${user.uid}"><img src="${path}/assets/img/user (${user.uid % 28}).png" style="    width: 28px; border-radius: 50%; margin-right: 5px;" alt=""><span>${user.username}</span></a></li>
+                <%--${inbox_msg}--%>
+                <li ><a href="inbox"><i class="am-icon-comments am-text-md"></i><c:if test="${inbox_msg>0}"><span class="am-badge am-badge-success am-round item-feed-badge">${inbox_msg}</span></c:if></a></li>
+                <li ><a href="${path}/fill"><img src="${path}/assets/img/user (${user.uid % 28}).png" style="    width: 28px; border-radius: 50%; margin-right: 5px;" alt=""><span>${user.nickname}</span></a></li>
                 <li><a href="${path}/ff.jsp"><i class="am-icon-database"></i> <span>${user.integral}</span></a></li>
                 <c:if test="${user.role==100}">
                     <li ><a href="${path}/admin/"><i class="am-icon-gear"></i></a></li>
                 </c:if>
-                <li><a href="${path}/sign!out"><i class="am-icon-sign-out"></i> </a></li>
+                <li><a href="${path}/sign/out"><i class="am-icon-sign-out"></i> </a></li>
             </ul>
 
             <%--<div class="am-topbar-right">--%>
