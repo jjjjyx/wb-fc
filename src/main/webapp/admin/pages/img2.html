@@ -22,13 +22,30 @@
                         </div>
                     </div>
                     <div class="am-u-sm-12">
+                        {{currItem}}
                         <el-table ref="multipleTable" @selection-change=" val => multipleSelection = val" :data="activityList" tooltip-effect="dark" style="width: 100%">
                             <!--<el-table-column type="selection" width="55"></el-table-column>-->
                             <el-table-column type="expand">
                                 <template scope="props">
-                                    <el-upload class="upload-demo" action="../file!upload?dir=img_upload" :on-success="handleSuccess" style="float: left;">
-                                        <el-button size="small" type="primary">点击添加</el-button>
+                                    <el-upload class="upload-demo" action="../file!upload?dir=img_upload" :on-success="handleSuccess"
+                                               accept="image/png,image/jpeg,image/jpeg,video/mp4">
+                                        <el-button size="small" type="primary" @click="beforeAdd(props.row)">点击添加</el-button>
                                     </el-upload>
+
+                                    <ul class="">
+                                        <li v-for="item in props.row.media" style="display: inline-block">
+                                            <template v-if="item.endsWith('mp4')||item.endsWith('MP4')">
+                                                <div class="WB_h5video">
+                                                <video alt="" controls="controls">
+                                                    <source :src="`../img_upload/${item}`" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                                                </video>
+                                                </div>
+                                            </template>
+                                            <template v-else>
+                                                <img :src="`../img_upload/${item}`" alt="" width="200">
+                                            </template>
+                                        </li>
+                                    </ul>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="id" label="id"></el-table-column>

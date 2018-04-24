@@ -47,7 +47,7 @@ public class MainAction extends BaseAction {
             // 活动通知 最近3条
             request.setAttribute("recent_activity",userServer.getRecentActivity(3));
             // 运动图片 5张
-            request.setAttribute("fc_img",userServer.getFCImg(5));
+            request.setAttribute("fc_img",userServer.getFCImg(8));
             // 材料 最近5个
             request.setAttribute("fc_data",userServer.getFCData(6));
             // 热门资料 6

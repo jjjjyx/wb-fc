@@ -3,6 +3,7 @@ package jyx.server;
 import jyx.common.Code;
 import jyx.dao.*;
 import jyx.model.*;
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -219,8 +220,8 @@ public class AdminServer {
         Date start = calendar.getTime();
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         Date end = calendar.getTime();
-        System.out.println(start);
-        System.out.println(end);
+//        System.out.println(start);
+//        System.out.println(end);
         Map<String,Object> map = new HashMap<>();
         map.put("start",start);
         map.put("end",end);
@@ -286,5 +287,22 @@ public class AdminServer {
         integralBean.setPost_ids(ids);
         integralDao.save(integralBean);
         return Code.SUCCESS;
+    }
+
+    public Code addActivityMedia(int id, String media) {
+        ActivityBean activityBean = this.activityDao.get(id);
+        if (activityBean==null) {
+            return Code.PARAME_ERROR;
+        } else {
+            String [] ms = activityBean.getMedia();
+            if (ms ==null) {
+                ms = new String[]{media};
+            }else {
+                ms = (String[]) ArrayUtils.add(ms,media);
+            }
+            activityBean.setMedia(ms);
+            this.activityDao.update(activityBean);
+            return Code.SUCCESS;
+        }
     }
 }

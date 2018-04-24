@@ -3,6 +3,7 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="jyx.model.ActivityStatus" %>
 <%@ page import="jyx.model.UserBean" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -100,6 +101,77 @@
                                     </div> <!-- 评论内容 -->
                                 </div>
                             </article>
+                            <article class="am-comment am-margin-bottom-sm"> <!-- 评论容器 -->
+                                <a href="#">
+                                    <div class="am-comment-avatar">
+                                        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" class="cuk-icon cuk-icon-thumb-tack null" style="vertical-align: middle;"><g><path d="m17.7 19.3v-10q0-0.3-0.2-0.5t-0.5-0.2-0.5 0.2-0.2 0.5v10q0 0.3 0.2 0.5t0.5 0.2 0.5-0.2 0.2-0.5z m15 7.8q0 0.6-0.4 1t-1 0.5h-9.6l-1.1 10.8q-0.1 0.2-0.3 0.4t-0.4 0.2h0q-0.6 0-0.8-0.6l-1.7-10.8h-9q-0.6 0-1-0.5t-0.4-1q0-2.7 1.8-4.9t3.9-2.2v-11.4q-1.1 0-2-0.9t-0.8-2 0.8-2 2-0.8h14.3q1.2 0 2 0.8t0.9 2-0.9 2-2 0.9v11.4q2.2 0 4 2.2t1.7 4.9z"></path></g></svg>
+                                    </div>
+                                </a>
+
+                                <div class="am-comment-main"> <!-- 评论内容容器 -->
+                                    <header class="am-comment-hd">
+                                        <!--<h3 class="am-comment-title">评论标题</h3>-->
+                                        <div class="am-comment-meta"> <!-- 评论元数据 -->
+                                            活动过程
+                                        </div>
+                                    </header>
+
+                                    <div class="am-comment-bd">
+                                        <%
+                                            String[] media = activityBean.getMedia();
+                                            List<String> imgs = new ArrayList<String>();
+                                            List<String> mp4s = new ArrayList<String>();
+                                            for (String s : media) {
+                                                String ext = s.substring(s.lastIndexOf(".") + 1);
+                                                if (ext.equalsIgnoreCase("mp4")) {
+                                                    mp4s.add(s);
+                                                } else {
+                                                    imgs.add(s);
+                                                }
+                                            }
+                                            if (imgs.size() > 0) {
+                                                pageContext.setAttribute("imgs",imgs);
+                                            }
+                                            pageContext.setAttribute("imgslength",imgs.size());
+                                            if (mp4s.size()>0){
+                                                pageContext.setAttribute("mp4s",mp4s);
+                                            }
+                                            pageContext.setAttribute("mp4slength",mp4s.size());
+                                        %>
+                                        <c:if test="${imgslength>0}">
+                                            <div class="WB_media_wrap am-cf">
+                                                <div class="media_box">
+                                                    <ul class="WB_media_a_mn  am-cf WB_media_a_m${imgslength}">
+                                            <c:forEach items="${imgs}" var="img">
+                                                        <li class="WB_pic li_1 S_bg1 S_line2 bigcursor li_n_mix_w">
+                                                            <img src="${path}/img_upload/${img}" alt="">
+                                                        </li>
+                                            </c:forEach>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                        <c:if test="${mp4slength>0}">
+                                            <div class="WB_media_wrap am-cf">
+                                                <div class="media_box">
+                                                    <ul class="WB_media_a_mn  am-cf WB_media_a_m${mp4slength}">
+                                                        <c:forEach items="${mp4s}" var="img">
+                                                            <li class="WB_video  S_bg1 WB_video_mini WB_video_h5">
+                                                                <div class="WB_h5video">
+                                                                    <video alt="" controls="controls">
+                                                                        <source src="${path}/img_upload/${img}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                                                                    </video>
+                                                                </div>
+                                                            </li>
+
+                                                        </c:forEach>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </div> <!-- 评论内容 -->
+                                </div>
+                            </article>
                         </div>
                         <%-- 如果是完成的活动可以上评论，以及上传内容--%>
                         <%
@@ -126,7 +198,7 @@
                                     </div>
                                     <el-popover ref="popover4" placement="bottom-start" width="400" trigger="click">
                                         <el-upload
-                                                class="upload-demo" ref="upload" action="${path}/file!upload?dir=dist"
+                                                class="upload-demo" ref="upload" action="${path}/file!upload?dir=img_upload"
                                                 :on-preview="handlePreview" :on-remove="handleRemove"
                                                 :on-success="handleSuccess"
                                                 :file-list="fileList" limit="9" multiple
@@ -137,7 +209,7 @@
                                     </el-popover>
                                     <el-popover ref="popover5" placement="bottom-start" width="400" trigger="click">
                                         <el-upload
-                                                class="upload-demo" ref="upload" action="${path}/file!upload?dir=dist"
+                                                class="upload-demo" ref="upload" action="${path}/file!upload?dir=img_upload"
                                                 :on-preview="handlePreview" :on-remove="handleRemove"
                                                 :on-success="handleSuccess"
                                                 :file-list="fileList" limit="1" multiple accept="video/mp4">

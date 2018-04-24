@@ -95,14 +95,14 @@
                                             <ul class="WB_media_a_mn WB_media_a_m${n['media.length']} am-cf">
                                                 <c:forEach items="${n['imgs']}" var="img">
                                                     <li class="WB_pic li_1 S_bg1 S_line2 bigcursor li_n_mix_w">
-                                                        <img src="${path}/dist/${img}" alt="">
+                                                        <img src="${path}/img_upload/${img}" alt="">
                                                     </li>
                                                 </c:forEach>
                                                     <c:forEach items="${n['mp4s']}" var="mp4">
                                                     <li class="WB_video  S_bg1 WB_video_mini WB_video_h5">
                                                     <div class="WB_h5video">
                                                     <video alt="" controls="controls">
-                                                    <source src="${path}/dist/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                                                    <source src="${path}/img_upload/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
                                                     </video>
                                                     </div>
                                                     </li>

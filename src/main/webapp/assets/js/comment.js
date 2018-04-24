@@ -25,7 +25,7 @@ const template =
                          <div class="media_box">
                              <ul :class="'WB_media_a_mn  am-cf WB_media_a_m'+item.imgs.length">
                                     <li class="WB_pic li_1 S_bg1 S_line2 bigcursor li_n_mix_w" v-for="img in item.imgs">
-                                        <img :src="\`\${path}/dist/\${img}\`" alt="">
+                                        <img :src="\`\${path}/img_upload/\${img}\`" alt="">
                                     </li>
                              </ul>
                          </div>
@@ -36,7 +36,7 @@ const template =
                                     <li class="WB_video  S_bg1 WB_video_mini WB_video_h5" v-for="img in item.mp4s">
                                         <div class="WB_h5video">
                                             <video alt="" controls="controls">
-                                                <source :src="path+'dist/'+img" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                                                <source :src="path+'img_upload/'+img" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
                                             </video>
                                         </div>
                                     </li>

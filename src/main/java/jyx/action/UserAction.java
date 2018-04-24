@@ -178,6 +178,15 @@ public class UserAction extends BaseAction {
         request.setAttribute("mode", PostType.group);
         return "mood";
     }
+
+    @Action(value = "delPost/{id}")
+    public String delPost(){
+//      删除动态
+        UserBean u = (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,userServer.delPost(id, u));
+
+        return JSON;
+    }
     @Action(value = "post")
     public String post(){
 //      发表动态

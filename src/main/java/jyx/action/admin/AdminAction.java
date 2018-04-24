@@ -33,6 +33,7 @@ import java.util.Map;
 public class AdminAction extends BaseAction {
     @Autowired
     private AdminServer adminServer;
+    private int id;
     private int del_id;
     private UserBean user;
     private ActivityBean activity;
@@ -41,6 +42,7 @@ public class AdminAction extends BaseAction {
     private LoreBean lore;
     private int[] uids;
     private String[] fns;
+    private String media;
     private DataDao dataDao = DataDao.getInstance();
     @Override
     public String execute() throws Exception {
@@ -53,7 +55,10 @@ public class AdminAction extends BaseAction {
         request.setAttribute("admin.data", cc);
         return "index";
     }
-
+    public String addActivityMedia(){
+        ResultUtils.set(this.data, adminServer.addActivityMedia(this.id,media));
+        return JSON;
+    }
     /* ======== UserBean*/
     public String resetPass(){
         ResultUtils.set(this.data, adminServer.resetPass(uids));
@@ -245,5 +250,17 @@ public class AdminAction extends BaseAction {
 
     public void setFns(String[] fns) {
         this.fns = fns;
+    }
+
+    public String getMedia() {
+        return media;
+    }
+
+    public void setMedia(String media) {
+        this.media = media;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

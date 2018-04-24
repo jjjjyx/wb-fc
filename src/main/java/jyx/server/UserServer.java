@@ -193,7 +193,7 @@ public class UserServer extends ServiceBase {
     }
 
     public List<Map> getPostData(UserBean u, String group, int i, Integer uid, PostType postType) {
-        StringBuilder hql = new StringBuilder("from PostBean where 1=1 ");
+        StringBuilder hql = new StringBuilder("from PostBean where 1=1 and isDel = 0 ");
         Map<String, Object> map = new HashMap<>();
         if (group != null && "" != group && !"all".equals(group)) {
             hql.append("and group_type = :gt");
@@ -622,5 +622,13 @@ public class UserServer extends ServiceBase {
         map.put("receive",user);
         Integer i = inboxDao.count("from InboxBean where receive =:receive and isRead = 0",map);
         return i;
+    }
+
+    public Code delPost(Integer id, UserBean u) {
+        PostBean p = postDao.get(id);
+        p.setDel(true);
+        postDao.update(p);
+
+        return Code.SUCCESS;
     }
 }

@@ -72,17 +72,17 @@
                     </div>
                     <el-popover ref="popover4" placement="bottom-start" width="400" trigger="click">
                         <el-upload
-                                class="upload-demo" ref="upload" action="file!upload?dir=dist"
+                                class="upload-demo" ref="upload" action="file!upload?dir=img_upload"
                                 :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess"
                                 :file-list="fileList" limit="9" multiple
-                                accept="image/png,image/jpeg,image/jpeg,video/mp4,video/x-msvideo">
+                                accept="image/png,image/jpeg,image/jpeg">
                             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                             <div slot="tip" class="el-upload__tip">请选择图片，支持png,jpe,jpeg</div>
                         </el-upload>
                     </el-popover>
                     <el-popover ref="popover5" placement="bottom-start" width="400" trigger="click">
                         <el-upload
-                                class="upload-demo" ref="upload" action="file!upload?dir=dist"
+                                class="upload-demo" ref="upload" action="file!upload?dir=img_upload"
                                 :on-preview="handlePreview" :on-remove="handleRemove" :on-success="handleSuccess"
                                 :file-list="fileList" limit="1" multiple accept="video/mp4">
                             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
@@ -136,6 +136,9 @@
                                         <c:if test="${n['group_type']=='private'}">
                                             <span class="am-badge am-radius">私密</span>
                                         </c:if>
+                                        <c:if test="${n['uid'].uid==user.uid}">
+                                            <span class="am-fr" @click="delPost('${n['id']}')"><i class="am-icon-close"></i></span>
+                                        </c:if>
                                     </div>
                                     <div class="WB_from S_txt2">
                                         <a href="#" class="S_txt2" style="font-size: 12px"><fmt:formatDate
@@ -152,14 +155,14 @@
                                             <ul class="WB_media_a_mn WB_media_a_m${n['media.length']} am-cf">
                                                 <c:forEach items="${n['imgs']}" var="img">
                                                     <li class="WB_pic li_1 S_bg1 S_line2 bigcursor li_n_mix_w">
-                                                        <img src="dist/${img}" alt="">
+                                                        <img src="img_upload/${img}" alt="">
                                                     </li>
                                                 </c:forEach>
                                                 <c:forEach items="${n['mp4s']}" var="mp4">
                                                     <li class="WB_video  S_bg1 WB_video_mini WB_video_h5">
                                                         <div class="WB_h5video">
                                                             <video alt="" controls="controls">
-                                                                <source src="dist/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
+                                                                <source src="img_upload/${mp4}" type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"'>
                                                             </video>
                                                         </div>
                                                     </li>

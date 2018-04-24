@@ -2,6 +2,7 @@ package jyx.dao;
 
 import jyx.common.Code;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.util.ResourceUtils;
 
@@ -12,12 +13,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class DataDao {
     private static DataDao ourInstance = new DataDao();
     private String DATE_PATH = "upload";
     private String IMG_PATH = "img_upload";
-    private String POST_PATH = "dist";
+    private String POST_PATH = IMG_PATH;
 
     public static DataDao getInstance() {
         return ourInstance;
@@ -50,13 +52,17 @@ public class DataDao {
         }
         return list;
     }
-
+    private String[] imgext = {"png","jpg","jpeg","gif","bmp"};
     public List<Map<String,String>> loadImgAll() {
         ServletContext rel= ServletActionContext.getServletContext();
 
         File uploadFile = new File(rel.getRealPath(IMG_PATH));
-
-        return this.loadAll(uploadFile);
+        List<Map<String,String>> list = this.loadAll(uploadFile);
+        list = list.stream().filter((item)->{
+            String type = item.get("type").toLowerCase();
+            return ArrayUtils.contains(imgext,type);
+        }).collect(Collectors.toList());
+        return list;
     }
 
     public List<Map<String,String>> loadPostAll() {

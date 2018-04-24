@@ -4,6 +4,23 @@ li {
   padding: 0;
   margin: 0;
 }
+.WB_h5video {
+  position: relative;
+  width: 200px;
+  height: 150px;
+  background: #d4d5e0;
+  color: #fff;
+  -webkit-transition: height .3s ease;
+  transition: height .3s ease;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.WB_h5video video {
+  width: 100%;
+  height: 100%;
+}
 [class*=am-icon-]:before {
   line-height: unset;
 }

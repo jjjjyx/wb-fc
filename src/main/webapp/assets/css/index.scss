@@ -1693,7 +1693,9 @@ only screen and (min-device-pixel-ratio: 2) {
     height: auto;
   }
 }
-
+.homefeed {
+  padding-bottom: 30px;
+}
 // 首页搜索用户列表
 .user-item {
   width: 250px;

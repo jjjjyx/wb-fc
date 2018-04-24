@@ -35,8 +35,8 @@ public class PostBean {
     @Expose
     private String content;
 
+    private Boolean isDel = false;
     @Expose
-
     private Integer thumbs_up;
     @Enumerated(EnumType.STRING)
     @Expose private PostType type = PostType.group; // 默认是group
@@ -136,5 +136,13 @@ public class PostBean {
 
     public void setType(PostType type) {
         this.type = type;
+    }
+
+    public Boolean getDel() {
+        return isDel;
+    }
+
+    public void setDel(Boolean del) {
+        isDel = del;
     }
 }

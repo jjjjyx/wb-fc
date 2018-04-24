@@ -69,6 +69,22 @@
                         this.$message('内容不可为空')
                     }
                 },
+                async delPost (id) {
+                    this.$confirm('确认删除此动态，此操作不可撤销?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        api.npost(`delPost/${id}`).then((result)=>{
+                            if(result.code==0){
+                                alert("删除成功")
+                                location.reload()
+                            }
+                        })
+                    }).catch(() => {
+        
+                    });
+                },
                 async star (id) {
                     
                     let result = await api.npost('star', {id})

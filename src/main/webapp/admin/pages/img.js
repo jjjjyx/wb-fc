@@ -17,7 +17,8 @@
                     dialogVisible: false,
                     currData:null,
                     active:'',
-                    multipleSelection: []
+                    multipleSelection: [],
+                    currItem: null
                 }
             },
             components: {},
@@ -34,14 +35,30 @@
                 }
             },
             methods: {
+                beforeAdd(currItem){
+                    this.currItem = currItem;
+                },
                 handleRemove(file, fileList) {
                     console.log(file, fileList);
                 },
                 handlePreview(file) {
                     console.log(file);
                 },
-                handleSuccess (response, file, fileList) {
+                async handleSuccess (response, file, fileList) {
                     this.store.commit('addImg', response.data)
+                    // 上次成功了
+                    //在当前的 对象中添加路径
+                    //保存
+                    console.log(response.data)
+                    if (this.currItem) {
+                        let result = await api.npost("!addActivityMedia",{id:this.currItem.id, media: response.data.fn})
+                        if (result.code==0){
+                            if (!this.currItem.media)
+                                this.currItem.media = []
+                            this.currItem.media.push(response.data.fn)
+                            this.currItem = null;
+                        }
+                    }
                 },
                 handleExceed(files, fileList) {
                     this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
