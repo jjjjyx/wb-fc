@@ -31,6 +31,8 @@ public class PostBean {
     // 发布时间
     @Expose
     private Date releaseTime;
+    @Expose
+    private String title;
     // 内容
     @Expose
     private String content;
@@ -144,5 +146,13 @@ public class PostBean {
 
     public void setDel(Boolean del) {
         isDel = del;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

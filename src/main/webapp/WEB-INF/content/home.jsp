@@ -35,6 +35,11 @@
                         已经输入{{form['post.content'].length}}个字
                     </div>
                 </div>
+                <%
+                    if (postType==PostType.group) {
+                %>
+                    <el-input v-model="form['post.title']" placeholder="标题" size="small"></el-input>
+                <%}%>
                 <div class="input">
                     <textarea name="" id="" class="W_input" v-model="form['post.content']"
                               style="height: 68px; margin: 0px; padding: 0px; border-style: none; border-width: 0px; font-size: 14px; word-wrap: break-word; line-height: 18px; overflow: hidden; outline: none;"></textarea>
@@ -132,6 +137,13 @@
                                 </div>
                                 <div class="WB_detail">
                                     <div class="WB_info">
+                                        <%
+                                            if (postType==PostType.group && n.get("title") !=null) {
+                                                out.print("<h1>");
+                                                out.print(n.get("title"));
+                                                out.print("</h1>");
+                                            }
+                                        %>
                                         <a href="people?uid=${n['uid'].uid}" class="W_f14 W_fb S_txt1">${n['uid'].username}</a>
                                         <c:if test="${n['group_type']=='private'}">
                                             <span class="am-badge am-radius">私密</span>

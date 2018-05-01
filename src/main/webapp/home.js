@@ -17,6 +17,7 @@
                 return {
                     form: {
                         'post.content': '',
+                        'post.title': '',
                         'post.group_type': '',
                         'post.media': [],
                     },
