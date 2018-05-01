@@ -176,7 +176,7 @@ public class AdminAction extends BaseAction {
     }
 
     public String delFiles(){
-        ResultUtils.set(data,dataDao.delFCData(this.fns));
+        ResultUtils.set(data,adminServer.delFCData(this.uids));
         return JSON;
     }
     public String issue(){

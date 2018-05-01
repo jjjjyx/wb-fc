@@ -9,6 +9,10 @@ import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * 排行榜发放记录
+ */
+
 @Entity
 @Table(name = "fc_integral")
 @TypeDef(name = "json", typeClass = JsonType.class)

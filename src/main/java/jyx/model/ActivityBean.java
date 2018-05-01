@@ -180,6 +180,7 @@ public class ActivityBean implements Bean<ActivityBean> {
         if (a.getSint()!=null) {
             this.sint.putAll(a.getSint());
         }
+//        this.author = a.getAuthor();
         this.type = a.getType();
     }
 

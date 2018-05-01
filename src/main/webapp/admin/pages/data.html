@@ -11,7 +11,7 @@
                         <div class="am-form-group">
                             <div class="am-btn-toolbar">
                                 <div class="am-btn-group am-btn-group-xs">
-                                    <el-upload class="upload-demo" action="../file!upload?dir=upload" :on-success="handleSuccess">
+                                    <el-upload class="upload-demo" action="../file!uploadDate?integral=10" :on-success="handleSuccess">
                                         <el-button size="small" type="primary">点击上传</el-button>
                                     </el-upload>
                                     <!--<button type="button" class="am-btn am-btn-default am-btn-success" @click="dialogVisible = true,newActivity(currData = {})"><span class="am-icon-plus"></span> 上传新文件</button>-->
@@ -27,24 +27,24 @@
                                   :data="dataList"
                                   tooltip-effect="dark"
                                   style="width: 100%">
-                            <el-table-column
-                                    type="selection"
-                                    width="55">
+                            <el-table-column type="selection" width="55"></el-table-column>
+                            <el-table-column prop="name" label="文件名称"></el-table-column>
+                            <el-table-column prop="ext" label="文件类型"></el-table-column>
+                            <el-table-column prop="size" label="文件大小"></el-table-column>
+                            <el-table-column prop="integral" label="下载所需积分"></el-table-column>
+
+                            <el-table-column label="上传者">
+                                <template scope="scope">
+                                    <span>{{scope.row.uid.username}}</span>
+                                </template>
                             </el-table-column>
-                            <el-table-column
-                                    prop="name"
-                                    label="文件名称">
-                            </el-table-column>
-                            <el-table-column
-                                    prop="type"
-                                    label="文件类型">
-                            </el-table-column>
+                            <!--<el-table-column prop="createDate" label="上传时间"></el-table-column>-->
                             <el-table-column label="操作" width="180">
                                 <template scope="scope">
                                     <!--@click.native.prevent="deleteRow(scope.$index, tableData4)"-->
-                                    <el-button type="text" size="small" @click="dialogVisible = true,editActivity(currData = scope.row)">
-                                        下载
-                                    </el-button>
+                                    <!--<el-button type="text" size="small" @click="dialogVisible = true,down(currData = scope.row)">-->
+                                        <!--下载-->
+                                    <!--</el-button>-->
                                     <el-button type="text" size="small" @click="multipleSelection=[scope.row],deleteFile()">
                                         删除
                                     </el-button>

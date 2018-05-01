@@ -3,9 +3,13 @@ package jyx.action;
 import jyx.common.Code;
 import jyx.common.ResultUtils;
 import jyx.dao.DataDao;
+import jyx.model.DataBean;
+import jyx.model.UserBean;
+import jyx.server.UserServer;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.convention.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import javax.servlet.ServletContext;
@@ -47,13 +51,17 @@ public class DataAction extends BaseAction{
     private String dir;
     private FileInputStream inputStream;
     private String contentType;
-    private DataDao dataDao = DataDao.getInstance();
+    private int integral;
+    private int id;
+//    private DataDao dataDao = DataDao.getInstance();
+    @Autowired
+    private UserServer userServer;
 
     public String upload(){
-        System.out.println("文件名:" +fileFileName );
-        System.out.println("文件类型:" +fileContentType );
-        System.out.println("文件大小:" +file.length());
-        System.out.println("文件临时路径:" +file .getAbsolutePath());
+        System.out.println("文件名:" + fileFileName );
+        System.out.println("文件类型:" + fileContentType );
+        System.out.println("文件大小:" + file.length());
+        System.out.println("文件临时路径:" +file.getAbsolutePath());
         ServletContext rel = ServletActionContext.getServletContext();
         File uploadFile = new File(rel.getRealPath(dir));
 
@@ -77,16 +85,33 @@ public class DataAction extends BaseAction{
         return JSON;
     }
 
+    public String uploadDate(){
+        System.out.println("上传资料");
+        System.out.println("文件名:" +fileFileName );
+        System.out.println("文件类型:" +fileContentType );
+        System.out.println("文件大小:" +file.length());
+        System.out.println("文件临时路径:" +file .getAbsolutePath());
+        UserBean u = (UserBean) session.getAttribute("user");
+        Object o = userServer.uploadDate(u,file,fileContentType,fileFileName,integral);
+        if (o!=null) {
+            ResultUtils.set(data,Code.SUCCESS,o);
+        }else {
+            ResultUtils.set(data,Code.ERROR);
+        }
+        return JSON;
+    }
+
     public String down(){
-        File path = dataDao.getFileByFn(fn);
+//        File path = dataDao.getFileByFn(fn);
+        DataBean db = userServer.getDate(id);
+        ServletContext rel = ServletActionContext.getServletContext();
+        File path = new File(rel.getRealPath(db.getSrc()));
+
         Path p = path.toPath();
         try {
             this.inputStream = new FileInputStream(path);
-//            this.fileFileName = new String(fn.substring(fn.indexOf('_')+1).getBytes(),"ISO8859-1");
-            this.fileFileName = fn.substring(fn.indexOf('_')+1);
-//            System.out.println("fileFileName = " + fileFileName);
+            this.fileFileName = new String(db.getName().getBytes(),"ISO8859-1");
             this.contentType = Files.probeContentType(p);
-//            response.setContentType(contentType);
         } catch (IOException e) {
         }
         return "file";
@@ -162,4 +187,11 @@ public class DataAction extends BaseAction{
         this.fn = fn;
     }
 
+    public void setIntegral(int integral) {
+        this.integral = integral;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

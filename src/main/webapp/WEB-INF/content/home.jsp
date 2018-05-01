@@ -132,12 +132,22 @@
                                 </div>
                                 <div class="WB_detail">
                                     <div class="WB_info">
-                                        <a href="people?uid=${n['uid'].uid}" class="W_f14 W_fb S_txt1">${n['uid'].nickname}</a>
+                                        <a href="people?uid=${n['uid'].uid}" class="W_f14 W_fb S_txt1">${n['uid'].username}</a>
                                         <c:if test="${n['group_type']=='private'}">
                                             <span class="am-badge am-radius">私密</span>
                                         </c:if>
                                         <c:if test="${n['uid'].uid==user.uid}">
                                             <span class="am-fr" @click="delPost('${n['id']}')"><i class="am-icon-close"></i></span>
+                                            <%
+                                                if (postType==PostType.mood){
+                                                    if ("private".equalsIgnoreCase((String) n.get("group_type"))) {
+                                                        out.print("<a class=\"am-fr\" style=\"margin-right: 5px;\" @click=\"public('"+n.get("id")+"')\">公开</a>");
+                                                    }else {
+                                                        out.print("<a class=\"am-fr\" style=\"margin-right: 5px;\" @click=\"priv('"+n.get("id")+"')\">转私密</a>");
+                                                    }
+                                                }
+                                            %>
+
                                         </c:if>
                                     </div>
                                     <div class="WB_from S_txt2">

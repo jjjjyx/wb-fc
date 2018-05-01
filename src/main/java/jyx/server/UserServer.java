@@ -1,14 +1,19 @@
 package jyx.server;
 
 import jyx.common.Code;
+import jyx.common.ResultUtils;
 import jyx.dao.*;
 import jyx.model.*;
 import jyx.utils.Utils;
+import org.apache.commons.io.FileUtils;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletContext;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,7 +42,10 @@ public class UserServer extends ServiceBase {
     private InboxDao inboxDao;
     @Autowired
     private CommentDao commentDao;
-    private DataDao dataDao = DataDao.getInstance();
+    @Autowired
+    private IntegralLogDao integralLogDao;
+    @Autowired
+    private DataDao dataDao;
 
     public UserBean getUser(String username, String password) {
         UserBean u = userDao.get("from UserBean where username=?0", username);
@@ -126,13 +134,10 @@ public class UserServer extends ServiceBase {
         return list;
     }
 
-    // 下载材料
-    public List<Map<String, String>> getFCData(int i) {
-        List<Map<String, String>> list = dataDao.loadDataAll();
-        if (i > 0) {
-            list = list.stream().limit((long) i).collect(Collectors.toList());
-            Collections.shuffle(list);
-        }
+    // 材料获取材料
+    public List<DataBean> getFCData(int i) {
+        String hql = "from DataBean order by createDate desc";
+        List<DataBean> list = dataDao.find(hql, 0, i, null);
         return list;
     }
 
@@ -182,10 +187,7 @@ public class UserServer extends ServiceBase {
 //        UserBean userBean = userDao.get(u.getUid());
         post.setUid(u);
         // 增加积分
-        Integer i = u.getIntegral();
-        if (i == null) i = 0;
-        i++;
-        u.setIntegral(i);
+        this.releasePostLog(u);
 
         postDao.save(post);
         userDao.update(u);
@@ -308,6 +310,26 @@ public class UserServer extends ServiceBase {
         }
         ps.add(postBean);
         userDao.update(userBean);
+        return Code.SUCCESS;
+    }
+
+    public Code priv(Integer id, UserBean u) {
+        PostBean postBean = postDao.get(id);
+        if (postBean == null) {
+            return Code.PARAMETER_FAIL;
+        }
+        postBean.setGroup_type("private");
+        postDao.update(postBean);
+        return Code.SUCCESS;
+    }
+
+    public Code pub(Integer id, UserBean u) {
+        PostBean postBean = postDao.get(id);
+        if (postBean == null) {
+            return Code.PARAMETER_FAIL;
+        }
+        postBean.setGroup_type("");
+        postDao.update(postBean);
         return Code.SUCCESS;
     }
 
@@ -490,12 +512,23 @@ public class UserServer extends ServiceBase {
         return Code.SUCCESS;
     }
 
-    public Code downFile(UserBean userBean) {
+    public Code downFile(UserBean userBean, Integer id) {
+        DataBean dataBean = dataDao.get(id);
+        if (dataBean==null) return  Code.PARAMETER_FAIL;
+
+        UserBean u = dataBean.getUid();
         int ii = userBean.getIntegral();
-        if (ii >= 5) {
-            ii -= 5;
-            userBean.setIntegral(ii);
-            this.userDao.update(userBean);
+        // 积分足够 或者是自己上传的
+        if (ii >= dataBean.getIntegral() || userBean.equals(u)) {
+            if (!userBean.equals(u)) {
+                this.downFileLog(u,"上传文件分红",dataBean.getIntegral());
+                this.userDao.update(u);
+
+                this.downFileLog(userBean,"下载文件扣除",-dataBean.getIntegral());
+            }else {
+                this.downFileLog(userBean,"下载文件扣除",-0);
+            }
+            this.userDao.merge(userBean);
             return Code.SUCCESS;
         }
         return Code.ACCESS_FAIL;
@@ -631,4 +664,101 @@ public class UserServer extends ServiceBase {
 
         return Code.SUCCESS;
     }
+
+    public DataBean uploadDate(UserBean u, File file, String fileContentType, String fileFileName, int integral) {
+        if (u == null) return null;
+        DataBean db = new DataBean();
+        // 固定上传目录
+        ServletContext rel = ServletActionContext.getServletContext();
+        File uploadFile = new File(rel.getRealPath("upload"));
+        if (!uploadFile .exists()) {//判断输出路径是否存在
+            uploadFile.mkdir();
+        }
+        String ext = fileFileName.substring(fileFileName.lastIndexOf(".") + 1);
+        db.setExt(ext);
+        db.setOriginName(fileFileName);
+        db.setName(fileFileName);
+        db.setIntegral(integral);
+        db.setSize(FileUtils.byteCountToDisplaySize(file.length()));
+        db.setType(fileContentType);
+        db.setUid(u);
+        db.setCreateDate(new Date());
+
+        // 拷贝文件
+        long l = new Date().getTime();
+        String name = l+"_" + fileFileName;
+
+        db.setSrc("upload/" + name);
+        File f = new File(uploadFile, name);
+        try {
+            FileUtils.copyFile(file, f);
+        } catch (IOException e) {
+            return null;
+        }
+        // 增加积分 固定增加5分
+        this.uploadLog(u);
+        dataDao.save(db);
+        return db;
+    }
+
+
+
+    // 上传资源文件
+    public void uploadLog(UserBean u){
+        this.addIntegralLog(u,"上传资料",5);
+    }
+    // 发表动态
+    public void releasePostLog(UserBean u){
+        this.addIntegralLog(u,"发表动态",5);
+    }
+    // 下载文件
+    public void downFileLog(UserBean u,String msg, int integral){
+//        this.addIntegralLog(u,"下载文件", integral);
+        IntegralLogBean logBean = new IntegralLogBean();
+        logBean.setIntegral(integral);
+        logBean.setRemark(msg);
+        logBean.setUid(u);
+        logBean.setUpdateDate(new Date());
+
+        Integer i = u.getIntegral();
+        if (i == null) i = 0;
+        i+=integral;
+        u.setIntegral(i);
+        integralLogDao.save(logBean);
+    }
+    // 排行榜奖励
+    public void issueLog(UserBean u, int integral){
+        this.addIntegralLog(u,"排行榜奖励", integral);
+    }
+
+    private void addIntegralLog(UserBean u,String msg, int integral) {
+        IntegralLogBean logBean = new IntegralLogBean();
+        logBean.setIntegral(integral);
+        logBean.setRemark(msg);
+        logBean.setUid(u);
+        logBean.setUpdateDate(new Date());
+
+        Integer i = u.getIntegral();
+        if (i == null) i = 0;
+        i+=integral;
+        u.setIntegral(i);
+        userDao.update(u);
+        integralLogDao.save(logBean);
+    }
+
+    public DataBean getDate(int id) {
+        return this.dataDao.get(id);
+    }
+
+    public List<IntegralLogBean> getAllintegral(UserBean userBean) {
+        String hql = "from IntegralLogBean where uid = ?0  order by updateDate desc";
+        return integralLogDao.find(hql,new Object[]{userBean});
+    }
+
+    public List<Map<String,Object>> getFollowLeaderboard(UserBean userBean) {
+        Set<UserBean> uf = userBean.getFollows();
+        return uf.stream().filter((item)-> item.getFollows().contains(userBean)).sorted(Comparator.comparingInt(UserBean::getIntegral).reversed()).map(Utils::transBean2Map).collect(Collectors.toList());
+    }
+
+
 }

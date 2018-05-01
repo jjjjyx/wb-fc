@@ -146,9 +146,9 @@
                         <ul class="am-gallery am-avg-sm-2 am-avg-md-4 am-gallery-default">
                             <c:forEach items="${fc_img}" var="n">
                                 <li>
-                                    <div class="am-gallery-item" @click="viewImg('${path}/img_upload/${n.fn}')">
-                                        <img src="${path}/img_upload/${n.fn}" alt=""/>
-                                        <h3 class="am-gallery-title">${n.name}</h3>
+                                    <div class="am-gallery-item" >
+                                        <img src="${path}/img_upload/${n.fn}" alt="" @click="viewImg('${path}/img_upload/${n.fn}')"/>
+                                        <h3 class="am-gallery-title" ><a href="activity/all">${n.name}</a></h3>
                                     </div>
                                 </li>
                             </c:forEach>
@@ -156,14 +156,16 @@
                     </div>
                 </div>
                 <div class="am-panel am-panel-default">
-                    <div class="am-panel-hd">材料下载 <i class="am-icon-cloud-download"></i></div>
-                    <div class="am-panel-bd">
-                        <ul class="am-list">
-                            <c:forEach items="${fc_data}" var="n">
+                    <div class="am-panel-hd">材料下载 <i class="am-icon-cloud-download"></i>
+                        <a class="am-fr" href="down">更多</a></div>
+                    <div class="am-panel-bd cuk-layout-content" style="height: auto">
+                        <ul class="am-list am-list-static ">
+                            <c:forEach items="${fc_data}" var="ad">
                                 <li>
-                                    <a href="down">${n.name}
-                                        <span class="am-badge am-badge-danger am-fr" style="cursor: pointer">点击下载</span>
-                                    </a>
+                                    <a href="javascript:void(0);">${ad.name}</a>
+                                    <span class="am-badge am-badge-warning" title="所需积分"
+                                          style="cursor: default">${ad.integral}分</span>
+                                    <a href="javascript:void(0);" class="am-fr" @click="down('${ad.id}')">下载文件</a>
                                 </li>
                             </c:forEach>
                         </ul>
@@ -172,7 +174,8 @@
             </div>
             <div class="col-md-3 am-u-md-3">
                 <div class="am-panel am-panel-default">
-                    <div class="am-panel-hd">热门资料下载</div>
+                    <div class="am-panel-hd">热门资料下载
+                    <a class="am-fr" href="down">更多</a></div>
                     <div class="am-panel-bd">
                         <ul class="am-list list-stlt">
                             <c:forEach items="${hot_data}" var="n">
@@ -209,20 +212,15 @@
             </div>
         </div>
     </section>
-    <el-dialog
-            title="查看图片"
-            :visible.sync="dialogVisible"
-            width="60%">
+    <el-dialog title="查看图片" :visible.sync="dialogVisible" width="60%">
         <div class="img-view">
             <img :src="imgSrc" alt="">
         </div>
-
     </el-dialog>
 </div>
 
 <%@include file="../../assets/base/footer.jsp" %>
-<script>
-</script>
+<script></script>
 </body>
 </html>
 

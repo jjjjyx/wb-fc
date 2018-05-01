@@ -11,9 +11,9 @@
                     String[][] nav = {
                             {"index","index","首页"},
                             {"news","news","资讯"},
-                            {"mood","mood","运动动态"},
+                            {"group?_=all","group","运动动态"},
                             {"activity/all","activity","活动"},
-                            {"group?_=all","group","圈子"},
+                            {"mood","mood","圈子"},
                             {"down","down","材料下载"},
                     };
 //                    out.print(pageContext.getAttribute("moduleName"));
@@ -47,8 +47,8 @@
             <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right">
                 <%--${inbox_msg}--%>
                 <li ><a href="inbox"><i class="am-icon-comments am-text-md"></i><c:if test="${inbox_msg>0}"><span class="am-badge am-badge-success am-round item-feed-badge">${inbox_msg}</span></c:if></a></li>
-                <li ><a href="${path}/fill"><img src="${path}/assets/img/user (${user.uid % 28}).png" style="    width: 28px; border-radius: 50%; margin-right: 5px;" alt=""><span>${user.nickname}</span></a></li>
-                <li><a href="${path}/ff.jsp"><i class="am-icon-database"></i> <span>${user.integral}</span></a></li>
+                <li ><a href="${path}/fill"><img src="${path}/assets/img/user (${user.uid % 28}).png" style="    width: 28px; border-radius: 50%; margin-right: 5px;" alt=""><span>${user.nickname}&nbsp;</span></a></li>
+                <li><a href="${path}/integral"><i class="am-icon-database"></i> <span>${user.integral}</span></a></li>
                 <c:if test="${user.role==100}">
                     <li ><a href="${path}/admin/"><i class="am-icon-gear"></i></a></li>
                 </c:if>

@@ -81,6 +81,7 @@ public class ActivityAction extends BaseAction {
     @Action(value = "save")
     public String save(){
         UserBean u = (UserBean) session.getAttribute("user");
+        this.activity.setAuthor(u.getUsername());
         ResultUtils.set(data, userServer.releaseActivity(this.activity, u));
         return JSON;
     }

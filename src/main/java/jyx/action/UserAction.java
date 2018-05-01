@@ -25,6 +25,7 @@ import java.util.Map;
         @Result(name = "user-info", location = "./user-info.jsp"),
         @Result(name = "people", location = "./people.jsp"),
         @Result(name = "inbox", location = "./inbox.jsp"),
+        @Result(name = "integral", location = "./integral.jsp"),
         @Result(name = "noUser", location = "./",type = "redirectAction"),
         @Result(name = "activity", location = "./activity/all",type = "redirectAction"),
         @Result(name = "lore", location = "./lore.jsp"),
@@ -104,6 +105,14 @@ public class UserAction extends BaseAction {
         }
         return "noUser";
     }
+    @Action(value = "integral")
+    public String integral(){
+        UserBean userBean = (UserBean) session.getAttribute("user");
+        request.setAttribute("leader_board",userServer.getFollowLeaderboard(userBean));
+        request.setAttribute("integral_data",userServer.getAllintegral(userBean));
+        return "integral";
+    }
+
     @Action(value = "people")
     public String people(){
         return "people";
@@ -154,8 +163,8 @@ public class UserAction extends BaseAction {
     @Action(value = "uf")
     public String uf(){
         // 检查当前用户
-        UserBean userBean = (UserBean) this.session.getAttribute("user");
-        Code code = this.userServer.downFile(userBean);
+        UserBean userBean = (UserBean) session.getAttribute("user");
+        Code code = this.userServer.downFile(userBean, id);
         ResultUtils.set(data,code);
         return JSON;
     }
@@ -195,6 +204,24 @@ public class UserAction extends BaseAction {
 
         return JSON;
     }
+
+    // 私密
+    @Action(value = "priv")
+    public String priv(){
+        UserBean u =  (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,userServer.priv(this.id, u));
+        return JSON;
+    }
+
+
+    // 公开
+    @Action(value = "pub")
+    public String pub(){
+        UserBean u =  (UserBean) session.getAttribute("user");
+        ResultUtils.set(data,userServer.pub(this.id, u));
+        return JSON;
+    }
+
     // 收藏 动态
     @Action(value = "star")
     public String star(){

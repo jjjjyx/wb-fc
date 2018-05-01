@@ -55,7 +55,7 @@
                             //刷新页面
                             if (result.code == 0) {
                                 //
-                                alert('发布成功，积分+1')
+                                alert('发布成功，积分+5')
                                 if (post_type == 'mood') {
                                     location.href = post_type
                                 } else {
@@ -127,6 +127,21 @@
                 handleSuccess (response, file, fileList) {
                     this.form['post.media'].push(response.data.fn)
                     //console.log(response, file, fileList)
+                },
+                async priv(id){
+                    console.log('private',id)
+                    let result = await api.npost('priv', {id})
+                    if (result.code == 0) {
+                        this.$message('权限设置成功')
+                        location.reload()
+                    }
+                },
+                async public(id){
+                    let result = await api.npost('pub', {id})
+                    if (result.code == 0) {
+                        this.$message('权限设置成功')
+                        location.reload()
+                    }
                 }
             },
             created () {

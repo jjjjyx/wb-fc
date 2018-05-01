@@ -10,7 +10,9 @@
     max-width: 1200px;
   }
 }
-
+a {
+  cursor: pointer;
+}
 /**
 
  */
@@ -1806,4 +1808,10 @@ el-select, el-dialog, el-button {
     align-items: center;
     background: #f2f4f6;
   }
+}
+
+.el-upload-list__item {
+  height: 30px;
+
+
 }

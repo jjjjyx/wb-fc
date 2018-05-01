@@ -1,9 +1,11 @@
 package jyx.dao;
 
 import jyx.common.Code;
+import jyx.model.DataBean;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.struts2.ServletActionContext;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.ResourceUtils;
 
 import javax.servlet.ServletContext;
@@ -14,8 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-public class DataDao {
+@Repository
+public class DataDao extends BaseDao<DataBean,Integer>{
     private static DataDao ourInstance = new DataDao();
     private String DATE_PATH = "upload";
     private String IMG_PATH = "img_upload";
@@ -23,10 +25,6 @@ public class DataDao {
 
     public static DataDao getInstance() {
         return ourInstance;
-    }
-
-    private DataDao() {
-
     }
 
     public List<Map<String,String>> loadDataAll() {

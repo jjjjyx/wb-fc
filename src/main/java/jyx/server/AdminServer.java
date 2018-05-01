@@ -4,11 +4,14 @@ import jyx.common.Code;
 import jyx.dao.*;
 import jyx.model.*;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletContext;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -19,6 +22,8 @@ import java.util.*;
 @Transactional(rollbackFor = {RuntimeException.class, IOException.class}, propagation = Propagation.REQUIRED)
 public class AdminServer {
 //    protected Logger logger = LoggerFactory.getLogger("jyx.task.file");
+    @Autowired
+    private UserServer userServer;
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -33,8 +38,10 @@ public class AdminServer {
     private PostDao postDao;
     @Autowired
     private IntegralDao integralDao;
-
-    private DataDao dataDao = DataDao.getInstance();
+    @Autowired
+    private IntegralLogDao integralLogDao;
+    @Autowired
+    private DataDao dataDao;
 
     private final String DEFAULT_PASS = "123456";
 
@@ -132,6 +139,7 @@ public class AdminServer {
     public Code add(ActivityBean activityBean) {
         activityBean.setReleaseTime(new Date());
         activityBean.setComment_id(UUID.randomUUID().toString());
+        activityBean.setStatus(ActivityStatus.ready);
         this.activityDao.save(activityBean);
         return Code.SUCCESS;
     }
@@ -206,7 +214,9 @@ public class AdminServer {
         map.put("lore_data",this.getAllLore());
 //        ServletContext rel= ServletActionContext.getServletContext();
 //        File uploadFile = new File(rel.getRealPath( "upload"));
-        map.put("data_data",dataDao.loadDataAll());
+        // 废弃这个
+//        map.put("data_data",dataDao.loadDataAll());
+        map.put("data_data",dataDao.loadAll());
         map.put("img_data",dataDao.loadImgAll());
         map.put("leaderboard_data",this.getLastLeaderboard());
         return map;
@@ -230,18 +240,6 @@ public class AdminServer {
         return list;
     }
 
-    public static void main(String[] args) {
-//        Calendar calendar=Calendar.getInstance(Locale.CHINA);
-//        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-//        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-//        Date start = calendar.getTime();
-//        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-//        Date end = calendar.getTime();
-//        System.out.println(start);
-//        System.out.println(end);
-        Calendar calendar=Calendar.getInstance(Locale.CHINA);
-        System.out.println(calendar.get(Calendar.WEEK_OF_YEAR));
-    }
 
     public Code issue() {
         Calendar calendar=Calendar.getInstance(Locale.CHINA);
@@ -270,13 +268,8 @@ public class AdminServer {
         int index =0;
         for (PostBean postBean : list) {
             UserBean u = postBean.getUid();
-            Integer f = u.getIntegral();
-            if(f==null) {
-                f = null;
-            }
             ids[index++] = postBean.getId();
-            f+=i;
-            u.setIntegral(f);
+            userServer.issueLog(u,i);
             i-=10;
             userDao.update(u);
         }
@@ -304,5 +297,19 @@ public class AdminServer {
             this.activityDao.update(activityBean);
             return Code.SUCCESS;
         }
+    }
+
+    public Code delFCData(int[] uids) {
+        ServletContext rel= ServletActionContext.getServletContext();
+        File uploadFile = new File(rel.getRealPath("/"));
+        for (int fn : uids) {
+            DataBean dataBean = this.dataDao.get(fn);
+            this.dataDao.delete(dataBean);
+            File file = new File(uploadFile, dataBean.getSrc());
+            if(file.exists()) {
+                file.delete();
+            }
+        }
+        return Code.SUCCESS;
     }
 }

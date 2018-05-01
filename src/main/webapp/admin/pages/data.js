@@ -34,7 +34,9 @@
                     console.log(file, fileList)
                 },
                 handleSuccess (response, file, fileList) {
-                    this.store.commit('addData', response.data)
+                    console.log(response)
+                    if (response.code==0)
+                        this.store.commit('addData', response.data)
                 },
                 handlePreview (file) {
                     console.log(file)
@@ -48,9 +50,9 @@
                     return this.$confirm(`确定移除 ${ file.name }？`)
                 },
                 async deleteFile () {
-                    let fns = this.multipleSelection.map(item => item.fn)
+                    let uids = this.multipleSelection.map(item => item.id)
                     
-                    let result = await api.npost('./!delFiles', {fns})
+                    let result = await api.npost('./!delFiles', {uids})
                     this.$message(result.msg)
                     if (result.code == 0) {
                         this.multipleSelection.forEach((item) => {
@@ -62,6 +64,7 @@
             created () {
             },
             mounted () {
+                console.log(this.dataList)
             }
         }
     })

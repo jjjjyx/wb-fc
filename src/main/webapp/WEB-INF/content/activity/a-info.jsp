@@ -121,22 +121,24 @@
                                             String[] media = activityBean.getMedia();
                                             List<String> imgs = new ArrayList<String>();
                                             List<String> mp4s = new ArrayList<String>();
-                                            for (String s : media) {
-                                                String ext = s.substring(s.lastIndexOf(".") + 1);
-                                                if (ext.equalsIgnoreCase("mp4")) {
-                                                    mp4s.add(s);
-                                                } else {
-                                                    imgs.add(s);
+                                            if (media!=null){
+                                                for (String s : media) {
+                                                    String ext = s.substring(s.lastIndexOf(".") + 1);
+                                                    if (ext.equalsIgnoreCase("mp4")) {
+                                                        mp4s.add(s);
+                                                    } else {
+                                                        imgs.add(s);
+                                                    }
                                                 }
+                                                if (imgs.size() > 0) {
+                                                    pageContext.setAttribute("imgs",imgs);
+                                                }
+                                                pageContext.setAttribute("imgslength",imgs.size());
+                                                if (mp4s.size()>0){
+                                                    pageContext.setAttribute("mp4s",mp4s);
+                                                }
+                                                pageContext.setAttribute("mp4slength",mp4s.size());
                                             }
-                                            if (imgs.size() > 0) {
-                                                pageContext.setAttribute("imgs",imgs);
-                                            }
-                                            pageContext.setAttribute("imgslength",imgs.size());
-                                            if (mp4s.size()>0){
-                                                pageContext.setAttribute("mp4s",mp4s);
-                                            }
-                                            pageContext.setAttribute("mp4slength",mp4s.size());
                                         %>
                                         <c:if test="${imgslength>0}">
                                             <div class="WB_media_wrap am-cf">

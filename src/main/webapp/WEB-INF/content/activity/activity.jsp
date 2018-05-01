@@ -62,7 +62,6 @@
                                         age += " -"+ arr.get(1);
                                     }
                                 }
-
                             %>
                             <li>
                                 <i class="am-icon-fa am-icon-fw"></i>
@@ -134,7 +133,7 @@
                 </el-col>
             </el-form-item>
             <el-form-item label="负责人">
-                <el-input value="${user.nickname}" disabled></el-input>
+                <el-input value="${user.username}" disabled></el-input>
             </el-form-item>
             <el-form-item label="负责人电话">
                 <el-input v-model="form['activity.phone']"></el-input>
