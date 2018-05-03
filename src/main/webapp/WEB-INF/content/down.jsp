@@ -64,7 +64,7 @@
         </el-upload>
         <span slot="footer" class="dialog-footer">
             <el-button @click="submitUpload">上传</el-button>
-            <el-button>取消</el-button>
+            <el-button @click="dialogTableVisible = false">取消</el-button>
         </span>
     </el-dialog>
 </div>

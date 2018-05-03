@@ -1724,8 +1724,9 @@ only screen and (min-device-pixel-ratio: 2) {
 
 }
 
-el-select, el-dialog, el-button {
+el-select, el-dialog, el-button,el-popover {
   display: none;
+
 }
 
 // 活动

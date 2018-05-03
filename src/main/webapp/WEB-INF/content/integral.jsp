@@ -103,22 +103,14 @@
         <div class="col-md-3 am-u-md-3 am-padding-0">
             <div class="cuk-layout-aside">
                 <div class="am-panel am-panel-default">
-                    <div class="am-panel-hd">积分排行榜</div>
+                    <div class="am-panel-hd">好友积分排行榜</div>
                     <div class="am-panel-bd">
                         <ol class="am-list leader-board ">
-                            <%
-                                System.out.println("leader_board = " + request.getAttribute("leader_board"));%>
                             <c:forEach items="${leader_board}" var="n">
                                 <li>
                                     <img src="assets/img/user (${n["uid"] % 28}).png" alt="">
                                     <a href="user/${n['uid']}">${n['nickname']}
                                         <span class="am-badge am-fr"> ${n['integral']} 分</span>
-                                        <c:if test="${n['is_f']}">
-                                            <span class="am-badge am-fr" @click="ung('${n['uid']}')">已关注</span>
-                                        </c:if>
-                                        <c:if test="${!n['is_f']}">
-                                            <span class="am-badge am-fr" @click="g('${n['uid']}')">关注</span>
-                                        </c:if>
                                     </a>
 
                                 </li>

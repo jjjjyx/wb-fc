@@ -13,7 +13,7 @@
 <div id="app">
     <%@include file="../../assets/base/nav.jsp" %>
     <section class="am-g am-g-fixed blog-fixed blog-content" style="background: #fff">
-        <div class="am-u-md-8 am-u-sm-12">
+        <div class="am-u-sm-12">
             <article class="am-article blog-article-p">
                 <div class="am-article-hd">
                     <h1 class="am-article-title blog-text-center">${new_date.title}</h1>

@@ -49,6 +49,23 @@ public class UserAction extends BaseAction {
     private String fn;
     private String query;
     private InboxBean inbox;
+    private String password;
+    private String cpass;
+
+
+    @Action("changepass")
+    public String changepass(){
+        String method = request.getMethod();
+        UserBean userBean = (UserBean) session.getAttribute("user");
+        if ("post".equalsIgnoreCase(method)) {
+            ResultUtils.set(data,userServer.changePass(userBean.getUid(),password));
+            session.removeAttribute("user");
+            session.invalidate();
+            return JSON;
+        }
+        return "user";
+    }
+
     // 查看用户信息
     @Action(value = "user/{uid}")
     public String user() {
@@ -140,8 +157,8 @@ public class UserAction extends BaseAction {
     @Action(value = "fill")
     public String fill_info() {
         String m = request.getMethod();
-        if ("Post".equalsIgnoreCase(m)) {
             UserBean u = (UserBean) session.getAttribute("user");
+        if ("Post".equalsIgnoreCase(m)) {
             u = userServer.updateUser(u.getUid(), user);
             if (u != null) {
                 // 将更新后的值重新放入
@@ -149,6 +166,8 @@ public class UserAction extends BaseAction {
             }
             return "fill_info_success";
         }
+
+        request.setAttribute("leader_board",userServer.getFollowLeaderboard(u));
         return "fill_info";
     }
 
@@ -366,5 +385,21 @@ public class UserAction extends BaseAction {
 
     public void setInbox(InboxBean inbox) {
         this.inbox = inbox;
+    }
+
+    public String getCpass() {
+        return cpass;
+    }
+
+    public void setCpass(String cpass) {
+        this.cpass = cpass;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
