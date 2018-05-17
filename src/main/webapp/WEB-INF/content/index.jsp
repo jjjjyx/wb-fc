@@ -132,15 +132,15 @@
                                     <div>
                                         <time class="am-text-xs am-vertical-align-middle">发布时间：<fmt:formatDate
                                                 value="${n.releaseTime}" pattern="yyyy-MM-dd HH:mm"/></time>
-                                        <span class="am-btn am-btn-link am-btn-xs am-padding-0"
-                                              @click="acSsign('${n.id}')">报名</span>
+                                        <%-- <span class="am-btn am-btn-link am-btn-xs am-padding-0"
+                                              @click="acSsign('${n.id}')">报名</span> --%>
                                     </div>
                                 </li>
                             </c:forEach>
                         </ul>
                     </div>
                 </div>
-                <div class="am-panel am-panel-default">
+               <%--  <div class="am-panel am-panel-default">
                     <div class="am-panel-hd">运动图片 <i class="am-icon-picture-o"></i></div>
                     <div class="am-panel-bd">
                         <ul class="am-gallery am-avg-sm-2 am-avg-md-4 am-gallery-default">
@@ -154,7 +154,7 @@
                             </c:forEach>
                         </ul>
                     </div>
-                </div>
+                </div> --%>
                 <div class="am-panel am-panel-default">
                     <div class="am-panel-hd">材料下载 <i class="am-icon-cloud-download"></i>
                         <a class="am-fr" href="down">更多</a></div>

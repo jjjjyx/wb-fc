@@ -44,7 +44,8 @@
                         "activity.author":"",
                         "activity.type":"",
                         "activity.address":"",
-                        "activity.phone":""
+                        "activity.phone":"",
+                        "activity.nums":""
                     },
                     o_form:{
                         sex: '',
@@ -84,6 +85,7 @@
                     this.form['activity.type'] = "";
                     this.form['activity.address'] = "";
                     this.form['activity.phone'] = "";
+                    this.form['activity.nums'] = "";
                     this.form['activity.author'] = this.store.states.user.username;
                     this.o_form.sex = '';
                     this.o_form.age = [18,30];
@@ -114,6 +116,7 @@
                         obj.address = this.form['activity.address']
                         obj.startTime = this.form['activity.startTime']
                         obj.endTime = this.form['activity.endTime']
+                        obj.nums = this.form['activity.nums']
                         obj.sint = {
                             sex: [this.form['activity.sint.sex']],
                             age: this.form['activity.sint.age']
@@ -137,6 +140,7 @@
                     this.form['activity.type'] = data.type;
                     this.form['activity.address'] = data.address;
                     this.form['activity.phone'] = data.phone;
+                    this.form['activity.nums'] = data.nums;
                     this.form['activity.author'] = this.store.states.user.username;
                     if (data.sint) {
                         if (data.sint.sex && data.sint.sex.length)

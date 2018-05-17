@@ -12,8 +12,8 @@
 <body>
 <div id="app">
     <%@include file="../../assets/base/nav.jsp" %>
-    <section class="am-g am-g-fixed blog-fixed blog-content" style="background: #fff">
-        <div class="am-u-md-8 am-u-sm-12">
+    <section class="am-g am-g-fixed blog-fixed blog-content" style="margin:0px 200px 0px 100px;;background: #fff;padding:10px 50px 30px 50px;min-height: 500px;">
+        <div class="am-u-md-10 am-u-sm-10">
             <%--<button type="button" class="am-btn am-btn-warning am-fr am-btn-xs" style="    margin-top: 28px;">发送私信</button>--%>
             <article class="am-article blog-article-p">
                 <div class="am-article-hd">
@@ -25,7 +25,7 @@
                     </p>
                 </div>
                 <div class="am-article-bd">
-                    <img src="assets/i/f${n.id%20+4}.jpg" alt="" class="blog-entry-img blog-article-margin">
+                    <%-- <img src="assets/i/f${n.id%20+4}.jpg" alt="" class="blog-entry-img blog-article-margin"> --%>
                     <p style="text-indent: 2ch">
                         ${lore_date.content}
                     </p>

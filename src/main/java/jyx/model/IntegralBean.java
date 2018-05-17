@@ -18,10 +18,10 @@ import java.util.Date;
 @TypeDef(name = "json", typeClass = JsonType.class)
 public class IntegralBean {
     @Id
-    @GenericGenerator(name = "idGenerator", strategy = "assigned")
+    @GenericGenerator(name = "idGenerator", strategy = "increment")
     @GeneratedValue(generator = "idGenerator")
     @Expose
-    private String id;
+    private int id;
     @Expose
     private Date createTime;
     @Expose
@@ -29,11 +29,11 @@ public class IntegralBean {
     @Column(name="post_ids", nullable=true, length = 65535)
     private Integer[] post_ids;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -60,11 +60,11 @@ public class IntegralBean {
 
         IntegralBean that = (IntegralBean) o;
 
-        return id != null ? id.equals(that.id) : that.id == null;
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return id;
     }
 }

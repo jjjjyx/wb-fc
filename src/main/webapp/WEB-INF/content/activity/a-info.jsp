@@ -174,6 +174,36 @@
                                     </div> <!-- 评论内容 -->
                                 </div>
                             </article>
+                            
+                            <article class="am-comment am-margin-bottom-sm"> <!-- 评论容器 -->
+                                <a href="#">
+                                    <div class="am-comment-avatar">
+                                        <svg fill="currentColor" preserveAspectRatio="xMidYMid meet" height="1em" width="1em" viewBox="0 0 40 40" class="cuk-icon cuk-icon-thumb-tack null" style="vertical-align: middle;"><g><path d="m17.7 19.3v-10q0-0.3-0.2-0.5t-0.5-0.2-0.5 0.2-0.2 0.5v10q0 0.3 0.2 0.5t0.5 0.2 0.5-0.2 0.2-0.5z m15 7.8q0 0.6-0.4 1t-1 0.5h-9.6l-1.1 10.8q-0.1 0.2-0.3 0.4t-0.4 0.2h0q-0.6 0-0.8-0.6l-1.7-10.8h-9q-0.6 0-1-0.5t-0.4-1q0-2.7 1.8-4.9t3.9-2.2v-11.4q-1.1 0-2-0.9t-0.8-2 0.8-2 2-0.8h14.3q1.2 0 2 0.8t0.9 2-0.9 2-2 0.9v11.4q2.2 0 4 2.2t1.7 4.9z"></path></g></svg>
+                                    </div>
+                                </a>
+
+                                <div class="am-comment-main"> <!-- 评论内容容器 -->
+                                    <header class="am-comment-hd">
+                                        <!--<h3 class="am-comment-title">评论标题</h3>-->
+                                        <div class="am-comment-meta"> <!-- 评论元数据 -->
+                                            	报名列表
+                                        </div>
+                                    </header>
+
+                                    <div class="am-comment-bd">
+                                        <ol class="am-list leader-board">
+				                            <c:forEach items="${users}" var="n">
+				                                <a href="../user/${n['uid']}">
+					                                <li style="margin-bottom: 10px;">
+					                                    <img src="../assets/img/user (${n["uid"] % 28}).png" alt="" width="30px">
+					                                    ${n['nickname']}
+					                                </li>
+				                                </a>
+				                            </c:forEach>
+				                        </ol>
+                                    </div>
+                                </div>
+                            </article>
                         </div>
                         <%-- 如果是完成的活动可以上评论，以及上传内容--%>
                         <%
@@ -249,8 +279,9 @@
                            ${activityBean.startTime} -<br>
                            ${activityBean.endTime}<br>
                         <b>当前状态：</b> ${activityBean.status.label} <br>
-                        <b>活动性别限制:</b> <%=sex %>  <br>
-                        <b>年龄限制:</b> <%=age%>
+                        <b>人数限制：</b>${activityBean.nums}  <br>
+                        <b>活动性别限制：</b> <%=sex %>  <br>
+                        <b>年龄限制：</b> <%=age%>
 
                     </div>
                 </div>

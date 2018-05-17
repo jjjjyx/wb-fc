@@ -1,18 +1,25 @@
 package jyx.action;
 
-//import com.google.gson.Gson;
-//import com.google.gson.GsonBuilder;
+import java.util.Set;
 
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
+import org.apache.struts2.convention.annotation.InterceptorRefs;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
+import org.apache.struts2.convention.annotation.Results;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
+import jyx.common.Code;
 import jyx.common.ResultUtils;
 import jyx.model.ActivityBean;
 import jyx.model.CommentBean;
 import jyx.model.UserBean;
 import jyx.server.UserServer;
-import org.apache.struts2.convention.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 
 @Controller
 @ParentPackage("default-package")
@@ -38,27 +45,31 @@ public class ActivityAction extends BaseAction {
     private Integer id;
     private ActivityBean activity;
     private String c_id;
+
     @Action(value = "/{id}")
     public String info() throws Exception {
 //        UserBean u = (UserBean) session.getAttribute("user");
         ActivityBean activityBean = userServer.queryActivityBean(this.id);
-        if (activityBean==null) return "del";
-        request.setAttribute("activityBean",activityBean);
+        if (activityBean == null) return "del";
+        Set<UserBean> users = activityBean.getUsers();
+        request.setAttribute("users", users);
+        request.setAttribute("activityBean", activityBean);
         return "info";
     }
+
     //    @Override
     @Action(value = "all")
     public String all() throws Exception {
         UserBean u = (UserBean) session.getAttribute("user");
         request.setAttribute("activity_data", userServer.getCurrActivity(0, u, false));
-        request.setAttribute("userBean",userServer.queryUserBean(u.getUid()));
+        request.setAttribute("userBean", userServer.queryUserBean(u.getUid()));
         return "activity";
     }
 
     @Action(value = "end/{id}")
     public String end() throws Exception {
         UserBean u = (UserBean) session.getAttribute("user");
-        userServer.endActivity(u,this.id);
+        userServer.endActivity(u, this.id);
         return "end";
     }
 
@@ -66,12 +77,12 @@ public class ActivityAction extends BaseAction {
     @Action(value = "del/{id}")
     public String delActivity() {
         UserBean u = (UserBean) session.getAttribute("user");
-        ResultUtils.set(data,userServer.delActivity(id));
+        ResultUtils.set(data, userServer.delActivity(id));
         return JSON;
     }
 
     @Action(value = "comment")
-    public String comment(){
+    public String comment() {
         UserBean u = (UserBean) session.getAttribute("user");
 //        userServer.endActivity(u,this.id);
         ResultUtils.set(data, userServer.activityComment(u, this.comment));
@@ -79,7 +90,7 @@ public class ActivityAction extends BaseAction {
     }
 
     @Action(value = "save")
-    public String save(){
+    public String save() {
         UserBean u = (UserBean) session.getAttribute("user");
         this.activity.setAuthor(u.getUsername());
         ResultUtils.set(data, userServer.releaseActivity(this.activity, u));
@@ -90,15 +101,16 @@ public class ActivityAction extends BaseAction {
     public String join() {
         UserBean u = (UserBean) session.getAttribute("user");
         request.setAttribute("activity_data", userServer.getUserJoinActivity(u));
-        request.setAttribute("userBean",userServer.queryUserBean(u.getUid()));
+        request.setAttribute("userBean", userServer.queryUserBean(u.getUid()));
         return "activity";
     }
+
     // 我创建的
     @Action(value = "found")
     public String found() {
         UserBean u = (UserBean) session.getAttribute("user");
-        request.setAttribute("activity_data", userServer.getCurrActivity(0,u,true));
-        request.setAttribute("userBean",userServer.queryUserBean(u.getUid()));
+        request.setAttribute("activity_data", userServer.getCurrActivity(0, u, true));
+        request.setAttribute("userBean", userServer.queryUserBean(u.getUid()));
         return "activity";
     }
 
@@ -106,18 +118,30 @@ public class ActivityAction extends BaseAction {
     public String finish() {
         UserBean u = (UserBean) session.getAttribute("user");
         request.setAttribute("activity_data", userServer.getFinishActivity());
-        request.setAttribute("userBean",userServer.queryUserBean(u.getUid()));
+        request.setAttribute("userBean", userServer.queryUserBean(u.getUid()));
         return "activity";
     }
-
-
 
 
     // 活动报名
     @Action(value = "sign")
     public String activitySign() {
-        UserBean u = (UserBean) session.getAttribute("user");
-        ResultUtils.set(data, userServer.activitySign(this.id, u));
+        ActivityBean activityBean = userServer.queryActivityBean(this.id);
+
+        boolean b = true;
+        if (activityBean != null) {
+            Set<UserBean> users = activityBean.getUsers();
+            Long nums = activityBean.getNums();
+            if (users != null && nums >= users.size()) {
+                b = false;
+            }
+        }
+        if (b) {
+            UserBean u = (UserBean) session.getAttribute("user");
+            ResultUtils.set(data, userServer.activitySign(this.id, u));
+        } else {
+            ResultUtils.set(data, Code.LIMIT);
+        }
         return JSON;
 
     }

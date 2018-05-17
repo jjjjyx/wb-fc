@@ -12,7 +12,7 @@
 <body>
 <div id="app">
     <%@include file="../../assets/base/nav.jsp" %>
-    <section class="am-g am-g-fixed blog-fixed blog-content" style="background: #fff">
+    <section class="am-g am-g-fixed blog-fixed blog-content" style="background: #fff;padding-left: 100px;padding-right: 100px;">
         <div class="am-u-sm-12">
             <article class="am-article blog-article-p">
                 <div class="am-article-hd">
@@ -24,7 +24,7 @@
                     </p>
                 </div>
                 <div class="am-article-bd">
-                    <img src="assets/i/f${n.id%20+4}.jpg" alt="" class="blog-entry-img blog-article-margin">
+                    <%-- <img src="assets/i/f${n.id%20+4}.jpg" alt="" class="blog-entry-img blog-article-margin"> --%>
                     <p style="text-indent: 2ch">
                         ${new_date.content}
                     </p>

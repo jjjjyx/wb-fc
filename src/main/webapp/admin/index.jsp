@@ -30,7 +30,7 @@
                     </li>
                     <!-- 退出 -->
                     <li class="am-text-sm">
-                        <a href="../sign!out">
+                        <a href="../sign/out">
                             <span class="am-icon-sign-out"></span> 退出
                         </a>
                     </li>
@@ -78,6 +78,9 @@
             <li class="sidebar-nav-link">
                 <router-link to="/post" tag="a"><i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 动态管理</router-link>
             </li>
+            <!-- <li class="sidebar-nav-link">
+                <i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 发送积分设置
+            </li> -->
             <li class="sidebar-nav-link">
                 <router-link to="/data_m" tag="a"><i class="am-icon-bar-chart sidebar-nav-link-logo"></i> 材料管理</router-link>
             </li>

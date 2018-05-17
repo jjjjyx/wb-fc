@@ -45,6 +45,8 @@ public class ActivityBean implements Bean<ActivityBean> {
     private String author;
     @Expose
     private String phone;
+    @Expose
+    private Long nums;
 
     @Expose
     private ActivityStatus status;
@@ -238,4 +240,13 @@ public class ActivityBean implements Bean<ActivityBean> {
     public void setMedia(String[] media) {
         this.media = media;
     }
+
+	public Long getNums() {
+		return nums;
+	}
+
+	public void setNums(Long nums) {
+		this.nums = nums;
+	}
+    
 }

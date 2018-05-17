@@ -24,7 +24,7 @@
                 <div class="list-content">
                     <form @submit.prevent="validateBeforeSubmit">
                         <div class="form-item form-type-password form-item-pass">
-                            <label for="edit-pass">新密码 <span
+                            <label for="edit-pass">&nbsp;&nbsp;&nbsp;&nbsp;新密码 <span
                                     class="form-required" title="This field is required.">*</span> </label>
                             <input type="password" id="edit-pass" v-model="password"
                                    name="password"

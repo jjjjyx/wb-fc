@@ -125,7 +125,8 @@ public class UserAction extends BaseAction {
     @Action(value = "integral")
     public String integral(){
         UserBean userBean = (UserBean) session.getAttribute("user");
-        request.setAttribute("leader_board",userServer.getFollowLeaderboard(userBean));
+        //request.setAttribute("leader_board",userServer.getFollowLeaderboard(userBean));
+        request.setAttribute("leader_board",this.userServer.follows(userBean));
         request.setAttribute("integral_data",userServer.getAllintegral(userBean));
         return "integral";
     }
@@ -166,8 +167,8 @@ public class UserAction extends BaseAction {
             }
             return "fill_info_success";
         }
-
-        request.setAttribute("leader_board",userServer.getFollowLeaderboard(u));
+        request.setAttribute("leader_board",this.userServer.follows(u));
+        //request.setAttribute("leader_board",userServer.getFollowLeaderboard(u));
         return "fill_info";
     }
 

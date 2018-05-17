@@ -15,20 +15,20 @@
 
 <div id="app">
     <%@include file="../../assets/base/nav.jsp" %>
-    <section class="am-g am-g-fixed blog-fixed blog-content" style="background: #fff">
-        <div class="am-u-md-8 am-u-sm-12">
+    <section class="am-g am-g-fixed blog-fixed blog-content" style="background: #fff;padding-left: 100px;margin-right: 100px;">
+        <div class="am-u-md-12 am-u-sm-12">
             <c:forEach items="${new_date}" var="n" varStatus="loop">
                 <article class="am-g blog-entry-article">
-                    <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
+                   <%--  <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
                         <img src="assets/i/f${n.id%16+4}.jpg" alt="" class="am-u-sm-12">
-                    </div>
-                    <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
+                    </div> --%>
+                    <div class="am-u-lg-12 am-u-md-12 am-u-sm-12 blog-entry-text">
                         <span><a href="" class="blog-color">article &nbsp;</a></span>
                         <span> @${n.author} &nbsp;</span>
                         <span><fmt:formatDate value="${n.releaseTime}" pattern="yyyy/MM/dd"/></span>
                         <h1><a href="news?id=${n.id}"> ${n.title}</a></h1>
                         <c:if test="${fn:length(n.content)>80}">
-                            <p style="text-indent: 2ch">${n.content.substring(0,80)}</p>
+                            <p style="text-indent: 2ch">${n.content.substring(0,80)}...</p>
                         </c:if>
                                 <c:if test="${fn:length(n.content)<=80}">
                         <p style="text-indent: 2ch">${n.content}</p>

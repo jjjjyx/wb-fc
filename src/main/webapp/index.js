@@ -46,6 +46,8 @@
                     if(result.code==0){
                         alert("报名成功")
                         location.href="activity"
+                    } else {
+                    	alert(result.msg)
                     }
                 },
                 down(fn){

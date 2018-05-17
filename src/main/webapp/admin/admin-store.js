@@ -10,6 +10,7 @@ define(['js/api', 'vue'], function (api, Vue) {
                 lore_data: [],
                 data_data: [],
                 img_data: [],
+                leader_setting: {},
                 leaderboard_data:[]
             }
             

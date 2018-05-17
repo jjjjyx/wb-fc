@@ -1,24 +1,34 @@
 package jyx.action.admin;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import jyx.action.BaseAction;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
-import jyx.common.Code;
-import jyx.common.ResultUtils;
-import jyx.dao.DataDao;
-import jyx.model.*;
-import jyx.server.AdminServer;
 import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.convention.annotation.*;
+import org.apache.struts2.convention.annotation.Action;
+import org.apache.struts2.convention.annotation.InterceptorRef;
+import org.apache.struts2.convention.annotation.Namespace;
+import org.apache.struts2.convention.annotation.ParentPackage;
+import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import javax.servlet.ServletContext;
-import javax.xml.crypto.Data;
-import java.io.File;
-import java.util.Date;
-import java.util.Map;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import jyx.action.BaseAction;
+import jyx.common.Code;
+import jyx.common.ResultUtils;
+import jyx.dao.DataDao;
+import jyx.dao.IntegralSetDao;
+import jyx.model.ActivityBean;
+import jyx.model.GroupBean;
+import jyx.model.IntegralSet;
+import jyx.model.LoreBean;
+import jyx.model.NewsBean;
+import jyx.model.UserBean;
+import jyx.server.AdminServer;
 
 /**
  * 管理员 相关操作
@@ -27,7 +37,9 @@ import java.util.Map;
 @ParentPackage("default-package")
 @Namespace("/admin")
 @Action(value = "",
-        results = {@Result(name = "index", location = "/admin/index.jsp")
+        results = {
+                @Result(name = "index", location = "/admin/index.jsp"),
+                @Result(name = "integralSet", location = "/admin/pages/integralSet.jsp")
         }, interceptorRefs = {@InterceptorRef("adminStack")
 })
 public class AdminAction extends BaseAction {
@@ -44,147 +56,198 @@ public class AdminAction extends BaseAction {
     private String[] fns;
     private String media;
     private DataDao dataDao = DataDao.getInstance();
-    @Override
+
+    private IntegralSet integralSet;
+    private IntegralSet leaderSetting;
+
+    @Autowired
+    public IntegralSetDao integralSetDao;
+
+    public String integralSet() {
+        request.setAttribute("integralSet", integralSetDao.getIntegralSet());
+        return "integralSet";
+    }
+
+    public String saveLeaderSetting(){
+        ResultUtils.set(this.data, adminServer.saveLeaderSetting(leaderSetting));
+        return JSON;
+    }
+
+    public void addIntegralSet() throws Exception {
+        Map<String, Object> oldIntegralSet = integralSetDao.getIntegralSet();
+        boolean b = true;
+        if (oldIntegralSet != null) {
+            b = integralSetDao.updateIntegralSet(integralSet);
+        } else {
+            b = integralSetDao.addIntegralSet(integralSet);
+        }
+        Map<String, Object> msg = new HashMap<String, Object>();
+        if (b) {
+            msg.put("msg", "操作成功！！！");
+        } else {
+            msg.put("msg", "操作失败！！！");
+        }
+        Gson gson = new Gson();
+        ServletActionContext.getResponse().setContentType("text/html;charset=utf-8");
+        PrintWriter out = ServletActionContext.getResponse().getWriter();
+        out.write(gson.toJson(gson));
+        out.flush();
+        out.close();
+    }
+
     public String execute() throws Exception {
         Map data = this.adminServer.getData();
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         UserBean userBean = (UserBean) this.session.getAttribute("user");
-        data.put("user",userBean);
+        data.put("user", userBean);
         StringBuffer cc = new StringBuffer("window.__INIT=");
         cc.append(gson.toJson(data)).append(";");
         request.setAttribute("admin.data", cc);
         return "index";
     }
-    public String addActivityMedia(){
-        ResultUtils.set(this.data, adminServer.addActivityMedia(this.id,media));
+
+    public String addActivityMedia() {
+        ResultUtils.set(this.data, adminServer.addActivityMedia(this.id, media));
         return JSON;
     }
+
     /* ======== UserBean*/
-    public String resetPass(){
+    public String resetPass() {
         ResultUtils.set(this.data, adminServer.resetPass(uids));
         return JSON;
     }
-    public String getAllUser(){
+
+    public String getAllUser() {
         ResultUtils.set(this.data, adminServer.getAllUser());
         return JSON;
     }
-    public String delUser(){
+
+    public String delUser() {
         UserBean userBean = (UserBean) this.session.getAttribute("user");
-        if(del_id==userBean.getUid()) {
-            ResultUtils.set(data,-5,"无法删除自己");
+        if (del_id == userBean.getUid()) {
+            ResultUtils.set(data, -5, "无法删除自己");
         } else {
             ResultUtils.set(data, this.adminServer.delUser(this.del_id));
         }
         return JSON;
     }
-    public String addUser(){
-        Code code= adminServer.add(user);
+
+    public String addUser() {
+        Code code = adminServer.add(user);
         ResultUtils.set(data, code, user);
         return JSON;
     }
-    public String updateUser(){
 
-        ResultUtils.set(data,adminServer.update(user));
+    public String updateUser() {
+
+        ResultUtils.set(data, adminServer.update(user));
         return JSON;
     }
+
     /* ======== ActivityBean*/
-    public String getAllActivity(){
+    public String getAllActivity() {
         ResultUtils.set(this.data, adminServer.getAllActivity());
         return JSON;
     }
 
-    public String delActivity(){
+    public String delActivity() {
         ResultUtils.set(data, this.adminServer.delActivity(this.uids));
         return JSON;
     }
 
-    public String addActivity(){
+    public String addActivity() {
         UserBean userBean = (UserBean) this.session.getAttribute("user");
         activity.setUid(userBean);
-        Code code= adminServer.add(activity);
+        Code code = adminServer.add(activity);
         ResultUtils.set(data, code, activity);
         return JSON;
     }
-    public String updateActivity(){
-        ResultUtils.set(data,adminServer.update(activity));
+
+    public String updateActivity() {
+        ResultUtils.set(data, adminServer.update(activity));
         return JSON;
     }
 
     /* ======== GroupBean*/
-    public String getAllGroup(){
+    public String getAllGroup() {
         ResultUtils.set(this.data, adminServer.getAllGroup());
         return JSON;
     }
 
-    public String delGroup(){
+    public String delGroup() {
         ResultUtils.set(data, this.adminServer.delGroup(this.uids));
         return JSON;
     }
 
-    public String addGroup(){
-        Code code= adminServer.add(group);
+    public String addGroup() {
+        Code code = adminServer.add(group);
         ResultUtils.set(data, code, group);
         return JSON;
     }
-    public String updateGroup(){
-        ResultUtils.set(data,adminServer.update(group));
+
+    public String updateGroup() {
+        ResultUtils.set(data, adminServer.update(group));
         return JSON;
     }
 
     /* ======== LoreBean*/
-    public String getAllLore(){
+    public String getAllLore() {
         ResultUtils.set(this.data, adminServer.getAllLore());
         return JSON;
     }
 
-    public String delLore(){
+    public String delLore() {
         ResultUtils.set(data, this.adminServer.delLore(this.uids));
         return JSON;
     }
 
-    public String addLore(){
-        Code code= adminServer.add(lore);
+    public String addLore() {
+        Code code = adminServer.add(lore);
         ResultUtils.set(data, code, lore);
         return JSON;
     }
-    public String updateLore(){
-        ResultUtils.set(data,adminServer.update(lore));
+
+    public String updateLore() {
+        ResultUtils.set(data, adminServer.update(lore));
         return JSON;
     }
 
     /* ======== NewsBean*/
-    public String getAllNews(){
+    public String getAllNews() {
         ResultUtils.set(this.data, adminServer.getAllNews());
         return JSON;
     }
 
-    public String delNews(){
+    public String delNews() {
         ResultUtils.set(data, this.adminServer.delNews(this.uids));
         return JSON;
     }
 
-    public String addNews(){
+    public String addNews() {
         UserBean userBean = (UserBean) this.session.getAttribute("user");
         news.setUid(userBean);
-        Code code= adminServer.add(news);
+        Code code = adminServer.add(news);
         ResultUtils.set(data, code, news);
         return JSON;
     }
-    public String updateNews(){
-        ResultUtils.set(data,adminServer.update(news));
+
+    public String updateNews() {
+        ResultUtils.set(data, adminServer.update(news));
         return JSON;
     }
 
-    public String delFiles(){
-        ResultUtils.set(data,adminServer.delFCData(this.uids));
+    public String delFiles() {
+        ResultUtils.set(data, adminServer.delFCData(this.uids));
         return JSON;
     }
-    public String issue(){
-        ResultUtils.set(data,adminServer.issue());
+
+    public String issue() {
+        ResultUtils.set(data, adminServer.issue());
         return JSON;
     }
-    public String delImg(){
-        ResultUtils.set(data,dataDao.delImg(this.fns));
+
+    public String delImg() {
+        ResultUtils.set(data, dataDao.delImg(this.fns));
         return JSON;
     }
 
@@ -262,5 +325,22 @@ public class AdminAction extends BaseAction {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public IntegralSet getIntegralSet() {
+        return integralSet;
+    }
+
+    public void setIntegralSet(IntegralSet integralSet) {
+        this.integralSet = integralSet;
+    }
+
+
+    public IntegralSet getLeaderSetting() {
+        return leaderSetting;
+    }
+
+    public void setLeaderSetting(IntegralSet leaderSetting) {
+        this.leaderSetting = leaderSetting;
     }
 }

@@ -4,7 +4,7 @@
             <div class="widget am-cf">
                 <div class="widget-head am-cf">
                     <div class="widget-title  am-cf">动态排行榜</div>
-                    <p> 每周点赞数最多前10名发放奖励</p>
+                    <p> 每周点赞数最多发放奖励，发放奖励为定时间任务，无需手动发送</p>
                 </div>
                 <div class="widget-body  am-fr">
 
@@ -12,10 +12,8 @@
                         <div class="am-form-group">
                             <div class="am-btn-toolbar">
                                 <div class="am-btn-group am-btn-group-xs">
-                                    <button type="button" class="am-btn am-btn-default am-btn-success" @click="issue"><span class="am-icon-plus"></span> 发放积分</button>
-                                    <!--<button type="button" class="am-btn am-btn-default am-btn-secondary" @click="resetPassword"><span class="am-icon-refresh"></span> </button>-->
-                                    <!--<button type="button" class="am-btn am-btn-default am-btn-warning"><span class="am-icon-archive"></span> 查看</button>-->
-                                    <!--<button type="button" class="am-btn am-btn-default am-btn-danger" @click="deleteNews"><span class="am-icon-trash-o"></span> 删除</button>-->
+                                    <!--<a class="am-btn am-btn-default am-btn-success" @click="issue"> 发放积分</a>-->
+                                    <a class="am-btn am-btn-default am-btn-success" @click="f_model= true">积分发放设置</a>
                                 </div>
                             </div>
                         </div>
@@ -69,4 +67,29 @@
             </div>
         </div>
     </div>
+    <el-dialog title="发放积分设置" :visible.sync="f_model" append-to-body="true" width="30%">
+
+        <el-form :model="f_form">
+            <el-form-item label="前几名" >
+                <el-input v-model="leader_setting.rank" ></el-input>
+            </el-form-item>
+            <el-form-item label="最高分" >
+                <el-input v-model="leader_setting.maxReward" ></el-input>
+            </el-form-item>
+            <el-form-item label="最低分">
+                <el-input v-model="leader_setting.minReward" ></el-input>
+            </el-form-item>
+            <el-form-item label="间隔">
+                <el-input v-model="leader_setting.intervalNums" ></el-input>
+            </el-form-item>
+            <el-form-item label="周期(天)">
+                <el-input v-model="leader_setting.cycle" ></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="f_model = false">取 消</el-button>
+            <el-button type="primary" @click="f_model = false,saveSetting()">确 定</el-button>
+        </div>
+    </el-dialog>
+
 </div>

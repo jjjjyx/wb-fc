@@ -13,6 +13,9 @@
             data: function () {
                 return {
                     store,currPage: 1,
+                    f_model:false,
+                    f_form:{},
+                    leader_setting:store.states.leader_setting
                     //currData: null
                 }
             },
@@ -22,9 +25,20 @@
                     let start = (this.currPage - 1) * 10
                     let end = start + 10
                     return this.store.states.leaderboard_data.slice(start, end)
-                }
+                },
             },
             methods: {
+                async saveSetting(){
+                    for(let a in this.leader_setting) {
+                        this.leader_setting[`leaderSetting.${a}`] = this.leader_setting[a]
+                    }
+                    let result = await api.npost('./!saveLeaderSetting',this.leader_setting)
+                    if (result.code===0) {
+                        alert("设置成功");
+                    }else {
+                        alert("设置失败");
+                    }
+                },
                 issue(){
                     this.$confirm('此操作将停止本周的统计, 是否继续?', '提示', {
                         confirmButtonText: '确定',

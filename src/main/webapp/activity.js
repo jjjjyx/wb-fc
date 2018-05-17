@@ -88,6 +88,8 @@
                     if(result.code==0){
                         alert("报名成功")
                         location.reload()
+                    } else {
+                    	alert(result.msg)
                     }
                 },
                 async unsign(id){

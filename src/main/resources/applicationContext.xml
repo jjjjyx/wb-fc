@@ -101,13 +101,11 @@
 		proxy-target-class="true" />
 
 	<!-- 在该Bean的代码中标注@Transactional可以被事务管理器注入 -->
-
-
-
 	<!-- 自动搜索@Component , @Service , @Repository等标注的类 不搜索@Controller的类 -->
 	<context:component-scan base-package="jyx" annotation-config="true">
 	</context:component-scan>
 	<aop:aspectj-autoproxy proxy-target-class="true" />
 	<!-- Spring 调度 -->
 	<task:annotation-driven />
+	<bean class="jyx.Init"/>
 </beans>

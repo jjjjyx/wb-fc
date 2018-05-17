@@ -32,17 +32,22 @@
             components: {FcComment},
             computed: {},
             methods: {
-                comment (id,is) {
-                    let post_type = this.$refs.post_type.value
-                    if (post_type == 'mood' || is) {
-                        this.comment_position = 'top'
-                    }else { // 圈子只能好友评论 ，
-                        this.$message("他还不是您的好友，您无权评论")
+            	
+                comment (post_type,id,is) {
+                    if (post_type == 'mood'&& (is == null || is == undefined || is == '' || is == false)) {
+                    	this.$message("他还不是您的好友，您无权评论")
                         this.comment_position = 'hide'
+                    }else { // 圈子只能好友评论 ，
+                        this.comment_position = 'top'
                     }
                     this.currPostId = id
                     this.dialogTableVisible = true
                 },
+                async commentmy (id,is) {
+            		this.comment_position = 'top';
+            		this.currPostId = id;
+                    this.dialogTableVisible = true;
+            	},
                 async release () {
                     let q = this.form;
                     let post_type = this.$refs.post_type.value

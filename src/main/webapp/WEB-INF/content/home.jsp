@@ -130,7 +130,7 @@
                             <div class="WB_feed_detail am-cf">
                                 <div class="WB_face">
                                     <div class="face">
-                                        <a href="people?uid=${n['uid'].uid}">
+                                        <a href="user/${n['uid'].uid}">
                                             <img src="assets/img/user (${n['uid'].uid % 28}).png" alt="" class="W_face_radius">
                                         </a>
                                     </div>
@@ -213,7 +213,13 @@
                                                 </a>
                                             </li>
                                             <li>
-                                                <a class="S_txt2" @click="comment('${n['comment_id']}','${n['is_comment']}')">
+                                            	<c:if test="${n['uid'].uid==user.uid}">
+                                            		<a class="S_txt2" @click="commentmy('${n['comment_id']}','${n['is_comment']}')">
+                                            	</c:if>
+                                            	<c:if test="${n['uid'].uid!=user.uid}">
+                                            		<a class="S_txt2" @click="comment('${n['type'] }','${n['comment_id']}','${n['is_comment']}')">
+                                            	</c:if>
+                                                
                                                 <span class="pos">
                                                     <span class="line S_line1">
                                                         <i class="am-icon-commenting"></i> <em>${n['comment_num']}</em>
