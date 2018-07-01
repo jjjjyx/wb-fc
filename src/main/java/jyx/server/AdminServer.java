@@ -380,7 +380,7 @@ public class AdminServer {
         System.out.println("period = " + period);
         System.out.println("nextDate = " + nextDate);
 //        nextDate = new Date();
-        timer.schedule(new MyTask(integralSet), 1000, period);
+        timer.schedule(new MyTask(integralSet), nextDate, period);
 
     }
 
